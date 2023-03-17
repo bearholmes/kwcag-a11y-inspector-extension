@@ -14,10 +14,10 @@
 // Check whether new version is installed
 chrome.runtime.onInstalled.addListener(function (details) {
   console.log('onInstalled');
-  if (details.reason == 'install') {
+  if (details.reason === 'install') {
     console.log('install');
     chrome.tabs.create({ url: 'option.html' });
-    chrome.storage.local.set({
+    chrome.storage.sync.set({
       monitors: '17',
       resolutions: '1366x768',
       ccshow: '1',
@@ -30,29 +30,37 @@ chrome.runtime.onInstalled.addListener(function (details) {
   }
 });
 
-chrome.browserAction.onClicked.addListener(function (tab) {
-  if (
-    tab.url.indexOf('https://chrome.google.com') == 0 ||
-    tab.url.indexOf('chrome://') == 0
-  ) {
-    alert('크롬 내부 페이지에서는 동작하지 않습니다.'); //It does not work on Google Chrome Internal pages
-    return;
-  }
-  chrome.tabs.executeScript(tab.id, { file: 'js/dkinspect.js' });
-  chrome.tabs.insertCSS(tab.id, { file: 'css/dkinspect.css' });
+// contextMenus.onClicked event listener
+chrome.contextMenus.onClicked.addListener(function (info, tab) {
+  chrome.scripting.executeScript({
+    target: {tabId: tab.id},
+    files: ['js/cals.js']
+  });
+  chrome.scripting.insertCSS({
+    target: {tabId: tab.id},
+    files: ['css/cals.css']
+  });
 });
 
-chrome.contextMenus.create({
-  contexts: ['browser_action'],
-  title: '수동계산하기',
-  onclick: function (tab) {
-    chrome.tabs.executeScript(tab.id, { file: 'js/cals.js' });
-    chrome.tabs.insertCSS(tab.id, { file: 'css/cals.css' });
-  },
+// browserAction.onClicked event listener
+chrome.action.onClicked.addListener(function (tab) {
+  if (tab.url.startsWith('chrome://') || tab.url.startsWith('https://chrome.google.com')) {
+    alert('It does not work on Google Chrome internal pages.');
+    return;
+  }
+
+  chrome.scripting.executeScript({
+    target: {tabId: tab.id},
+    files: ['js/dkinspect.js']
+  });
+  chrome.scripting.insertCSS({
+    target: {tabId: tab.id},
+    files: ['css/dkinspect.css']
+  });
 });
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.cmd === 'pause') {
-    sendResponse('27'); //esc
+    sendResponse('Escape'); //esc
   }
 });

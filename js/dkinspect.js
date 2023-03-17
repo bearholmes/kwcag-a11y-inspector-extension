@@ -12,7 +12,7 @@
  */
 function readData(myKey) {
   return new Promise((resolve) => {
-    chrome.storage.local.get(myKey, function (data) {
+    chrome.storage.sync.get(myKey, function (data) {
       resolve(data);
     });
   });
@@ -1143,7 +1143,6 @@ async function myApp() {
       }
 
       this.RemoveEventListeners();
-      console.log('disabled dkInspect');
       return true;
     }
 
@@ -1186,7 +1185,7 @@ async function myApp() {
   let dkInspectPause = false;
   const shortcut = {
     initialize: function () {
-      chrome.extension.sendMessage(
+      chrome.runtime.sendMessage(
         {
           cmd: 'pause',
         },
@@ -1194,7 +1193,7 @@ async function myApp() {
           window.addEventListener(
             'keyup',
             function (e) {
-              if (e.which === response) {
+              if (e.key === response) {
                 if (dkInspectPause) {
                   shortcut.resume();
                 } else {
@@ -1256,4 +1255,4 @@ async function myApp() {
 }
 myApp()
   .then(() => console.log('Load'))
-  .catch((e) => console.error(e));
+

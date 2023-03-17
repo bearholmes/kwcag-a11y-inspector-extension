@@ -6,19 +6,19 @@ const $ = function () {
 };
 
 function loadEvent() {
-  chrome.storage.local.get('monitors', function (result) {
+  chrome.storage.sync.get('monitors', function (result) {
     const monitors = result.monitors;
     if (monitors) {
       $(monitors).selected = true;
     }
   });
-  chrome.storage.local.get('resolutions', function (result) {
+  chrome.storage.sync.get('resolutions', function (result) {
     const resolutions = result.resolutions;
     if (resolutions) {
       $(resolutions).selected = true;
     }
   });
-  chrome.storage.local.get('ccshow', function (result) {
+  chrome.storage.sync.get('ccshow', function (result) {
     const ccshow = result.ccshow;
 
     if (ccshow === 1) {
@@ -27,7 +27,7 @@ function loadEvent() {
       $('ccShowOff').checked = true;
     }
   });
-  chrome.storage.local.get('linkmode', function (result) {
+  chrome.storage.sync.get('linkmode', function (result) {
     const linkmode = result.linkmode;
 
     if (linkmode === 1) {
@@ -36,7 +36,7 @@ function loadEvent() {
       $('linkModeOff').checked = true;
     }
   });
-  chrome.storage.local.get('bgmode', function (result) {
+  chrome.storage.sync.get('bgmode', function (result) {
     const bgmode = result.bgmode;
 
     if (bgmode === 1) {
@@ -45,7 +45,7 @@ function loadEvent() {
       $('bgModeOff').checked = true;
     }
   });
-  chrome.storage.local.get('linetype', function (result) {
+  chrome.storage.sync.get('linetype', function (result) {
     const linetype = result.linetype;
 
     if (linetype === 'solid') {
@@ -56,10 +56,10 @@ function loadEvent() {
       $('linetype3').checked = true;
     }
   });
-  chrome.storage.local.get('colortype', function (result) {
+  chrome.storage.sync.get('colortype', function (result) {
     $('colorType').value = result.colortype;
   });
-  chrome.storage.local.get('trackingmode', function (result) {
+  chrome.storage.sync.get('trackingmode', function (result) {
     const trackingmode = result.trackingmode;
 
     if (trackingmode === 'true') {
@@ -68,7 +68,7 @@ function loadEvent() {
       $('trackingModeOff').checked = true;
     }
   });
-  chrome.storage.local.get('bordersize', function (result) {
+  chrome.storage.sync.get('bordersize', function (result) {
     $('bordersize').value = result.bordersize;
   });
 }
@@ -101,7 +101,7 @@ function resRegEvent() {
 
   const bordersize = $('bordersize').value;
 
-  chrome.storage.local.set({
+  chrome.storage.sync.set({
     monitors: monitor,
     resolutions: resolution,
     ccshow: cc_sw,

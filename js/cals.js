@@ -87,8 +87,8 @@
       });
     },
     setDiagonal: function (h, w, callback) {
-      chrome.storage.local.get('resolutions', function (r) {
-        chrome.storage.local.get('monitors', function (m) {
+      chrome.storage.sync.get('resolutions', function (r) {
+        chrome.storage.sync.get('monitors', function (m) {
           const cb = {};
           cb.monitor = m.monitors;
           cb.resolution = r.resolutions;
