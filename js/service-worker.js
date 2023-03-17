@@ -30,16 +30,24 @@ chrome.runtime.onInstalled.addListener(function (details) {
   }
 });
 
-// contextMenus.onClicked event listener
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
-  chrome.scripting.executeScript({
-    target: {tabId: tab.id},
-    files: ['js/cals.js']
-  });
-  chrome.scripting.insertCSS({
-    target: {tabId: tab.id},
-    files: ['css/cals.css']
-  });
+chrome.contextMenus.create({
+  id: "dkinspectContextMenu",
+  title: "수동계산 팝업 열기",
+  contexts: ["page", "frame"],
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "dkinspectContextMenu") {
+    console.log("My Context Menu clicked!");
+    chrome.scripting.executeScript({
+      target: {tabId: tab.id},
+      files: ['js/cals.js']
+    });
+    chrome.scripting.insertCSS({
+      target: {tabId: tab.id},
+      files: ['css/cals.css']
+    });
+  }
 });
 
 // browserAction.onClicked event listener
