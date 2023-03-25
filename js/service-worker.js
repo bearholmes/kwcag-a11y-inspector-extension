@@ -52,7 +52,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 // browserAction.onClicked event listener
 chrome.action.onClicked.addListener(function (tab) {
-  if (tab.url.startsWith('chrome://') || tab.url.startsWith('https://chrome.google.com')) {
+  if (tab.url.startsWith('chrome://')) {
     alert('It does not work on Google Chrome internal pages.');
     return;
   }
