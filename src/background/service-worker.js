@@ -18,6 +18,19 @@
  */
 
 /**
+ * 사용자에게 알림을 표시하는 헬퍼 함수
+ * @param {string} message - 표시할 메시지
+ */
+function showNotification(message) {
+  chrome.notifications.create({
+    type: 'basic',
+    iconUrl: 'assets/icons/48.png',
+    title: 'KWCAG A11y Inspector',
+    message: message,
+  });
+}
+
+/**
  * 익스텐션 설치 또는 업데이트 시 발생하는 이벤트 처리
  * @listens chrome.runtime#onInstalled
  */
@@ -91,16 +104,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         return;
       }
 
-      // cals.js 스크립트 주입
+      // calculator.js 스크립트 주입
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        files: ['js/cals.js'],
+        files: ['dist/content/calculator.js'],
       });
 
-      // cals.css 스타일시트 주입
+      // calculator.css 스타일시트 주입
       await chrome.scripting.insertCSS({
         target: { tabId: tab.id },
-        files: ['css/cals.css'],
+        files: ['dist/content/calculator.css'],
       });
 
       console.log('[KWCAG Inspector] Calculator popup injected');
@@ -127,7 +140,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   try {
     // Chrome 내부 페이지 체크
     if (tab.url?.startsWith('chrome://') || tab.url?.startsWith('edge://')) {
-      alert('Chrome/Edge 내부 페이지에서는 동작하지 않습니다.');
+      showNotification('Chrome/Edge 내부 페이지에서는 동작하지 않습니다.');
       return;
     }
 
@@ -136,7 +149,7 @@ chrome.action.onClicked.addListener(async (tab) => {
       tab.url?.includes('chrome.google.com/webstore') ||
       tab.url?.includes('microsoftedge.microsoft.com/addons')
     ) {
-      alert('스토어 페이지에서는 동작하지 않습니다.');
+      showNotification('스토어 페이지에서는 동작하지 않습니다.');
       return;
     }
 
@@ -146,16 +159,16 @@ chrome.action.onClicked.addListener(async (tab) => {
       return;
     }
 
-    // dkinspect.js 스크립트 주입
+    // inspector.js 스크립트 주입
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      files: ['js/dkinspect.js'],
+      files: ['dist/content/inspector.js'],
     });
 
-    // dkinspect.css 스타일시트 주입
+    // inspector.css 스타일시트 주입
     await chrome.scripting.insertCSS({
       target: { tabId: tab.id },
-      files: ['css/dkinspect.css'],
+      files: ['dist/content/inspector.css'],
     });
 
     console.log('[KWCAG Inspector] Inspector activated');
@@ -164,11 +177,11 @@ chrome.action.onClicked.addListener(async (tab) => {
 
     // 사용자에게 친절한 에러 메시지 표시
     if (error.message?.includes('Cannot access')) {
-      alert(
+      showNotification(
         '이 페이지에서는 확장프로그램을 사용할 수 없습니다.\n(권한이 제한된 페이지입니다)'
       );
     } else {
-      alert('확장프로그램 실행 중 오류가 발생했습니다.\n콘솔을 확인해주세요.');
+      showNotification('확장프로그램 실행 중 오류가 발생했습니다.\n콘솔을 확인해주세요.');
     }
   }
 });

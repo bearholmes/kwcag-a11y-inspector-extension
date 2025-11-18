@@ -380,7 +380,7 @@ async function myApp() {
       return;
     }
 
-    li.lastChild.innerHTML = ` : ${element.getPropertyValue(property)}`;
+    li.lastChild.textContent = ` : ${element.getPropertyValue(property)}`;
   }
 
   // element의 CSS property를 조건(condition)에 따라 설정하는 함수
@@ -398,7 +398,7 @@ async function myApp() {
     // 조건이 참일 경우
     if (condition) {
       // li의 마지막 자식에 해당 property의 값을 넣어줌
-      li.lastChild.innerHTML = ` : ${element.getPropertyValue(property)}`;
+      li.lastChild.textContent = ` : ${element.getPropertyValue(property)}`;
       // li 엘리먼트 보여주기
       li.style.display = 'block';
 
@@ -597,7 +597,7 @@ async function myApp() {
 
       // 조건이 참일 경우 li 엘리먼트에 대비 비율 값을 넣고 보여주기
       if (condition) {
-        li.lastChild.innerHTML = ` : ${
+        li.lastChild.textContent = ` : ${
           Math.round(ratio * 100) / 100
         }:1`;
         li.style.display = 'block';
@@ -627,7 +627,7 @@ async function myApp() {
     }
 
     // li 엘리먼트의 텍스트 변경 및 보여주기
-    li.lastChild.innerHTML = ` : ${value}`;
+    li.lastChild.textContent = ` : ${value}`;
     li.style.display = 'block';
   }
 
@@ -644,7 +644,7 @@ async function myApp() {
 
     // 조건이 참일 경우 li 엘리먼트의 텍스트 변경 및 보여주기
     if (condition) {
-      li.lastChild.innerHTML = ` : ${value}`;
+      li.lastChild.textContent = ` : ${value}`;
       li.style.display = 'block';
       return 1;
     }

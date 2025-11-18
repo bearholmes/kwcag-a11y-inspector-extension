@@ -204,22 +204,58 @@
         const inputContainer = doc.createElement('div');
         const ul = doc.createElement('ul');
 
-        // 입력 필드 목록
-        const list = [
-          // 높이
-          `<span class='${CSS_CLASSES.PROPERTY}'><label for='${ELEMENT_IDS.INPUT_HEIGHT}'>Height</label></span><span><input type='text' id='${ELEMENT_IDS.INPUT_HEIGHT}'> px</span>`,
-          // 너비
-          `<span class='${CSS_CLASSES.PROPERTY}'><label for='${ELEMENT_IDS.INPUT_WIDTH}'>Width</label></span><span><input type='text' id='${ELEMENT_IDS.INPUT_WIDTH}'> px</span>`,
-          // 하단 버튼
-          `<span style='float:right'><button id='${ELEMENT_IDS.BTN_SUBMIT}' class='${CSS_CLASSES.BUTTON}'>확인</button><button id='${ELEMENT_IDS.BTN_CLOSE}' class='${CSS_CLASSES.BUTTON}'>닫기</button></span>`,
-        ];
+        // Height input field
+        const heightLi = doc.createElement('li');
+        const heightLabelSpan = doc.createElement('span');
+        heightLabelSpan.className = CSS_CLASSES.PROPERTY;
+        const heightLabel = doc.createElement('label');
+        heightLabel.setAttribute('for', ELEMENT_IDS.INPUT_HEIGHT);
+        heightLabel.textContent = 'Height';
+        heightLabelSpan.appendChild(heightLabel);
+        const heightInputSpan = doc.createElement('span');
+        const heightInput = doc.createElement('input');
+        heightInput.type = 'text';
+        heightInput.id = ELEMENT_IDS.INPUT_HEIGHT;
+        heightInputSpan.appendChild(heightInput);
+        heightInputSpan.appendChild(doc.createTextNode(' px'));
+        heightLi.appendChild(heightLabelSpan);
+        heightLi.appendChild(heightInputSpan);
+        ul.appendChild(heightLi);
 
-        // "li" 요소를 생성하고, "ul" 요소에 추가합니다.
-        list.forEach((item) => {
-          const li = doc.createElement('li');
-          li.innerHTML = item;
-          ul.appendChild(li);
-        });
+        // Width input field
+        const widthLi = doc.createElement('li');
+        const widthLabelSpan = doc.createElement('span');
+        widthLabelSpan.className = CSS_CLASSES.PROPERTY;
+        const widthLabel = doc.createElement('label');
+        widthLabel.setAttribute('for', ELEMENT_IDS.INPUT_WIDTH);
+        widthLabel.textContent = 'Width';
+        widthLabelSpan.appendChild(widthLabel);
+        const widthInputSpan = doc.createElement('span');
+        const widthInput = doc.createElement('input');
+        widthInput.type = 'text';
+        widthInput.id = ELEMENT_IDS.INPUT_WIDTH;
+        widthInputSpan.appendChild(widthInput);
+        widthInputSpan.appendChild(doc.createTextNode(' px'));
+        widthLi.appendChild(widthLabelSpan);
+        widthLi.appendChild(widthInputSpan);
+        ul.appendChild(widthLi);
+
+        // Buttons
+        const btnLi = doc.createElement('li');
+        const btnSpan = doc.createElement('span');
+        btnSpan.style.cssFloat = 'right';
+        const submitBtn = doc.createElement('button');
+        submitBtn.id = ELEMENT_IDS.BTN_SUBMIT;
+        submitBtn.className = CSS_CLASSES.BUTTON;
+        submitBtn.textContent = '확인';
+        const closeBtn = doc.createElement('button');
+        closeBtn.id = ELEMENT_IDS.BTN_CLOSE;
+        closeBtn.className = CSS_CLASSES.BUTTON;
+        closeBtn.textContent = '닫기';
+        btnSpan.appendChild(submitBtn);
+        btnSpan.appendChild(closeBtn);
+        btnLi.appendChild(btnSpan);
+        ul.appendChild(btnLi);
 
         // "ul" 요소를 "div" 요소에 추가합니다.
         inputContainer.appendChild(ul);
@@ -327,17 +363,26 @@
 
             // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
             const list = [
-              `<span class='${CSS_CLASSES.PROPERTY}'> height : </span><span>${cb.height} mm (${h}px)</span>`,
-              `<span class='${CSS_CLASSES.PROPERTY}'> width : </span><span>${cb.width} mm (${w}px)</span>`,
-              `<span class='${CSS_CLASSES.PROPERTY}'> diagonal : </span><span>${cb.diagonal} mm (${cb.diagonal_px}px)</span>`,
+              { label: 'height', value: `${cb.height} mm (${h}px)` },
+              { label: 'width', value: `${cb.width} mm (${w}px)` },
+              { label: 'diagonal', value: `${cb.diagonal} mm (${cb.diagonal_px}px)` },
             ];
 
             // "list" 배열에 저장된 값들을 이용하여 "ul" 요소를 생성하고, 이 요소에 "li" 요소들을 추가합니다.
             const ul = doc.createElement('ul');
             list.forEach((item) => {
-              // "li" 요소를 생성하고, 해당 요소에 "innerHTML" 속성을 이용하여 값을 할당합니다.
+              // "li" 요소를 생성하고, 안전하게 DOM 요소를 추가합니다.
               const li = doc.createElement('li');
-              li.innerHTML = item;
+
+              const labelSpan = doc.createElement('span');
+              labelSpan.className = CSS_CLASSES.PROPERTY;
+              labelSpan.textContent = ` ${item.label} : `;
+
+              const valueSpan = doc.createElement('span');
+              valueSpan.textContent = item.value;
+
+              li.appendChild(labelSpan);
+              li.appendChild(valueSpan);
 
               // 생성된 "li" 요소를 "ul" 요소에 추가합니다.
               ul.appendChild(li);
