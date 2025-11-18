@@ -27,6 +27,7 @@ KWCAG A11y Inspector는 웹 접근성 진단을 위한 Chrome 확장프로그램
 - ✅ **수동 계산기**: 직접 입력을 통한 치수 계산
 - ✅ **커스터마이징**: 테두리 색상, 스타일, 두께 조정 가능
 - ✅ **다양한 모니터 지원**: 11~40인치, 다양한 해상도 설정
+- ✅ **다국어 지원**: 11개 언어 지원 (한국어, 영어, 중국어, 일본어, 독일어, 프랑스어, 스페인어, 이탈리아어, 러시아어, 포르투갈어)
 
 ---
 
@@ -105,15 +106,23 @@ npm run build
 - **Chrome Extension API** (Manifest V3)
 - **JavaScript** (ES2020)
 - **CSS3**
+- **Chrome i18n API** - 다국어 지원 (11개 언어)
 
 ### 개발 도구
-- **Babel** - ES6+ → ES2020 트랜스파일
+- **Babel** - ES6+ → Chrome 88 타겟 트랜스파일
 - **Prettier** - 코드 포맷팅
 - **Jest** - 단위 테스트 (설정 완료)
-- **JSDoc** - 코드 문서화
+- **JSDoc** - 전체 코드 문서화 완료
 
 ### 주요 라이브러리
 - **jscolor.min.js** - 색상 선택기
+
+### 코드 품질
+- ✅ **완전한 JSDoc 문서화**: 모든 함수와 타입에 JSDoc 주석 적용
+- ✅ **포괄적 에러 핸들링**: try-catch 블록과 구조화된 에러 메시지
+- ✅ **상수 관리**: 매직 넘버 제거 및 CONSTANTS 객체로 중앙 관리
+- ✅ **소스맵 지원**: 디버깅을 위한 소스맵 생성
+- ✅ **타입 정의**: JSDoc @typedef를 통한 타입 안전성 향상
 
 ---
 
@@ -123,12 +132,22 @@ npm run build
 kwcag-a11y-inspector-extension/
 ├── manifest.json              # Chrome 확장프로그램 매니페스트
 ├── option.html                # 옵션 페이지
+├── package.json               # NPM 의존성 및 스크립트
+├── .babelrc                   # Babel 설정 (Chrome 88 타겟)
+│
+├── _locales/                  # 국제화 리소스 (11개 언어)
+│   ├── ko/messages.json      # 한국어
+│   ├── en/messages.json      # 영어
+│   ├── ja/messages.json      # 일본어
+│   ├── zh_CN/messages.json   # 중국어 간체
+│   ├── zh_TW/messages.json   # 중국어 번체
+│   └── ...                    # 독일어, 프랑스어, 스페인어, 이탈리아어, 러시아어, 포르투갈어
 │
 ├── src/                       # 소스 코드 (ES6+)
-│   ├── service-worker.js     # 백그라운드 스크립트
-│   ├── dkinspect.js          # 메인 인스펙터 로직 (1,350줄)
-│   ├── cals.js               # 수동 계산기
-│   └── option.js             # 옵션 페이지 로직
+│   ├── service-worker.js     # 백그라운드 스크립트 (204줄, JSDoc 완료)
+│   ├── dkinspect.js          # 메인 인스펙터 로직 (1,350줄, JSDoc 완료)
+│   ├── cals.js               # 수동 계산기 (JSDoc 완료)
+│   └── option.js             # 옵션 페이지 로직 (JSDoc 완료)
 │
 ├── js/                        # 트랜스파일된 코드 (프로덕션)
 │   ├── service-worker.js
@@ -145,8 +164,8 @@ kwcag-a11y-inspector-extension/
 │
 └── docs/                      # 문서
     ├── PROJECT_ANALYSIS.md    # 프로젝트 상세 분석
-    ├── TECH_STACK_ANALYSIS.md # 기술 스택 검토
-    └── ...
+    ├── CODE_REVIEW_REPORT.md  # 코드 리뷰 결과
+    └── ...                    # 기술 스택 분석 문서들
 ```
 
 ---
@@ -187,6 +206,29 @@ npm run test:coverage
 - **JSDoc** 주석 필수 (모든 함수)
 - **한국어 주석** 권장 (비즈니스 로직)
 - **ES2020** 문법 사용
+- **에러 핸들링** 필수 (try-catch 블록)
+- **타입 정의** 권장 (JSDoc @typedef)
+
+### 보안 및 성능 주의사항
+
+#### 보안
+- ✅ Chrome 내부 페이지 및 스토어 페이지 접근 차단 구현됨
+- ✅ 모든 사용자 입력에 대한 유효성 검증 필수
+- ✅ XSS 방지를 위한 DOM 조작 시 textContent 사용 권장
+- ⚠️ `eval()` 사용 금지
+- ⚠️ `innerHTML` 사용 시 주의 (가능한 `textContent` 사용)
+
+#### 성능
+- ✅ ES2020 타겟으로 번들 크기 최적화 (약 130KB)
+- ✅ 이벤트 리스너 최소화 및 적절한 해제
+- ✅ DOM 접근 캐싱으로 성능 향상
+- ⚠️ 대량 DOM 조작 시 `DocumentFragment` 사용 권장
+- ⚠️ 긴 작업은 `requestAnimationFrame` 또는 `setTimeout`으로 분할
+
+#### 접근성
+- ✅ 키보드 단축키 지원 (ESC)
+- ✅ 명확한 에러 메시지 제공
+- ⚠️ 새로운 UI 요소 추가 시 ARIA 속성 고려
 
 ### 커밋 컨벤션
 
@@ -198,6 +240,9 @@ style: 코드 포맷팅
 refactor: 코드 리팩토링
 test: 테스트 코드
 chore: 빌드 설정 등
+perf: 성능 개선
+security: 보안 패치
+i18n: 국제화 관련
 ```
 
 ---
@@ -233,12 +278,20 @@ npm run test:coverage
 - **dkinspect.js**: ~100KB (트랜스파일 후)
 - **전체**: ~130KB
 - **로딩 시간**: ~9ms (ES2020 타겟)
+- **국제화 리소스**: 각 언어당 ~3KB
 
 ### 최적화 기법
-- ✅ ES2020 타겟으로 불필요한 트랜스파일 제거
+- ✅ ES2020 타겟으로 불필요한 트랜스파일 제거 (Chrome 88+)
+- ✅ Babel `modules: false` 설정으로 트리 쉐이킹 지원
 - ✅ 소스맵 생성으로 디버깅 용이
-- ✅ 이벤트 리스너 최소화
+- ✅ 이벤트 리스너 최소화 및 적절한 해제
 - ✅ DOM 접근 캐싱
+- ✅ 매직 넘버 제거 및 상수 중앙 관리로 유지보수성 향상
+
+### 로딩 성능
+- **초기 로딩**: Chrome Storage에서 설정 비동기 로드
+- **스크립트 주입**: 필요 시에만 동적 주입 (Lazy Loading)
+- **메모리 관리**: 인스펙터 비활성화 시 이벤트 리스너 정리
 
 ---
 
@@ -321,16 +374,32 @@ in the Software without restriction...
 
 ## 🗺️ 로드맵
 
+### v0.13.0 (완료) ✅
+- [x] 국제화(i18n) 지원 - 11개 언어
+- [x] 전체 JSDoc 문서화 완료
+- [x] 포괄적 에러 핸들링 구현
+- [x] ES2020 타겟 빌드 최적화
+- [x] 매직 넘버 제거 및 상수 중앙 관리
+- [x] 소스맵 생성 지원
+
 ### v0.14.0 (계획 중)
-- [ ] TypeScript 마이그레이션 검토
-- [ ] 추가 WCAG 지침 지원
-- [ ] 다국어 지원 (i18n)
-- [ ] 리포팅 기능
+- [ ] 단위 테스트 구현 (Jest)
+- [ ] CI/CD 파이프라인 구축
+- [ ] E2E 테스트 추가
+- [ ] 리포팅 기능 추가
+- [ ] 추가 WCAG 지침 지원 (2.5.5 목표 크기)
 
 ### v0.15.0 (향후)
+- [ ] TypeScript 마이그레이션 검토
 - [ ] 전체 페이지 스캔 기능
-- [ ] 결과 내보내기 (CSV, JSON)
+- [ ] 결과 내보내기 (CSV, JSON, PDF)
 - [ ] 사용자 정의 기준 설정
+- [ ] Chrome DevTools 패널 통합
+
+### 장기 비전
+- [ ] Firefox, Safari 확장프로그램 지원
+- [ ] AI 기반 접근성 제안 기능
+- [ ] 웹 대시보드 및 팀 협업 기능
 
 ---
 
