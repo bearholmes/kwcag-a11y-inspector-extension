@@ -1,0 +1,294 @@
+{
+  "extName": {
+    "message": "KWCAG 无障碍检查器",
+    "description": "扩展程序名称"
+  },
+  "extDescription": {
+    "message": "KWCAG 2.1.3 可操作性检查项目测量工具",
+    "description": "扩展程序描述"
+  },
+  "contextMenuCalc": {
+    "message": "打开手动计算弹窗",
+    "description": "右键菜单项"
+  },
+  "alertChromeInternal": {
+    "message": "在Chrome/Edge内部页面无法运行。",
+    "description": "内部页面警告"
+  },
+  "alertStorePage": {
+    "message": "在商店页面无法运行。",
+    "description": "商店页面警告"
+  },
+  "alertRestrictedPage": {
+    "message": "无法在此页面使用扩展程序。\n(受限页面)",
+    "description": "受限页面警告"
+  },
+  "alertExtensionError": {
+    "message": "扩展程序运行时发生错误。\n请检查控制台。",
+    "description": "一般错误消息"
+  },
+  "calcTitle": {
+    "message": "手动计算",
+    "description": "计算器标题"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "高度标签"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "宽度标签"
+  },
+  "calcConfirm": {
+    "message": "确认",
+    "description": "确认按钮"
+  },
+  "calcClose": {
+    "message": "关闭",
+    "description": "关闭按钮"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "结果标题"
+  },
+  "calcStandard": {
+    "message": "标准",
+    "description": "标准显示"
+  },
+  "errorInvalidInput": {
+    "message": "无效的输入值。",
+    "description": "无效输入错误"
+  },
+  "errorMissingElement": {
+    "message": "找不到必需的元素。",
+    "description": "缺少元素错误"
+  },
+  "errorStorage": {
+    "message": "无法从存储读取数据。",
+    "description": "存储错误"
+  },
+  "errorCalculation": {
+    "message": "计算过程中发生错误。",
+    "description": "计算错误"
+  },
+  "errorInputValidation": {
+    "message": "只能输入正数。",
+    "description": "输入验证错误"
+  },
+  "errorUIInit": {
+    "message": "UI初始化失败。",
+    "description": "UI初始化错误"
+  },
+  "errorResultDisplay": {
+    "message": "显示结果时发生错误。",
+    "description": "结果显示错误"
+  },
+  "errorCalcInit": {
+    "message": "计算器初始化失败。",
+    "description": "计算器初始化错误"
+  },
+  "pauseMessage": {
+    "message": "已暂停。按ESC键继续。",
+    "description": "暂停消息"
+  },
+  "resumeMessage": {
+    "message": "继续。",
+    "description": "恢复消息"
+  },
+  "optionPageTitle": {
+    "message": "kwcag a11y inspector - 选项",
+    "description": "选项页面标题"
+  },
+  "optionVersion": {
+    "message": "版本",
+    "description": "版本标签"
+  },
+  "optionMenu": {
+    "message": "选项菜单",
+    "description": "选项菜单标题"
+  },
+  "optionContent": {
+    "message": "选项内容",
+    "description": "选项内容标题"
+  },
+  "menuIntro": {
+    "message": "简介",
+    "description": "简介菜单"
+  },
+  "menuShortcuts": {
+    "message": "快捷键指南",
+    "description": "快捷键菜单"
+  },
+  "menuSettings": {
+    "message": "环境设置",
+    "description": "环境设置菜单"
+  },
+  "menuReferences": {
+    "message": "参考资料",
+    "description": "参考资料菜单"
+  },
+  "menuSupport": {
+    "message": "支持",
+    "description": "支持菜单"
+  },
+  "introDesc1": {
+    "message": "提供用于测量KWCAG 2.1的2.1.3可操作性检查项目的功能",
+    "description": "简介说明 1"
+  },
+  "introDesc2": {
+    "message": "提供有助于测量1.3.3文本内容明度对比检查项目的辅助功能",
+    "description": "简介说明 2"
+  },
+  "introDesc3": {
+    "message": "标准: box + padding + border",
+    "description": "简介说明 3"
+  },
+  "introTip": {
+    "message": "提示",
+    "description": "提示标签"
+  },
+  "introWarning1": {
+    "message": "* 注意事项：遗憾的是，由于Chrome的特性，无法检查iframe、frame内部文档。",
+    "description": "简介警告 1"
+  },
+  "introWarning2": {
+    "message": "* 右键单击时显示的上下文菜单中可以打开手动计算弹窗。",
+    "description": "简介警告 2"
+  },
+  "shortcutDesc": {
+    "message": "使用快捷键会更加方便。",
+    "description": "快捷键说明"
+  },
+  "shortcutEsc": {
+    "message": "暂停 / 恢复（激活状态下可用）",
+    "description": "ESC快捷键说明"
+  },
+  "settingResolution": {
+    "message": "分辨率标准",
+    "description": "分辨率设置标签"
+  },
+  "settingMonitor": {
+    "message": "显示器标准",
+    "description": "显示器设置标签"
+  },
+  "settingContrastCheck": {
+    "message": "明度对比检查",
+    "description": "明度对比设置标签"
+  },
+  "settingSelectorLine": {
+    "message": "选择器线条",
+    "description": "选择器线条设置标签"
+  },
+  "settingSelectorColor": {
+    "message": "选择器颜色",
+    "description": "选择器颜色设置标签"
+  },
+  "settingSelectorBorder": {
+    "message": "选择器边框",
+    "description": "选择器边框设置标签"
+  },
+  "settingLinkMode": {
+    "message": "链接模式",
+    "description": "链接模式设置标签"
+  },
+  "settingLinkModeOn": {
+    "message": "ON（限定为a、button、input元素）",
+    "description": "链接模式ON标签"
+  },
+  "settingLinkModeDesc": {
+    "message": "- 仅检查到父元素",
+    "description": "链接模式说明"
+  },
+  "settingLinkModeOff": {
+    "message": "OFF（所有元素）",
+    "description": "链接模式OFF标签"
+  },
+  "settingTrackingMode": {
+    "message": "分离式选择器（链接）",
+    "description": "分离式选择器设置标签"
+  },
+  "settingTrackingModeOn": {
+    "message": "ON（包含背景色）",
+    "description": "分离式选择器ON标签"
+  },
+  "settingTrackingModeOff": {
+    "message": "OFF",
+    "description": "分离式选择器OFF标签"
+  },
+  "settingBgMode": {
+    "message": "分离式选择器背景",
+    "description": "分离式选择器背景设置标签"
+  },
+  "settingBgModeOn": {
+    "message": "ON（包含透明背景）",
+    "description": "分离式选择器背景ON标签"
+  },
+  "settingBgModeOff": {
+    "message": "OFF",
+    "description": "分离式选择器背景OFF标签"
+  },
+  "settingLineTypeSolid": {
+    "message": "实线（solid）",
+    "description": "实线标签"
+  },
+  "settingLineTypeDashed": {
+    "message": "虚线（dashed）",
+    "description": "虚线标签"
+  },
+  "settingLineTypeDotted": {
+    "message": "点线（dotted）",
+    "description": "点线标签"
+  },
+  "settingSaveButton": {
+    "message": "保存设置",
+    "description": "保存设置按钮"
+  },
+  "settingOn": {
+    "message": "ON",
+    "description": "ON标签"
+  },
+  "settingOff": {
+    "message": "OFF",
+    "description": "OFF标签"
+  },
+  "refBasedOn": {
+    "message": "基于CSSViewer构建。",
+    "description": "CSSViewer参考说明"
+  },
+  "refContrast": {
+    "message": "明度对比检查功能参考了WebAIM的Color Contrast Checker。",
+    "description": "WebAIM参考说明"
+  },
+  "refDiagonal": {
+    "message": "参考了无障碍组件对角线工具的诊断方法。",
+    "description": "对角线工具参考说明"
+  },
+  "refPageRuler": {
+    "message": "计算宽度/高度为auto的元素的方法从Page Ruler获得灵感。",
+    "description": "Page Ruler参考说明"
+  },
+  "refMoreLink": {
+    "message": "更多",
+    "description": "更多链接文本"
+  },
+  "supportDesc": {
+    "message": "如有疑问或改进建议，请随时联系我们。",
+    "description": "支持说明"
+  },
+  "supportLink": {
+    "message": "联系我们",
+    "description": "联系链接文本"
+  },
+  "settingSaved": {
+    "message": "设置已成功保存。",
+    "description": "设置保存消息"
+  },
+  "translationDisclaimer": {
+    "message": "翻译由机器翻译提供，可能包含错误。如发现不准确之处，请报告。",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "报告翻译错误",
+    "description": "Report translation error link"
+  }
+}

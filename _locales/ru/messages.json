@@ -1,0 +1,294 @@
+{
+  "extName": {
+    "message": "KWCAG A11y Inspector",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Инструмент измерения рабочих критериев KWCAG 2.1.3",
+    "description": "Extension description"
+  },
+  "contextMenuCalc": {
+    "message": "Открыть ручной калькулятор",
+    "description": "Context menu item"
+  },
+  "alertChromeInternal": {
+    "message": "Не работает на внутренних страницах Chrome/Edge.",
+    "description": "Internal page warning"
+  },
+  "alertStorePage": {
+    "message": "Не работает на страницах магазина.",
+    "description": "Store page warning"
+  },
+  "alertRestrictedPage": {
+    "message": "Невозможно использовать расширение на этой странице.\n(Ограниченная страница)",
+    "description": "Restricted page warning"
+  },
+  "alertExtensionError": {
+    "message": "Произошла ошибка при выполнении расширения.\nПожалуйста, проверьте консоль.",
+    "description": "General error message"
+  },
+  "calcTitle": {
+    "message": "Ручной расчет",
+    "description": "Calculator title"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "Height label"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "Width label"
+  },
+  "calcConfirm": {
+    "message": "Подтвердить",
+    "description": "Confirm button"
+  },
+  "calcClose": {
+    "message": "Закрыть",
+    "description": "Close button"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "Results title"
+  },
+  "calcStandard": {
+    "message": "Стандарт",
+    "description": "Standard label"
+  },
+  "errorInvalidInput": {
+    "message": "Неверное значение ввода.",
+    "description": "Invalid input error"
+  },
+  "errorMissingElement": {
+    "message": "Необходимый элемент не найден.",
+    "description": "Element missing error"
+  },
+  "errorStorage": {
+    "message": "Не удается прочитать данные из хранилища.",
+    "description": "Storage error"
+  },
+  "errorCalculation": {
+    "message": "Произошла ошибка во время расчета.",
+    "description": "Calculation error"
+  },
+  "errorInputValidation": {
+    "message": "Допускаются только положительные числа.",
+    "description": "Input validation error"
+  },
+  "errorUIInit": {
+    "message": "Не удалось инициализировать интерфейс.",
+    "description": "UI initialization error"
+  },
+  "errorResultDisplay": {
+    "message": "Ошибка при отображении результатов.",
+    "description": "Result display error"
+  },
+  "errorCalcInit": {
+    "message": "Не удалось инициализировать калькулятор.",
+    "description": "Calculator initialization error"
+  },
+  "pauseMessage": {
+    "message": "Приостановлено. Нажмите ESC для продолжения.",
+    "description": "Pause message"
+  },
+  "resumeMessage": {
+    "message": "Возобновлено.",
+    "description": "Resume message"
+  },
+  "optionPageTitle": {
+    "message": "kwcag a11y inspector - Параметры",
+    "description": "Options page title"
+  },
+  "optionVersion": {
+    "message": "Версия",
+    "description": "Version label"
+  },
+  "optionMenu": {
+    "message": "Меню параметров",
+    "description": "Options menu title"
+  },
+  "optionContent": {
+    "message": "Содержание параметров",
+    "description": "Options content title"
+  },
+  "menuIntro": {
+    "message": "Введение",
+    "description": "Introduction menu"
+  },
+  "menuShortcuts": {
+    "message": "Сочетания клавиш",
+    "description": "Shortcuts menu"
+  },
+  "menuSettings": {
+    "message": "Настройки",
+    "description": "Settings menu"
+  },
+  "menuReferences": {
+    "message": "Ссылки",
+    "description": "References menu"
+  },
+  "menuSupport": {
+    "message": "Поддержка",
+    "description": "Support menu"
+  },
+  "introDesc1": {
+    "message": "Предоставляет функциональность для измерения тестовых элементов 2.1.3 Работоспособность KWCAG 2.1",
+    "description": "Introduction description 1"
+  },
+  "introDesc2": {
+    "message": "Предоставляет вспомогательную функциональность, полезную при измерении тестовых элементов 1.3.3 Цветовой контраст",
+    "description": "Introduction description 2"
+  },
+  "introDesc3": {
+    "message": "Стандарт: box + padding + border",
+    "description": "Introduction description 3"
+  },
+  "introTip": {
+    "message": "совет",
+    "description": "Tip label"
+  },
+  "introWarning1": {
+    "message": "* Примечание: К сожалению, из-за особенностей Chrome содержимое внутри iframe/frame не может быть проверено.",
+    "description": "Introduction warning 1"
+  },
+  "introWarning2": {
+    "message": "* Вы можете открыть ручной калькулятор из контекстного меню, отображаемого при щелчке правой кнопкой мыши.",
+    "description": "Introduction warning 2"
+  },
+  "shortcutDesc": {
+    "message": "Использование сочетаний клавиш более удобно.",
+    "description": "Shortcut description"
+  },
+  "shortcutEsc": {
+    "message": "Пауза / Возобновить (доступно при активации)",
+    "description": "ESC shortcut description"
+  },
+  "settingResolution": {
+    "message": "Стандарт разрешения",
+    "description": "Resolution setting label"
+  },
+  "settingMonitor": {
+    "message": "Стандарт монитора",
+    "description": "Monitor setting label"
+  },
+  "settingContrastCheck": {
+    "message": "Проверка контраста",
+    "description": "Contrast check setting label"
+  },
+  "settingSelectorLine": {
+    "message": "Линия селектора",
+    "description": "Selector line setting label"
+  },
+  "settingSelectorColor": {
+    "message": "Цвет селектора",
+    "description": "Selector color setting label"
+  },
+  "settingSelectorBorder": {
+    "message": "Граница селектора",
+    "description": "Selector border setting label"
+  },
+  "settingLinkMode": {
+    "message": "Режим ссылки",
+    "description": "Link mode setting label"
+  },
+  "settingLinkModeOn": {
+    "message": "ВКЛ (ограничено элементами a, button, input)",
+    "description": "Link mode ON label"
+  },
+  "settingLinkModeDesc": {
+    "message": "- Проверять только до родительских элементов",
+    "description": "Link mode description"
+  },
+  "settingLinkModeOff": {
+    "message": "ВЫКЛ (все элементы)",
+    "description": "Link mode OFF label"
+  },
+  "settingTrackingMode": {
+    "message": "Отдельный селектор (ссылка)",
+    "description": "Tracking mode setting label"
+  },
+  "settingTrackingModeOn": {
+    "message": "ВКЛ (включить цвет фона)",
+    "description": "Tracking mode ON label"
+  },
+  "settingTrackingModeOff": {
+    "message": "ВЫКЛ",
+    "description": "Tracking mode OFF label"
+  },
+  "settingBgMode": {
+    "message": "Фон отдельного селектора",
+    "description": "Background mode setting label"
+  },
+  "settingBgModeOn": {
+    "message": "ВКЛ (включить прозрачный фон)",
+    "description": "Background mode ON label"
+  },
+  "settingBgModeOff": {
+    "message": "ВЫКЛ",
+    "description": "Background mode OFF label"
+  },
+  "settingLineTypeSolid": {
+    "message": "Сплошная",
+    "description": "Solid line label"
+  },
+  "settingLineTypeDashed": {
+    "message": "Пунктирная",
+    "description": "Dashed line label"
+  },
+  "settingLineTypeDotted": {
+    "message": "Точечная",
+    "description": "Dotted line label"
+  },
+  "settingSaveButton": {
+    "message": "Сохранить настройки",
+    "description": "Save settings button"
+  },
+  "settingOn": {
+    "message": "ВКЛ",
+    "description": "ON label"
+  },
+  "settingOff": {
+    "message": "ВЫКЛ",
+    "description": "OFF label"
+  },
+  "refBasedOn": {
+    "message": "Создано на основе CSSViewer.",
+    "description": "CSSViewer reference description"
+  },
+  "refContrast": {
+    "message": "Функция проверки контраста ссылается на Color Contrast Checker от WebAIM.",
+    "description": "WebAIM reference description"
+  },
+  "refDiagonal": {
+    "message": "Ссылается на метод диагностики инструмента диагонали компонента доступности.",
+    "description": "Diagonal tool reference description"
+  },
+  "refPageRuler": {
+    "message": "Идея расчета элементов с автоматической шириной/высотой взята из Page Ruler.",
+    "description": "Page Ruler reference description"
+  },
+  "refMoreLink": {
+    "message": "подробнее",
+    "description": "More link text"
+  },
+  "supportDesc": {
+    "message": "Пожалуйста, свяжитесь с нами в любое время, если у вас есть вопросы или предложения по улучшению.",
+    "description": "Support description"
+  },
+  "supportLink": {
+    "message": "Связаться с нами",
+    "description": "Contact link text"
+  },
+  "settingSaved": {
+    "message": "Настройки успешно сохранены.",
+    "description": "Settings saved message"
+  },
+  "translationDisclaimer": {
+    "message": "Переводы предоставляются машинным переводом и могут содержать ошибки. Пожалуйста, сообщайте о неточностях.",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "Сообщить об ошибке перевода",
+    "description": "Report translation error link"
+  }
+}

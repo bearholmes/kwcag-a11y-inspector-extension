@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>kwcag a11y inspector - Option</title>
+  </head>
+  <body>
+    <div id="dkWrap" class="path_admin">
+      <header id="dkHead">
+        <div class="inner_head">
+          <h1 class="tit">kwcag a11y inspector</h1>
+          <div class="info">버전 : 0.13.0</div>
+        </div>
+      </header>
+      <!-- // dkHead -->
+      <hr class="hide" />
+      <main id="dkContent">
+        <div id="cMain">
+          <div id="mFeature" class="">
+            <div id="dkGnb">
+              <h2 class="screen_out">옵션 메뉴</h2>
+              <ul class="gnb_comm">
+                <li><a href="#idx01" class="link_gnb">소개</a></li>
+                <li><a href="#idx02" class="link_gnb">단축키 안내</a></li>
+                <li><a href="#idx03" class="link_gnb">환경설정</a></li>
+                <li><a href="#idx04" class="link_gnb">참고자료</a></li>
+                <li><a href="#idx05" class="link_gnb">Support</a></li>
+              </ul>
+            </div>
+          </div>
+          <article id="mArticle">
+            <h2 id="dkBody" class="screen_out">옵션 본문</h2>
+            <div class="info_box">
+              <h2 id="idx01" class="tit">소개</h2>
+              <div>
+                <ul class="txt_item">
+                  <li>
+                    KWCAG 2.1의 2.1.3 조작 가능 검사항목을 측정하기 위한 기능
+                    제공
+                  </li>
+                  <li>
+                    1.3.3 텍스트 콘텐츠의 명도 대비 검사항목을 측정시 도움될 수
+                    있는 보조 기능 제공
+                  </li>
+                  <li>기준 : box + padding + border</li>
+                </ul>
+              </div>
+              <div style="margin-top: 20px">
+                <strong>tip</strong>
+                <ul class="txt_item">
+                  <li>
+                    * 주의사항 : 아쉽게도 크롬의 특성상 iframe, frame 내부
+                    문서는 확인할 수 없습니다.
+                  </li>
+                  <li>
+                    * 우클릭하면 노출되는 컨텍스트 메뉴에서 수동계산 팝업을 열
+                    수 있습니다.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info_box">
+              <h2 id="idx02" class="tit">단축키 안내</h2>
+              <div>
+                <ul class="txt_item">
+                  <li>
+                    단축키를 이용하면 좀 더 편리하게 이용할 수 있습니다.
+                    <ul style="margin-left: 15px">
+                      <li>
+                        <kbd>Esc</kbd> : 일시정지 / 재개 (활성화된 상태에서
+                        가능)
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="info_box">
+              <h2 id="idx03" class="tit">환경설정</h2>
+              <div class="box">
+                <div class="info_item">
+                  <label for="resStd" class="tit_lab">해상도 기준</label>
+                  <div class="cont_item">
+                    <div class="box_inptf">
+                      <select id="resStd" class="inp_comm">
+                        <option value="1280x960" id="1280x960">
+                          1280x960 UVGA
+                        </option>
+                        <option value="1280x1024" id="1280x1024">
+                          1280x1024 SXGA
+                        </option>
+                        <option value="1366x768" id="1366x768">
+                          1366x768 HD
+                        </option>
+                        <option value="1440x1050" id="1440x1050">
+                          1440x1050 SXGA+
+                        </option>
+                        <option value="1440x900" id="1440x900">
+                          1440x900 WXGA+
+                        </option>
+                        <option value="1600x900" id="1600x900">
+                          1600x900 HD+
+                        </option>
+                        <option value="1600x1200" id="1600x1200">
+                          1600x1200 UXGA
+                        </option>
+                        <option value="1680x1050" id="1680x1050">
+                          1680x1050 WSXGA+
+                        </option>
+                        <option value="1920x1080" id="1920x1080">
+                          1920x1080 FHD
+                        </option>
+                        <option value="1920x1200" id="1920x1200">
+                          1920x1200 WUXGA
+                        </option>
+                        <option value="2560x1440" id="2560x1440">
+                          2560x1440 WQHD
+                        </option>
+                        <option value="2560x1600" id="2560x1600">
+                          2560x1600 WQXGA
+                        </option>
+                        <option value="3200x1800" id="3200x1800">
+                          3200x1800 QHD+
+                        </option>
+                        <option value="3840x2160" id="3840x2160">
+                          3840x2160 UHD
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <label for="moniStd" class="tit_lab">모니터 기준</label>
+                  <div class="cont_item">
+                    <div class="box_inptf">
+                      <select id="moniStd" class="inp_comm">
+                        <option value="11" id="11">11 inch</option>
+                        <option value="12" id="12">12 inch</option>
+                        <option value="13" id="13">13 inch</option>
+                        <option value="14" id="14">14 inch</option>
+                        <option value="15" id="15">15 inch</option>
+                        <option value="17" id="17">17 inch</option>
+                        <option value="19" id="19">19 inch</option>
+                        <option value="20" id="20">20 inch</option>
+                        <option value="21" id="21">21 inch</option>
+                        <option value="22" id="22">22 inch</option>
+                        <option value="23" id="23">23 inch</option>
+                        <option value="24" id="24">24 inch</option>
+                        <option value="27" id="27">27 inch</option>
+                        <option value="30" id="30">30 inch</option>
+                        <option value="32" id="32">32 inch</option>
+                        <option value="36" id="36">36 inch</option>
+                        <option value="38" id="38">38 inch</option>
+                        <option value="40" id="40">40 inch</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab">명도대비 체크</span>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input type="radio" id="ccShowOn" name="ccShow" />
+                        <label for="ccShowOn">ON</label>
+                        <input
+                          type="radio"
+                          id="ccShowOff"
+                          name="ccShow"
+                          style="margin-left: 20px"
+                        />
+                        <label for="ccShowOff">OFF</label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab">선택자 라인</span>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input type="radio" id="linetype1" name="lineType" />
+                        <label for="linetype1">실선(soild)</label>
+                        <input
+                          type="radio"
+                          id="linetype2"
+                          name="lineType"
+                          style="margin-left: 20px"
+                        />
+                        <label for="linetype2">점선(dashed)</label>
+                        <input
+                          type="radio"
+                          id="linetype3"
+                          name="lineType"
+                          style="margin-left: 20px"
+                        />
+                        <label for="linetype3">점선(dotted)</label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <label for="colorType" class="tit_lab">선택자 색상</label>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <div class="box_inptf">
+                        <input
+                          type="text"
+                          id="colorType"
+                          class="inp_comm jscolor"
+                          value="ff0000"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <label for="bordersize" class="tit_lab">선택자 border</label>
+                  <div class="cont_item">
+                    <div class="box_inptf">
+                      <span class="inp_comm">
+                        <input
+                          type="number"
+                          id="bordersize"
+                          name="bordersize"
+                          class="inp_comm"
+                          max="10"
+                          min="1"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab">링크 모드</span>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input type="radio" id="linkModeOn" name="linkMode" />
+                        <label for="linkModeOn"
+                          >ON (a, button, input요소로 한정)</label
+                        >
+                        - 부모 요소까지만 체크
+                        <input
+                          type="radio"
+                          id="linkModeOff"
+                          name="linkMode"
+                          style="margin-left: 20px"
+                        />
+                        <label for="linkModeOff">OFF (모든 요소)</label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab">분리형 선택자(link)</span>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input
+                          type="radio"
+                          id="trackingModeOn"
+                          name="trackingMode"
+                        />
+                        <label for="trackingModeOn">ON (배경색 포함)</label>
+                        <input
+                          type="radio"
+                          id="trackingModeOff"
+                          name="trackingMode"
+                          style="margin-left: 20px"
+                        />
+                        <label for="trackingModeOff">OFF</label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab">분리형 선택자 배경</span>
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input type="radio" id="bgModeOn" name="bgMode" />
+                        <label for="bgModeOn">ON (투명배경 포함)</label>
+                        <input
+                          type="radio"
+                          id="bgModeOff"
+                          name="bgMode"
+                          style="margin-left: 20px"
+                        />
+                        <label for="bgModeOff">OFF</label>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="alert-info" role="alert">
+                  <button id="resBtn" class="btn_g">설정</button>
+                  <span id="resStatus" class="txt"></span>
+                </div>
+              </div>
+            </div>
+            <div class="info_box">
+              <h2 id="idx04" class="tit">참고자료</h2>
+              <ul>
+                <li>
+                  CSSViewer를 기반으로 만들어졌습니다.
+                  <a
+                    href="https://chrome.google.com/webstore/detail/cssviewer/ggfgijbpiheegefliciemofobhmofgce?hl=ko"
+                    target="_blank"
+                    class="link_comm"
+                    >more</a
+                  >
+                </li>
+                <li>
+                  명도대비 체크 기능은 WebAIM의 Color Contrast Checker를
+                  참고하였습니다.
+                  <a
+                    href="https://webaim.org/resources/contrastchecker"
+                    target="_blank"
+                    class="link_comm"
+                    >more</a
+                  >
+                </li>
+                <li>
+                  접근성 컴포넌트 대각선도구 툴의 진단 방식을 참고하였습니다.
+                  <a
+                    href="https://chrome.google.com/webstore/detail/chogmnfcfckihakaealpjfjdkbjmkpok?hl=ko"
+                    target="_blank"
+                    class="link_comm"
+                    >more</a
+                  >
+                </li>
+                <li>
+                  가로/세로 길이가 auto의 요소를 계산하는 방법은 Page Ruler에서
+                  아이디어를 얻었습니다.
+                  <a
+                    href="https://chrome.google.com/webstore/detail/page-ruler/jlpkojjdgbllmedoapgfodplfhcbnbpn?hl=ko"
+                    target="_blank"
+                    class="link_comm"
+                    >more</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="info_box info_lst">
+              <h2 id="idx05" class="tit">Support</h2>
+              <ul>
+                <li>문의사항이나 개선의견이 있으면 언제든지 연락주세요.</li>
+                <li>
+                  <a
+                    href=" https://chrome.google.com/webstore/detail/dk-a11y-inspector/ngcmkfaolkgkjbddhjnhgoekgaamjibo/support?hl=ko"
+                    target="_blank"
+                    class="link_comm"
+                    >문의하기</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </article>
+          <!--// mArticle -->
+        </div>
+        <!-- // cMain -->
+      </main>
+      <!-- // dkContent -->
+      <hr class="hide" />
+      <footer id="dkFoot" class="footer_comm">
+        <small class="txt_copyright"
+          ><a href="https://github.com/bearholmes" class="link_daum"
+            >&copy; bearholmes.</a
+          ></small
+        >
+      </footer>
+      <!-- // dkFoot -->
+    </div>
+    <!-- // dkWrap -->
+    <script type="module" src="settings.js"></script>
+  </body>
+</html>
