@@ -23,6 +23,15 @@
     "page": "src/options/settings.html",
     "browser_style": true
   },
-  "permissions": ["contextMenus", "tabs", "scripting", "storage", "notifications"],
-  "host_permissions": ["https://*/*", "http://*/*"]
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "scripting",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": ["https://*/*", "http://*/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }

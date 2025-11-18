@@ -4,6 +4,8 @@
  * @module service-worker
  */
 
+import { StorageManager } from '../shared/storage-utils.js';
+
 /**
  * 기본 설정 값
  * @typedef {Object} DefaultSettings
@@ -58,15 +60,15 @@ chrome.runtime.onInstalled.addListener((details) => {
         bordersize: '2',
       };
 
-      chrome.storage.sync.set(defaultSettings).catch((error) => {
+      StorageManager.setMultiple(defaultSettings).catch((error) => {
         console.error(
           '[KWCAG Inspector] Failed to save default settings:',
-          error
+          error,
         );
       });
     } else if (details.reason === 'update') {
       console.log(
-        `[KWCAG Inspector] Extension updated from ${details.previousVersion}`
+        `[KWCAG Inspector] Extension updated from ${details.previousVersion}`,
       );
     }
   } catch (error) {
@@ -124,7 +126,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     // Chrome 내부 페이지 또는 권한 없는 페이지인 경우
     if (error.message?.includes('Cannot access')) {
       console.warn(
-        '[KWCAG Inspector] Cannot inject script on this page (restricted)'
+        '[KWCAG Inspector] Cannot inject script on this page (restricted)',
       );
     }
   }
@@ -178,10 +180,12 @@ chrome.action.onClicked.addListener(async (tab) => {
     // 사용자에게 친절한 에러 메시지 표시
     if (error.message?.includes('Cannot access')) {
       showNotification(
-        '이 페이지에서는 확장프로그램을 사용할 수 없습니다.\n(권한이 제한된 페이지입니다)'
+        '이 페이지에서는 확장프로그램을 사용할 수 없습니다.\n(권한이 제한된 페이지입니다)',
       );
     } else {
-      showNotification('확장프로그램 실행 중 오류가 발생했습니다.\n콘솔을 확인해주세요.');
+      showNotification(
+        '확장프로그램 실행 중 오류가 발생했습니다.\n콘솔을 확인해주세요.',
+      );
     }
   }
 });

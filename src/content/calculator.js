@@ -1,12 +1,13 @@
 // Import CSS
 import './calculator.css';
+import { StorageManager } from '../shared/storage-utils.js';
 
 (function () {
   // ==================== CONSTANTS ====================
 
   /**
    * UI 요소 ID 상수
-   * @const {Object}
+   * @constant {Object}
    */
   const ELEMENT_IDS = {
     CONTAINER: 'dkInspect_cals',
@@ -19,7 +20,7 @@ import './calculator.css';
 
   /**
    * CSS 클래스 상수
-   * @const {Object}
+   * @constant {Object}
    */
   const CSS_CLASSES = {
     PROPERTY: 'dkInspect_property',
@@ -28,7 +29,7 @@ import './calculator.css';
 
   /**
    * 스토리지 키 상수
-   * @const {Object}
+   * @constant {Object}
    */
   const STORAGE_KEYS = {
     RESOLUTIONS: 'resolutions',
@@ -37,7 +38,7 @@ import './calculator.css';
 
   /**
    * 계산 상수
-   * @const {Object}
+   * @constant {Object}
    */
   const CALCULATION_CONSTANTS = {
     MM_PER_INCH: 25.4,
@@ -47,7 +48,7 @@ import './calculator.css';
 
   /**
    * 기본 에러 메시지
-   * @const {Object}
+   * @constant {Object}
    */
   const ERROR_MESSAGES = {
     INVALID_INPUT: '유효하지 않은 입력값입니다.',
@@ -82,47 +83,6 @@ import './calculator.css';
       return null;
     }
   };
-
-  /**
-   * Chrome Storage Sync API를 이용하여 저장된 데이터를 읽어오는 함수입니다.
-   *
-   * @async
-   * @function readData
-   * @param {string} myKey - 읽어올 데이터의 키
-   * @returns {Promise<Object>} 저장소에서 읽어온 데이터를 포함한 Promise 객체
-   * @throws {Error} 스토리지 읽기 실패 시 에러
-   * @example
-   * const data = await readData('myKey');
-   */
-  function readData(myKey) {
-    return new Promise((resolve, reject) => {
-      try {
-        // 입력 검증
-        if (!myKey || typeof myKey !== 'string') {
-          reject(new Error('Invalid key provided to readData'));
-          return;
-        }
-
-        // Chrome Storage API 사용 가능 여부 확인
-        if (!chrome || !chrome.storage || !chrome.storage.sync) {
-          reject(new Error('Chrome storage API not available'));
-          return;
-        }
-
-        // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
-        chrome.storage.sync.get(myKey, function (data) {
-          if (chrome.runtime.lastError) {
-            reject(new Error(chrome.runtime.lastError.message));
-            return;
-          }
-          // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
-          resolve(data);
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
 
   /**
    * 숫자 입력값의 유효성을 검증하는 함수입니다.
@@ -451,20 +411,21 @@ import './calculator.css';
           throw new Error('Callback must be a function');
         }
 
-        // "chrome.storage.sync" API를 이용하여 저장된 "resolutions"와 "monitors" 값을 가져옵니다.
-        const resolutionsData = await readData(STORAGE_KEYS.RESOLUTIONS);
-        const monitorsData = await readData(STORAGE_KEYS.MONITORS);
+        // StorageManager를 이용하여 저장된 "resolutions"와 "monitors" 값을 가져옵니다.
+        const data = await StorageManager.getMultiple([
+          STORAGE_KEYS.RESOLUTIONS,
+          STORAGE_KEYS.MONITORS,
+        ]);
 
         // 데이터 검증
-        if (!resolutionsData || !resolutionsData.resolutions) {
+        if (!data || !data.resolutions) {
           throw new Error(`${ERROR_MESSAGES.STORAGE_ERROR}: resolutions`);
         }
-        if (!monitorsData || !monitorsData.monitors) {
+        if (!data || !data.monitors) {
           throw new Error(`${ERROR_MESSAGES.STORAGE_ERROR}: monitors`);
         }
 
-        const { resolutions } = resolutionsData;
-        const { monitors } = monitorsData;
+        const { resolutions, monitors } = data;
 
         // 계산 결과를 저장할 객체를 생성합니다.
         const cb = {};

@@ -1,12 +1,12 @@
 /*jshint browser: true */
-/*global chrome */
 
 // ============================================================================
 // Imports
 // ============================================================================
 import './settings.css';
-import Pickr from '@simonwep/pickr';
-import '@simonwep/pickr/dist/themes/nano.min.css';
+// import Pickr from '@simonwep/pickr';
+// import '@simonwep/pickr/dist/themes/nano.min.css';
+import { StorageManager } from '../shared/storage-utils.js';
 
 // ============================================================================
 // Constants - 매직 넘버를 명명된 상수로 추출
@@ -91,20 +91,13 @@ function safeStorageGet(key, callback) {
       throw new Error('Callback must be a function');
     }
 
-    chrome.storage.sync.get(key, function (result) {
-      try {
-        if (chrome.runtime.lastError) {
-          console.error(
-            `Chrome storage error for key "${key}":`,
-            chrome.runtime.lastError,
-          );
-          return;
-        }
-        callback(result);
-      } catch (error) {
-        console.error(`Error in storage callback for key "${key}":`, error);
-      }
-    });
+    StorageManager.get(key)
+      .then((value) => {
+        callback({ [key]: value });
+      })
+      .catch((error) => {
+        console.error(`Chrome storage error for key "${key}":`, error);
+      });
   } catch (error) {
     console.error(`Error in safeStorageGet for key "${key}":`, error);
   }
@@ -125,20 +118,15 @@ function safeStorageSet(data, callback) {
       throw new Error('Data must be a valid object');
     }
 
-    chrome.storage.sync.set(data, function () {
-      try {
-        if (chrome.runtime.lastError) {
-          console.error('Chrome storage set error:', chrome.runtime.lastError);
-          return;
-        }
-
+    StorageManager.setMultiple(data)
+      .then(() => {
         if (callback && typeof callback === 'function') {
           callback();
         }
-      } catch (error) {
-        console.error('Error in storage set callback:', error);
-      }
-    });
+      })
+      .catch((error) => {
+        console.error('Chrome storage set error:', error);
+      });
   } catch (error) {
     console.error('Error in safeStorageSet:', error);
   }

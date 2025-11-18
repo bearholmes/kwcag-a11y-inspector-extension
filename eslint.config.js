@@ -22,6 +22,7 @@ export default [
         HTMLElement: 'readonly',
         Event: 'readonly',
         Promise: 'readonly',
+        alert: 'readonly',
       },
     },
     rules: {

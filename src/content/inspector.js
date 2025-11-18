@@ -1,5 +1,6 @@
 // Import CSS
 import './inspector.css';
+import { StorageManager } from '../shared/storage-utils.js';
 
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
@@ -97,41 +98,31 @@ const CONSTANTS = {
   },
 };
 
-/**
- * Chrome Storage API를 사용하여 저장된 데이터를 읽어오는 함수
- * @param {string} myKey - 읽어올 데이터의 키
- * @returns {Promise} 저장된 데이터를 포함하는 Promise 객체
- */
-function readData(myKey) {
-  // Promise 객체를 생성합니다.
-  return new Promise((resolve, reject) => {
-    try {
-      // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
-      chrome.storage.sync.get(myKey, function (data) {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
-          resolve(data);
-        }
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
-
 async function myApp() {
-  // "chrome.storage.sync" API를 이용하여, 여러 개의 데이터를 읽어옵니다.
-  const { ccshow } = await readData('ccshow');
-  const { resolutions } = await readData('resolutions');
-  const { monitors } = await readData('monitors');
-  const { linkmode } = await readData('linkmode');
-  const { bgmode } = await readData('bgmode');
-  const { linetype } = await readData('linetype');
-  const { colortype } = await readData('colortype');
-  const { trackingmode } = await readData('trackingmode');
-  const { bordersize = 2 } = await readData('bordersize');
+  // StorageManager를 이용하여 여러 개의 데이터를 한 번에 읽어옵니다.
+  const settings = await StorageManager.getMultiple([
+    'ccshow',
+    'resolutions',
+    'monitors',
+    'linkmode',
+    'bgmode',
+    'linetype',
+    'colortype',
+    'trackingmode',
+    'bordersize',
+  ]);
+
+  const {
+    ccshow,
+    resolutions,
+    monitors,
+    linkmode,
+    bgmode,
+    linetype,
+    colortype,
+    trackingmode,
+    bordersize = 2,
+  } = settings;
 
   const [width, height] = resolutions.split('x');
   const diagonal = Math.sqrt(
@@ -374,7 +365,8 @@ async function myApp() {
   }
 
   // 주어진 element의 CSS 속성 값을 설정하는 함수
-  function SetCSSProperty(element, property) {
+  // eslint-disable-next-line no-unused-vars
+  function _SetCSSProperty(element, property) {
     const document = GetCurrentDocument();
     const li = document.getElementById(`dkInspect_${property}`);
 
@@ -676,7 +668,8 @@ async function myApp() {
   }
 
   // CSS 속성이 속한 카테고리 전체를 보여주는 함수
-  function ShowCSSCategory(category) {
+  // eslint-disable-next-line no-unused-vars
+  function _ShowCSSCategory(category) {
     const document = GetCurrentDocument();
     // div 엘리먼트 가져오기
     const div = document.getElementById(`dkInspect_${category}`);
@@ -1629,7 +1622,7 @@ async function myApp() {
   /*
    * dkInspect entry-point
    */
-  let dkInspect = new DkInspect();
+  const dkInspect = new DkInspect();
   shortcut.initialize();
 
   if (dkInspect.IsEnabled()) {
