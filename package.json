@@ -3,7 +3,7 @@
   "version": "0.13.0",
   "description": "KWCAG 2.1 Accessibility Inspector - Chrome Extension for measuring operable criteria",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --watch --mode development",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src/**/*.js",
@@ -17,6 +17,10 @@
   },
   "author": "bearholmes <bearholmes@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/bearholmes/kwcag-a11y-inspector-extension"

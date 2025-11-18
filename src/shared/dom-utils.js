@@ -6,7 +6,7 @@
 /**
  * ID로 요소 조회
  * @param {string} id - 요소 ID
- * @returns {HTMLElement|null}
+ * @returns {HTMLElement|null} 조회된 DOM 요소 또는 null
  */
 export function $(id) {
   try {
@@ -28,7 +28,7 @@ export function $(id) {
  * @param {string} [options.className] - CSS 클래스명
  * @param {string} [options.textContent] - 텍스트 내용
  * @param {Object} [options.attrs] - 속성 객체
- * @returns {HTMLElement}
+ * @returns {HTMLElement} 생성된 DOM 요소
  */
 export function createElement(
   tag,
