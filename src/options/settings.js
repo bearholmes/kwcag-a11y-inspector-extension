@@ -7,6 +7,7 @@ import './settings.css';
 // import Pickr from '@simonwep/pickr';
 // import '@simonwep/pickr/dist/themes/nano.min.css';
 import { StorageManager } from '../shared/storage-utils.js';
+import { $ } from '../shared/dom-utils.js';
 
 // ============================================================================
 // Constants - 매직 넘버를 명명된 상수로 추출
@@ -39,38 +40,6 @@ const TRACKING_MODE_ENABLED = 'true';
 // ============================================================================
 // Utility Functions - 유틸리티 함수
 // ============================================================================
-
-/**
- * DOM 요소를 ID로 조회하는 헬퍼 함수
- * $ 함수를 정의합니다. 이 함수는 ID를 인자로 받아 해당 ID를 가진 요소를 반환합니다.
- *
- * @param {string} elementId - 조회할 요소의 ID
- * @returns {HTMLElement|null} ID에 해당하는 DOM 요소, 없으면 null
- * @throws {Error} elementId가 문자열이 아닌 경우
- *
- * @example
- * const button = $('myButton');
- * if (button) {
- *   button.addEventListener('click', handleClick);
- * }
- */
-const $ = function (elementId) {
-  try {
-    // 입력 검증
-    if (typeof elementId !== 'string') {
-      throw new Error('Element ID must be a string');
-    }
-
-    if (!elementId.trim()) {
-      throw new Error('Element ID cannot be empty');
-    }
-
-    return document.getElementById(elementId);
-  } catch (error) {
-    console.error(`Error in $() function: ${error.message}`, error);
-    return null;
-  }
-};
 
 /**
  * Chrome Storage에서 값을 안전하게 가져오는 헬퍼 함수

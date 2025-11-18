@@ -86,8 +86,9 @@ textarea,
 button {
   font-size: 14px;
   line-height: 1.5;
-  font-family: NanumGothic, 나눔고딕, Helvetica, 'Apple SD Gothic Neo',
-    AppleGothic, Arial, sans-serif;
+  font-family:
+    NanumGothic, 나눔고딕, Helvetica, 'Apple SD Gothic Neo', AppleGothic, Arial,
+    sans-serif;
   color: #000;
   letter-spacing: -1px;
 } /* color값은 디자인가이드에 맞게사용 */
@@ -173,7 +174,6 @@ var {
   overflow: visible;
   width: auto;
   clear: both;
-  *zoom: 1;
 }
 .clear_g:after {
   display: block;

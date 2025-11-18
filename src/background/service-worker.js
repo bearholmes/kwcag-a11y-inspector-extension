@@ -40,8 +40,6 @@ chrome.runtime.onInstalled.addListener((details) => {
   try {
     // 익스텐션을 처음 설치한 경우
     if (details.reason === 'install') {
-      console.log('[KWCAG Inspector] Extension installed');
-
       // 옵션 페이지를 새 탭으로 열기
       chrome.tabs.create({ url: 'option.html' }).catch((error) => {
         console.error('[KWCAG Inspector] Failed to open options page:', error);
@@ -66,10 +64,6 @@ chrome.runtime.onInstalled.addListener((details) => {
           error,
         );
       });
-    } else if (details.reason === 'update') {
-      console.log(
-        `[KWCAG Inspector] Extension updated from ${details.previousVersion}`,
-      );
     }
   } catch (error) {
     console.error('[KWCAG Inspector] Error in onInstalled listener:', error);
@@ -117,8 +111,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         target: { tabId: tab.id },
         files: ['dist/content/calculator.css'],
       });
-
-      console.log('[KWCAG Inspector] Calculator popup injected');
     }
   } catch (error) {
     console.error('[KWCAG Inspector] Error in context menu handler:', error);
@@ -172,8 +164,6 @@ chrome.action.onClicked.addListener(async (tab) => {
       target: { tabId: tab.id },
       files: ['dist/content/inspector.css'],
     });
-
-    console.log('[KWCAG Inspector] Inspector activated');
   } catch (error) {
     console.error('[KWCAG Inspector] Error in action click handler:', error);
 
