@@ -1,6 +1,19 @@
 // Import CSS
 import './inspector.css';
-import { StorageManager } from '../shared/storage-utils.js';
+import { StorageManager } from '../../shared/storage-utils.js';
+import { CONSTANTS } from './constants.js';
+
+// TODO: Phase 2 Week 1 Day 3-4 작업 시 아래 주석 해제하고 로컬 함수 정의 제거
+// import { HEX_CHARS } from './constants.js';
+// import {
+//   DecToHex,
+//   RGBToHex,
+//   RGBToHexStr,
+//   getRGB,
+//   getsRGB,
+//   getL,
+//   getContrastRatio,
+// } from './color-utils.js';
 
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
@@ -14,89 +27,6 @@ import { StorageManager } from '../shared/storage-utils.js';
  * This source code is licensed under the GNU General Public License,
  * Version 2. See the file COPYING for more details.
  */
-
-/*
- * ============================================================================
- * CONSTANTS SECTION
- * ============================================================================
- */
-
-// COLOR & STYLING CONSTANTS
-const CONSTANTS = {
-  // 색상 및 스타일 상수
-  COLOR: {
-    DEFAULT_WHITE: '#FFFFFF',
-    DEFAULT_BLACK: '#000000',
-    TRANSPARENT_HEX: '#00000000',
-    TRANSPARENT_HEX_SHORT: '00000000',
-    MESSAGE_BG: '#3c77eb',
-    MESSAGE_TEXT: '#ffffff',
-  },
-
-  // 측정 및 계산 상수
-  MEASUREMENT: {
-    MM_PER_INCH: 25.4,
-    BLOCK_WIDTH: 332,
-    DECIMAL_PLACES: 2,
-    SIZE_PRECISION: 1,
-  },
-
-  // WCAG 명도 대비 계산 상수
-  WCAG_CONTRAST: {
-    LUMINANCE_RED: 0.2126,
-    LUMINANCE_GREEN: 0.7152,
-    LUMINANCE_BLUE: 0.0722,
-    SRGB_THRESHOLD: 0.03928,
-    SRGB_DIVISOR: 12.92,
-    SRGB_OFFSET: 0.055,
-    SRGB_MULTIPLIER: 1.055,
-    SRGB_EXPONENT: 2.4,
-    CONTRAST_OFFSET: 0.05,
-    MAX_RGB_VALUE: 255,
-  },
-
-  // 타이밍 상수 (밀리초)
-  TIMING: {
-    MESSAGE_DISPLAY: 3000,
-  },
-
-  // UI 위치 및 크기 상수
-  UI: {
-    POSITION_OFFSET: 20,
-    POSITION_OFFSET_LARGE: 40,
-    POSITION_MIN: 10,
-    Z_INDEX_MAX: '99999999',
-    BORDER_WIDTH: 1,
-    INLINE_BLOCK_SIZE: 8,
-  },
-
-  // 상호작용 요소 태그명
-  INTERACTIVE_ELEMENTS: ['a', 'button', 'input', 'area'],
-
-  // 부모 상호작용 요소 태그명
-  PARENT_INTERACTIVE_ELEMENTS: ['a', 'button', 'input'],
-
-  // 스타일 속성 값
-  STYLE_VALUES: {
-    NONE: 'none',
-    AUTO: 'auto',
-    TRANSPARENT: 'transparent',
-    ZERO_PX: '0px',
-    ZERO: '0',
-    ZERO_MARGIN_PADDING: '0 0 0 0',
-  },
-
-  // 노드 타입
-  NODE_TYPE: {
-    ELEMENT: 1,
-  },
-
-  // HEX 색상 길이
-  COLOR_LENGTH: {
-    SHORT: 3,
-    FULL: 6,
-  },
-};
 
 async function myApp() {
   // StorageManager를 이용하여 여러 개의 데이터를 한 번에 읽어옵니다.
