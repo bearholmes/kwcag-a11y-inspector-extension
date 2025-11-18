@@ -1,3 +1,6 @@
+// Import CSS
+import './calculator.css';
+
 (function () {
   // ==================== CONSTANTS ====================
 
@@ -329,8 +332,10 @@
         const widthInput = $(ELEMENT_IDS.INPUT_WIDTH);
 
         // 요소 존재 여부 확인
-        if (!validateElement(heightInput, 'Height Input') ||
-            !validateElement(widthInput, 'Width Input')) {
+        if (
+          !validateElement(heightInput, 'Height Input') ||
+          !validateElement(widthInput, 'Width Input')
+        ) {
           displayError(ERROR_MESSAGES.MISSING_ELEMENT);
           return;
         }
@@ -341,7 +346,9 @@
 
         // 입력값 검증
         if (!validateNumericInput(h) || !validateNumericInput(w)) {
-          displayError(ERROR_MESSAGES.INVALID_INPUT + ' 양수 숫자만 입력 가능합니다.');
+          displayError(
+            ERROR_MESSAGES.INVALID_INPUT + ' 양수 숫자만 입력 가능합니다.',
+          );
           return;
         }
 
@@ -365,7 +372,10 @@
             const list = [
               { label: 'height', value: `${cb.height} mm (${h}px)` },
               { label: 'width', value: `${cb.width} mm (${w}px)` },
-              { label: 'diagonal', value: `${cb.diagonal} mm (${cb.diagonal_px}px)` },
+              {
+                label: 'diagonal',
+                value: `${cb.diagonal} mm (${cb.diagonal_px}px)`,
+              },
             ];
 
             // "list" 배열에 저장된 값들을 이용하여 "ul" 요소를 생성하고, 이 요소에 "li" 요소들을 추가합니다.
@@ -471,7 +481,10 @@
         const resWidth = parseInt(std_res[0]);
         const resHeight = parseInt(std_res[1]);
 
-        if (!validateNumericInput(resWidth) || !validateNumericInput(resHeight)) {
+        if (
+          !validateNumericInput(resWidth) ||
+          !validateNumericInput(resHeight)
+        ) {
           throw new Error('Invalid resolution values');
         }
 
@@ -487,22 +500,27 @@
         }
 
         // 표준 대각선 길이를 이용하여 픽셀당 mm 길이를 구합니다.
-        const std_px = CALCULATION_CONSTANTS.MM_PER_INCH / (std_diagonal / monitorSize); // mm 기준
+        const std_px =
+          CALCULATION_CONSTANTS.MM_PER_INCH / (std_diagonal / monitorSize); // mm 기준
 
         // 입력값을 숫자로 변환
         const heightNum = parseFloat(h);
         const widthNum = parseFloat(w);
 
         // 입력받은 높이와 너비를 이용하여, 실제 높이와 너비를 구합니다.
-        cb.height = (heightNum * std_px).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
-        cb.width = (widthNum * std_px).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
+        cb.height = (heightNum * std_px).toFixed(
+          CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+        ); // to mm
+        cb.width = (widthNum * std_px).toFixed(
+          CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+        ); // to mm
         cb.diagonal = Math.sqrt(
           Math.pow(cb.width, 2) + Math.pow(cb.height, 2),
         ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
 
         // 입력받은 높이와 너비를 이용하여 대각선 길이(px)를 구합니다.
         cb.diagonal_px = Math.sqrt(
-          Math.pow(heightNum, 2) + Math.pow(widthNum, 2)
+          Math.pow(heightNum, 2) + Math.pow(widthNum, 2),
         ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to px
 
         // 계산 결과를 콜백 함수에 전달합니다.

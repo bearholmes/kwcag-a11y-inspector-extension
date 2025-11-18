@@ -1,3 +1,6 @@
+// Import CSS
+import './inspector.css';
+
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
  * CSSViewer, A Google Chrome Extension for fellow web developers, web designers, and hobbyists.
@@ -597,9 +600,7 @@ async function myApp() {
 
       // 조건이 참일 경우 li 엘리먼트에 대비 비율 값을 넣고 보여주기
       if (condition) {
-        li.lastChild.textContent = ` : ${
-          Math.round(ratio * 100) / 100
-        }:1`;
+        li.lastChild.textContent = ` : ${Math.round(ratio * 100) / 100}:1`;
         li.style.display = 'block';
         return 1;
       }
@@ -1094,9 +1095,7 @@ async function myApp() {
           trackingEl.style.display = 'block';
         } else {
           const parentTagName = this.parentElement?.nodeName.toLowerCase();
-          if (
-            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
-          ) {
+          if (CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)) {
             trackingEl.style.display = 'block';
           } else {
             trackingEl.style.display = 'none';
@@ -1144,39 +1143,29 @@ async function myApp() {
     // dkInspect_block이 페이지 너비를 벗어나는 경우
     if (e.pageX + blockWidth > pageWidth) {
       // dkInspect_block을 왼쪽으로 이동시킴
-      if (
-        e.pageX - blockWidth - CONSTANTS.UI.POSITION_MIN >
-        0
-      )
+      if (e.pageX - blockWidth - CONSTANTS.UI.POSITION_MIN > 0)
         block.style.left = `${
           e.pageX - blockWidth - CONSTANTS.UI.POSITION_OFFSET_LARGE
         }px`;
       else block.style.left = `0px`;
-    } else
-      block.style.left = `${e.pageX + CONSTANTS.UI.POSITION_OFFSET}px`;
+    } else block.style.left = `${e.pageX + CONSTANTS.UI.POSITION_OFFSET}px`;
 
     // dkInspect_block이 페이지 높이를 벗어나는 경우
     if (e.pageY + blockHeight > pageHeight) {
       // dkInspect_block을 위쪽으로 이동시킴
-      if (
-        e.pageY - blockHeight - CONSTANTS.UI.POSITION_MIN >
-        0
-      )
+      if (e.pageY - blockHeight - CONSTANTS.UI.POSITION_MIN > 0)
         block.style.top = `${
           e.pageY - blockHeight - CONSTANTS.UI.POSITION_OFFSET
         }px`;
       else block.style.top = `0px`;
-    } else
-      block.style.top = `${e.pageY + CONSTANTS.UI.POSITION_OFFSET}px`;
+    } else block.style.top = `${e.pageY + CONSTANTS.UI.POSITION_OFFSET}px`;
 
     // dkInspect_block의 위치를 스크롤 위치에 맞게 조정하는 코드
     const inView = dkInspectIsElementInViewport(block);
 
     // dkInspect_block이 화면에 보이지 않는 경우
     if (!inView)
-      block.style.top = `${
-        window.scrollY + CONSTANTS.UI.POSITION_OFFSET
-      }px`;
+      block.style.top = `${window.scrollY + CONSTANTS.UI.POSITION_OFFSET}px`;
 
     // 이벤트 전파 방지
     e.stopPropagation();
@@ -1366,9 +1355,17 @@ async function myApp() {
             if (frameEl) {
               const frameEls = this.GetAllElements(frameEl);
               frameEls.forEach((item) => {
-                item.removeEventListener('mouseover', dkInspectMouseOver, false);
+                item.removeEventListener(
+                  'mouseover',
+                  dkInspectMouseOver,
+                  false,
+                );
                 item.removeEventListener('mouseout', dkInspectMouseOut, false);
-                item.removeEventListener('mousemove', dkInspectMouseMove, false);
+                item.removeEventListener(
+                  'mousemove',
+                  dkInspectMouseMove,
+                  false,
+                );
               });
             }
           } catch (error) {

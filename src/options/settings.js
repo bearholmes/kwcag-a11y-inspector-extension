@@ -2,6 +2,13 @@
 /*global chrome */
 
 // ============================================================================
+// Imports
+// ============================================================================
+import './settings.css';
+import Pickr from '@simonwep/pickr';
+import '@simonwep/pickr/dist/themes/nano.min.css';
+
+// ============================================================================
 // Constants - 매직 넘버를 명명된 상수로 추출
 // ============================================================================
 
@@ -47,7 +54,7 @@ const TRACKING_MODE_ENABLED = 'true';
  *   button.addEventListener('click', handleClick);
  * }
  */
-const $ = function(elementId) {
+const $ = function (elementId) {
   try {
     // 입력 검증
     if (typeof elementId !== 'string') {
@@ -84,10 +91,13 @@ function safeStorageGet(key, callback) {
       throw new Error('Callback must be a function');
     }
 
-    chrome.storage.sync.get(key, function(result) {
+    chrome.storage.sync.get(key, function (result) {
       try {
         if (chrome.runtime.lastError) {
-          console.error(`Chrome storage error for key "${key}":`, chrome.runtime.lastError);
+          console.error(
+            `Chrome storage error for key "${key}":`,
+            chrome.runtime.lastError,
+          );
           return;
         }
         callback(result);
@@ -115,7 +125,7 @@ function safeStorageSet(data, callback) {
       throw new Error('Data must be a valid object');
     }
 
-    chrome.storage.sync.set(data, function() {
+    chrome.storage.sync.set(data, function () {
       try {
         if (chrome.runtime.lastError) {
           console.error('Chrome storage set error:', chrome.runtime.lastError);
@@ -211,7 +221,7 @@ function safeSetValue(elementId, value) {
  */
 function loadMonitorSettings() {
   try {
-    safeStorageGet('monitors', function(result) {
+    safeStorageGet('monitors', function (result) {
       const monitors = result.monitors;
       if (monitors) {
         safeSetSelected(monitors, true);
@@ -229,7 +239,7 @@ function loadMonitorSettings() {
  */
 function loadResolutionSettings() {
   try {
-    safeStorageGet('resolutions', function(result) {
+    safeStorageGet('resolutions', function (result) {
       const resolutions = result.resolutions;
       if (resolutions) {
         safeSetSelected(resolutions, true);
@@ -247,7 +257,7 @@ function loadResolutionSettings() {
  */
 function loadCCShowSettings() {
   try {
-    safeStorageGet('ccshow', function(result) {
+    safeStorageGet('ccshow', function (result) {
       const ccshow = result.ccshow;
 
       if (ccshow === STATE_ENABLED) {
@@ -268,7 +278,7 @@ function loadCCShowSettings() {
  */
 function loadLinkModeSettings() {
   try {
-    safeStorageGet('linkmode', function(result) {
+    safeStorageGet('linkmode', function (result) {
       const linkmode = result.linkmode;
 
       if (linkmode === STATE_ENABLED) {
@@ -289,7 +299,7 @@ function loadLinkModeSettings() {
  */
 function loadBackgroundModeSettings() {
   try {
-    safeStorageGet('bgmode', function(result) {
+    safeStorageGet('bgmode', function (result) {
       const bgmode = result.bgmode;
 
       if (bgmode === STATE_ENABLED) {
@@ -310,7 +320,7 @@ function loadBackgroundModeSettings() {
  */
 function loadLineTypeSettings() {
   try {
-    safeStorageGet('linetype', function(result) {
+    safeStorageGet('linetype', function (result) {
       const linetype = result.linetype;
 
       if (linetype === LINE_TYPE_SOLID) {
@@ -333,7 +343,7 @@ function loadLineTypeSettings() {
  */
 function loadColorTypeSettings() {
   try {
-    safeStorageGet('colortype', function(result) {
+    safeStorageGet('colortype', function (result) {
       safeSetValue('colorType', result.colortype);
     });
   } catch (error) {
@@ -348,7 +358,7 @@ function loadColorTypeSettings() {
  */
 function loadTrackingModeSettings() {
   try {
-    safeStorageGet('trackingmode', function(result) {
+    safeStorageGet('trackingmode', function (result) {
       const trackingmode = result.trackingmode;
 
       if (trackingmode === TRACKING_MODE_ENABLED) {
@@ -369,7 +379,7 @@ function loadTrackingModeSettings() {
  */
 function loadBorderSizeSettings() {
   try {
-    safeStorageGet('bordersize', function(result) {
+    safeStorageGet('bordersize', function (result) {
       safeSetValue('bordersize', result.bordersize);
     });
   } catch (error) {
@@ -436,7 +446,10 @@ function getCheckboxBooleanState(onElementId) {
     }
     return element.checked;
   } catch (error) {
-    console.error(`Error getting checkbox boolean state for "${onElementId}":`, error);
+    console.error(
+      `Error getting checkbox boolean state for "${onElementId}":`,
+      error,
+    );
     return false;
   }
 }
@@ -491,7 +504,11 @@ function safeGetValue(elementId, defaultValue = '') {
  * @param {number} [duration=STATUS_MESSAGE_DURATION] - 메시지 표시 지속 시간 (밀리초)
  * @returns {void}
  */
-function showStatusMessage(elementId, message, duration = STATUS_MESSAGE_DURATION) {
+function showStatusMessage(
+  elementId,
+  message,
+  duration = STATUS_MESSAGE_DURATION,
+) {
   try {
     // 입력 검증
     if (typeof message !== 'string') {
@@ -512,7 +529,7 @@ function showStatusMessage(elementId, message, duration = STATUS_MESSAGE_DURATIO
 
     element.innerText = message;
 
-    setTimeout(function() {
+    setTimeout(function () {
       try {
         const statusElement = $(elementId);
         if (statusElement) {
@@ -572,7 +589,7 @@ function resRegEvent() {
       bordersize: bordersize,
     };
 
-    safeStorageSet(settingsData, function() {
+    safeStorageSet(settingsData, function () {
       // '저장완료!' 메시지를 출력함
       showStatusMessage('resStatus', '저장완료!');
     });
