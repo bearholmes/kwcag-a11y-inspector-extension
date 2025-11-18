@@ -34,11 +34,13 @@ KWCAG A11y Inspector는 웹 접근성 진단을 위한 Chrome 확장프로그램
 ## 🎯 측정 기준
 
 ### KWCAG 2.1.3 - 조작 가능
+
 - **최소 크기**: 6mm × 6mm (약 45px × 45px @96DPI)
 - **측정 범위**: box + padding + border
 - **대상 요소**: 링크, 버튼, 입력 필드 등 인터랙티브 요소
 
 ### WCAG 1.3.3 - 명도 대비
+
 - **AA 등급**: 4.5:1 이상 (일반 텍스트)
 - **AAA 등급**: 7:1 이상 (일반 텍스트)
 - **계산 방식**: WCAG 2.0 상대 휘도(Relative Luminance) 기반
@@ -103,21 +105,25 @@ npm run build
 ## 🛠️ 기술 스택
 
 ### 런타임
+
 - **Chrome Extension API** (Manifest V3)
 - **JavaScript** (ES2020)
 - **CSS3**
 - **Chrome i18n API** - 다국어 지원 (11개 언어)
 
 ### 개발 도구
+
 - **Babel** - ES6+ → Chrome 88 타겟 트랜스파일
 - **Prettier** - 코드 포맷팅
 - **Jest** - 단위 테스트 (설정 완료)
 - **JSDoc** - 전체 코드 문서화 완료
 
 ### 주요 라이브러리
+
 - **jscolor.min.js** - 색상 선택기
 
 ### 코드 품질
+
 - ✅ **완전한 JSDoc 문서화**: 모든 함수와 타입에 JSDoc 주석 적용
 - ✅ **포괄적 에러 핸들링**: try-catch 블록과 구조화된 에러 메시지
 - ✅ **상수 관리**: 매직 넘버 제거 및 CONSTANTS 객체로 중앙 관리
@@ -212,6 +218,7 @@ npm run test:coverage
 ### 보안 및 성능 주의사항
 
 #### 보안
+
 - ✅ Chrome 내부 페이지 및 스토어 페이지 접근 차단 구현됨
 - ✅ 모든 사용자 입력에 대한 유효성 검증 필수
 - ✅ XSS 방지를 위한 DOM 조작 시 textContent 사용 권장
@@ -219,6 +226,7 @@ npm run test:coverage
 - ⚠️ `innerHTML` 사용 시 주의 (가능한 `textContent` 사용)
 
 #### 성능
+
 - ✅ ES2020 타겟으로 번들 크기 최적화 (약 130KB)
 - ✅ 이벤트 리스너 최소화 및 적절한 해제
 - ✅ DOM 접근 캐싱으로 성능 향상
@@ -226,6 +234,7 @@ npm run test:coverage
 - ⚠️ 긴 작업은 `requestAnimationFrame` 또는 `setTimeout`으로 분할
 
 #### 접근성
+
 - ✅ 키보드 단축키 지원 (ESC)
 - ✅ 명확한 에러 메시지 제공
 - ⚠️ 새로운 UI 요소 추가 시 ARIA 속성 고려
@@ -275,12 +284,14 @@ npm run test:coverage
 ## 📊 성능 최적화
 
 ### 번들 크기
+
 - **dkinspect.js**: ~100KB (트랜스파일 후)
 - **전체**: ~130KB
 - **로딩 시간**: ~9ms (ES2020 타겟)
 - **국제화 리소스**: 각 언어당 ~3KB
 
 ### 최적화 기법
+
 - ✅ ES2020 타겟으로 불필요한 트랜스파일 제거 (Chrome 88+)
 - ✅ Babel `modules: false` 설정으로 트리 쉐이킹 지원
 - ✅ 소스맵 생성으로 디버깅 용이
@@ -289,6 +300,7 @@ npm run test:coverage
 - ✅ 매직 넘버 제거 및 상수 중앙 관리로 유지보수성 향상
 
 ### 로딩 성능
+
 - **초기 로딩**: Chrome Storage에서 설정 비동기 로드
 - **스크립트 주입**: 필요 시에만 동적 주입 (Lazy Loading)
 - **메모리 관리**: 인스펙터 비활성화 시 이벤트 리스너 정리
@@ -352,11 +364,13 @@ in the Software without restriction...
 ## 📚 참고 자료
 
 ### 접근성 지침
+
 - [KWCAG 2.1](http://www.wa.or.kr/m1/sub1.asp) - 한국형 웹 콘텐츠 접근성 지침
 - [WCAG 2.0](https://www.w3.org/TR/WCAG20/) - 웹 콘텐츠 접근성 지침
 - [WebAIM](https://webaim.org/) - 접근성 자료
 
 ### Chrome Extension
+
 - [Manifest V3 가이드](https://developer.chrome.com/docs/extensions/mv3/intro/)
 - [Chrome Extension API](https://developer.chrome.com/docs/extensions/reference/)
 
@@ -375,31 +389,28 @@ in the Software without restriction...
 ## 🗺️ 로드맵
 
 ### v0.13.0 (완료) ✅
+
 - [x] 국제화(i18n) 지원 - 11개 언어
 - [x] 전체 JSDoc 문서화 완료
 - [x] 포괄적 에러 핸들링 구현
 - [x] ES2020 타겟 빌드 최적화
 - [x] 매직 넘버 제거 및 상수 중앙 관리
 - [x] 소스맵 생성 지원
+- [ ] 단위 테스트 구현 (Jest)
+- [ ] TypeScript 마이그레이션 검토
 
 ### v0.14.0 (계획 중)
-- [ ] 단위 테스트 구현 (Jest)
-- [ ] CI/CD 파이프라인 구축
-- [ ] E2E 테스트 추가
-- [ ] 리포팅 기능 추가
+
 - [ ] 추가 WCAG 지침 지원 (2.5.5 목표 크기)
 
 ### v0.15.0 (향후)
-- [ ] TypeScript 마이그레이션 검토
+
+- [ ] CI/CD 파이프라인 구축
+- [ ] 리포팅 기능 추가
 - [ ] 전체 페이지 스캔 기능
 - [ ] 결과 내보내기 (CSV, JSON, PDF)
 - [ ] 사용자 정의 기준 설정
 - [ ] Chrome DevTools 패널 통합
-
-### 장기 비전
-- [ ] Firefox, Safari 확장프로그램 지원
-- [ ] AI 기반 접근성 제안 기능
-- [ ] 웹 대시보드 및 팀 협업 기능
 
 ---
 
