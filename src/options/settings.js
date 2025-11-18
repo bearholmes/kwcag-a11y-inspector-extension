@@ -4,8 +4,8 @@
 // Imports
 // ============================================================================
 import './settings.css';
-// import Pickr from '@simonwep/pickr';
-// import '@simonwep/pickr/dist/themes/nano.min.css';
+import Pickr from '@simonwep/pickr';
+import '@simonwep/pickr/dist/themes/nano.min.css';
 import { StorageManager } from '../shared/storage-utils.js';
 import { $ } from '../shared/dom-utils.js';
 
@@ -36,6 +36,16 @@ const DEFAULT_LINE_TYPE = LINE_TYPE_DASHED;
 
 /** @constant {string} - 추적 모드 활성화 문자열 값 */
 const TRACKING_MODE_ENABLED = 'true';
+
+// ============================================================================
+// Global Variables - 전역 변수
+// ============================================================================
+
+/**
+ * Pickr 색상 선택기 인스턴스
+ * @type {Pickr|null}
+ */
+let pickrInstance = null;
 
 // ============================================================================
 // Utility Functions - 유틸리티 함수
@@ -295,13 +305,18 @@ function loadLineTypeSettings() {
 
 /**
  * Chrome Storage에서 색상 유형 설정을 로드합니다
+ * Pickr 색상 선택기의 초기 값을 설정합니다
  *
+ * @param {Pickr} pickrInstance - Pickr 인스턴스
  * @returns {void}
  */
-function loadColorTypeSettings() {
+function loadColorTypeSettings(pickrInstance) {
   try {
     safeStorageGet('colortype', function (result) {
-      safeSetValue('colorType', result.colortype);
+      const colorHex = result.colortype || 'ff0000';
+      if (pickrInstance) {
+        pickrInstance.setColor(`#${colorHex}`);
+      }
     });
   } catch (error) {
     console.error('Error loading color type settings:', error);
@@ -345,14 +360,81 @@ function loadBorderSizeSettings() {
 }
 
 /**
+ * Pickr 색상 선택기를 초기화하는 함수
+ * @returns {Pickr|null} Pickr 인스턴스 또는 null
+ */
+function initializeColorPicker() {
+  try {
+    const colorTypeEl = $('colorType');
+    if (!colorTypeEl) {
+      console.warn('Color picker element not found');
+      return null;
+    }
+
+    const pickr = Pickr.create({
+      el: '#colorType',
+      theme: 'nano',
+      default: '#ff0000',
+
+      components: {
+        preview: true,
+        opacity: false,
+        hue: true,
+
+        interaction: {
+          hex: true,
+          input: true,
+          save: true,
+        },
+      },
+
+      i18n: {
+        'btn:save': '확인',
+        'btn:cancel': '취소',
+        'btn:clear': '초기화',
+      },
+    });
+
+    // 색상 저장 이벤트
+    pickr.on('save', (color) => {
+      try {
+        if (color) {
+          const hexColor = color.toHEXA().toString().substring(1, 7);
+          safeStorageSet({ colortype: hexColor }, function () {
+            showStatusMessage('resStatus', '색상이 저장되었습니다.');
+          });
+          pickr.hide();
+        }
+      } catch (error) {
+        console.error('Error saving color:', error);
+        showStatusMessage('resStatus', '색상 저장 중 오류가 발생했습니다.');
+      }
+    });
+
+    // 색상 변경 이벤트 - 실시간 미리보기 (현재 비활성화)
+    // pickr.on('change', (color) => {
+    //   if (color) {
+    //     // 필요시 실시간 미리보기 기능 추가
+    //   }
+    // });
+
+    return pickr;
+  } catch (error) {
+    console.error('Error initializing color picker:', error);
+    return null;
+  }
+}
+
+/**
  * 저장된 설정 값을 모두 로드하는 함수
  * 설정 값 로드 함수
  * 모니터 크기, 해상도, CC 표시 여부, 링크 모드 여부, 배경 모드 여부,
  * 선 유형, 선 색상, 추적 모드 여부, 테두리 크기 값을 가져와서 설정함
  *
+ * @param {Pickr|null} pickrInstance - Pickr 인스턴스
  * @returns {void}
  */
-function loadEvent() {
+function loadEvent(pickrInstance = null) {
   try {
     loadMonitorSettings();
     loadResolutionSettings();
@@ -360,7 +442,7 @@ function loadEvent() {
     loadLinkModeSettings();
     loadBackgroundModeSettings();
     loadLineTypeSettings();
-    loadColorTypeSettings();
+    loadColorTypeSettings(pickrInstance);
     loadTrackingModeSettings();
     loadBorderSizeSettings();
   } catch (error) {
@@ -522,7 +604,16 @@ function resRegEvent() {
     const lm_sw = getCheckboxState('linkModeOn');
     const bg_sw = getCheckboxBooleanState('bgModeOn');
     const linetype = getSelectedLineType();
-    const colortype = safeGetValue('colorType');
+
+    // Pickr에서 색상 가져오기
+    let colortype = 'ff0000'; // 기본값
+    if (pickrInstance) {
+      const color = pickrInstance.getColor();
+      if (color) {
+        colortype = color.toHEXA().toString().substring(1, 7);
+      }
+    }
+
     const trackingmode = getCheckboxBooleanState('trackingModeOn');
     const bordersize = safeGetValue('bordersize');
 
@@ -597,17 +688,20 @@ function safeAddEventListener(elementId, eventType, handler) {
  * DOM 초기화 함수
  * DOMContentLoaded 이벤트가 발생하면 실행될 코드
  * id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
- * loadEvent 함수를 실행함
+ * Pickr 색상 선택기를 초기화하고 설정을 로드함
  *
  * @returns {void}
  */
 function initializePage() {
   try {
+    // Pickr 색상 선택기 초기화 및 전역 변수에 저장
+    pickrInstance = initializeColorPicker();
+
     // id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
     safeAddEventListener('resBtn', 'click', resRegEvent);
 
-    // loadEvent 함수를 실행함
-    loadEvent();
+    // loadEvent 함수를 실행함 (Pickr 인스턴스 전달)
+    loadEvent(pickrInstance);
   } catch (error) {
     console.error('Error initializing page:', error);
   }
