@@ -107,28 +107,35 @@ npm run build
 ### 런타임
 
 - **Chrome Extension API** (Manifest V3)
-- **JavaScript** (ES2020)
+- **TypeScript** (ES2020) - 핵심 모듈 마이그레이션 완료
+- **JavaScript** (ES2020) - 레거시 코드
 - **CSS3**
 - **Chrome i18n API** - 다국어 지원 (11개 언어)
 
 ### 개발 도구
 
-- **Babel** - ES6+ → Chrome 88 타겟 트랜스파일
+- **Vite** - 빌드 도구 (TypeScript 지원)
+- **TypeScript** - 타입 안전성 강화
 - **Prettier** - 코드 포맷팅
-- **Jest** - 단위 테스트 (설정 완료)
+- **ESLint** - 코드 품질 검사
+- **Jest** - 단위 테스트 (28.53% 커버리지)
 - **JSDoc** - 전체 코드 문서화 완료
+- **Husky** - Git 훅 자동화
 
 ### 주요 라이브러리
 
-- **jscolor.min.js** - 색상 선택기
+- **@simonwep/pickr** - 색상 선택기 (MIT 라이선스)
+- **@types/chrome** - Chrome API 타입 정의
 
 ### 코드 품질
 
+- ✅ **TypeScript 마이그레이션**: 핵심 모듈 TypeScript로 전환 (~50%)
+- ✅ **엄격한 타입 체킹**: strict 모드 활성화
 - ✅ **완전한 JSDoc 문서화**: 모든 함수와 타입에 JSDoc 주석 적용
 - ✅ **포괄적 에러 핸들링**: try-catch 블록과 구조화된 에러 메시지
 - ✅ **상수 관리**: 매직 넘버 제거 및 CONSTANTS 객체로 중앙 관리
 - ✅ **소스맵 지원**: 디버깅을 위한 소스맵 생성
-- ✅ **타입 정의**: JSDoc @typedef를 통한 타입 안전성 향상
+- ✅ **테스트 커버리지**: 28.53% (238개 테스트)
 
 ---
 
@@ -136,42 +143,54 @@ npm run build
 
 ```
 kwcag-a11y-inspector-extension/
-├── manifest.json              # Chrome 확장프로그램 매니페스트
-├── option.html                # 옵션 페이지
-├── package.json               # NPM 의존성 및 스크립트
-├── .babelrc                   # Babel 설정 (Chrome 88 타겟)
+├── manifest.json                 # Chrome 확장프로그램 매니페스트
+├── package.json                  # NPM 의존성 및 스크립트
+├── tsconfig.json                 # TypeScript 설정
+├── vite.config.js                # Vite 빌드 설정
 │
-├── _locales/                  # 국제화 리소스 (11개 언어)
-│   ├── ko/messages.json      # 한국어
-│   ├── en/messages.json      # 영어
-│   ├── ja/messages.json      # 일본어
-│   ├── zh_CN/messages.json   # 중국어 간체
-│   ├── zh_TW/messages.json   # 중국어 번체
-│   └── ...                    # 독일어, 프랑스어, 스페인어, 이탈리아어, 러시아어, 포르투갈어
+├── _locales/                     # 국제화 리소스 (11개 언어)
+│   ├── ko/messages.json         # 한국어
+│   ├── en/messages.json         # 영어
+│   └── ...                       # 9개 추가 언어
 │
-├── src/                       # 소스 코드 (ES6+)
-│   ├── service-worker.js     # 백그라운드 스크립트 (204줄, JSDoc 완료)
-│   ├── dkinspect.js          # 메인 인스펙터 로직 (1,350줄, JSDoc 완료)
-│   ├── cals.js               # 수동 계산기 (JSDoc 완료)
-│   └── option.js             # 옵션 페이지 로직 (JSDoc 완료)
+├── src/                          # 소스 코드
+│   ├── background/
+│   │   └── service-worker.ts    # 백그라운드 스크립트 (TypeScript)
+│   ├── content/
+│   │   ├── inspector/           # 인스펙터 모듈
+│   │   │   ├── constants.ts     # 상수 정의 (TypeScript)
+│   │   │   ├── color-utils.ts   # 색상 유틸리티 (TypeScript)
+│   │   │   ├── dom-utils.ts     # DOM 유틸리티 (TypeScript)
+│   │   │   ├── shortcut-manager.ts  # 단축키 관리자 (TypeScript)
+│   │   │   ├── css-handlers.js  # CSS 핸들러
+│   │   │   ├── event-handlers.js  # 이벤트 핸들러
+│   │   │   ├── inspector-core.js  # 인스펙터 코어
+│   │   │   └── index.js         # 진입점
+│   │   └── calculator.js        # 수동 계산기
+│   ├── options/
+│   │   ├── settings.html        # 설정 페이지
+│   │   └── settings.js          # 설정 로직
+│   └── shared/
+│       ├── storage-utils.ts     # Storage 유틸리티 (TypeScript)
+│       └── dom-utils.ts         # 공통 DOM 유틸리티 (TypeScript)
 │
-├── js/                        # 트랜스파일된 코드 (프로덕션)
-│   ├── service-worker.js
-│   ├── dkinspect.js
-│   ├── cals.js
-│   └── option.js
+├── tests/                        # 테스트 코드
+│   ├── content/                 # 콘텐츠 스크립트 테스트
+│   ├── background/              # 백그라운드 테스트
+│   ├── options/                 # 옵션 페이지 테스트
+│   └── shared/                  # 공통 유틸리티 테스트
 │
-├── css/                       # 스타일시트
-│   ├── dkinspect.css         # 인스펙터 UI 스타일
-│   ├── cals.css              # 계산기 스타일
-│   └── option.css            # 옵션 페이지 스타일
+├── dist/                         # 빌드 결과물
+│   ├── background/
+│   ├── content/
+│   ├── options/
+│   └── assets/
 │
-├── img/                       # 아이콘
-│
-└── docs/                      # 문서
-    ├── PROJECT_ANALYSIS.md    # 프로젝트 상세 분석
-    ├── CODE_REVIEW_REPORT.md  # 코드 리뷰 결과
-    └── ...                    # 기술 스택 분석 문서들
+└── docs/                         # 문서
+    ├── PROJECT_ANALYSIS.md      # 프로젝트 상세 분석
+    ├── CICD_PLAN.md             # CI/CD 파이프라인 설계
+    ├── E2E_TEST_PLAN.md         # E2E 테스트 계획
+    └── ROADMAP.md               # 프로젝트 로드맵
 ```
 
 ---
@@ -396,16 +415,41 @@ in the Software without restriction...
 - [x] ES2020 타겟 빌드 최적화
 - [x] 매직 넘버 제거 및 상수 중앙 관리
 - [x] 소스맵 생성 지원
-- [ ] 단위 테스트 구현 (Jest)
-- [ ] TypeScript 마이그레이션 검토
+- [x] **단위 테스트 구현** (Jest, 28.53% 커버리지)
+- [x] **TypeScript 마이그레이션 시작** (핵심 모듈 50% 완료)
+- [x] **Pickr 색상 선택기 통합** (jscolor → Pickr, MIT 라이선스)
+- [x] **CI/CD 파이프라인 설계 문서화** (GitHub Actions)
+- [x] **E2E 테스트 계획 문서화** (Puppeteer)
 
-### v0.14.0 (계획 중)
+### v0.14.0 (진행 중) 🚧
 
+- [x] TypeScript 마이그레이션 (핵심 유틸리티 완료)
+  - [x] constants.ts
+  - [x] storage-utils.ts
+  - [x] dom-utils.ts (shared)
+  - [x] color-utils.ts
+  - [x] shortcut-manager.ts
+  - [x] service-worker.ts
+- [ ] TypeScript 마이그레이션 (나머지 모듈)
+  - [ ] inspector-core.ts
+  - [ ] css-handlers.ts
+  - [ ] event-handlers.ts
+  - [ ] calculator.ts
+  - [ ] settings.ts
+- [ ] 테스트 커버리지 80% 달성
+- [ ] CI/CD 파이프라인 구현 (Phase 1)
+- [ ] E2E 테스트 구현 시작
+
+### v0.15.0 (계획 중)
+
+- [ ] TypeScript 마이그레이션 100% 완료
+- [ ] CI/CD 파이프라인 완전 자동화 (Phase 2-3)
+- [ ] E2E 테스트 커버리지 100% (핵심 시나리오)
 - [ ] 추가 WCAG 지침 지원 (2.5.5 목표 크기)
+- [ ] 성능 최적화 및 프로파일링
 
-### v0.15.0 (향후)
+### v0.16.0 (향후)
 
-- [ ] CI/CD 파이프라인 구축
 - [ ] 리포팅 기능 추가
 - [ ] 전체 페이지 스캔 기능
 - [ ] 결과 내보내기 (CSV, JSON, PDF)
