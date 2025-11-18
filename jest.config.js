@@ -43,6 +43,12 @@ export default {
       functions: 100,
       lines: 85,
     },
+    'src/content/calculator/calculator-math.js': {
+      statements: 100,
+      branches: 100,
+      functions: 100,
+      lines: 100,
+    },
   },
 
   // Setup files
