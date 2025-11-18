@@ -44,7 +44,44 @@ export default [
       'jsdoc/require-returns-description': 'warn',
     },
   },
+  // Test files configuration
   {
-    ignores: ['dist/**', 'node_modules/**', '.husky/**'],
+    files: ['tests/**/*.js', 'jest.config.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      globals: {
+        // Jest globals
+        describe: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        jest: 'readonly',
+        // Browser/DOM globals (jsdom)
+        global: 'writable',
+        document: 'readonly',
+        window: 'readonly',
+        console: 'readonly',
+        chrome: 'readonly',
+        HTMLElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        HTMLSpanElement: 'readonly',
+        HTMLButtonElement: 'readonly',
+        HTMLInputElement: 'readonly',
+        Event: 'readonly',
+        Promise: 'readonly',
+      },
+    },
+    rules: {
+      'no-undef': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-console': 'off', // Allow console in tests
+    },
+  },
+  {
+    ignores: ['dist/**', 'node_modules/**', '.husky/**', 'coverage/**'],
   },
 ];

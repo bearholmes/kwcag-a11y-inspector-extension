@@ -1,6 +1,7 @@
 {
   "name": "kwcag-a11y-inspector",
   "version": "0.13.0",
+  "type": "module",
   "description": "KWCAG 2.1 Accessibility Inspector - Chrome Extension for measuring operable criteria",
   "scripts": {
     "dev": "vite build --watch --mode development",
@@ -10,9 +11,9 @@
     "lint:fix": "eslint src/**/*.js --fix",
     "format": "prettier . --write",
     "clean": "rm -rf dist",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
+    "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
+    "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
     "prepare": "husky"
   },
   "author": "bearholmes <bearholmes@gmail.com>",
