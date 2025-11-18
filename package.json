@@ -4,10 +4,10 @@
   "description": "KWCAG 2.1 Accessibility Inspector - Chrome Extension for measuring operable criteria",
   "scripts": {
     "format": "prettier . --write",
-    "build": "babel src --out-dir js --source-maps",
-    "build:prod": "babel src --out-dir js --source-maps --minified --no-comments",
-    "watch": "babel src --out-dir js --source-maps --watch",
-    "clean": "rm -rf js/*.js js/*.map",
+    "build": "babel src/scripts --out-dir dist/scripts --source-maps",
+    "build:prod": "babel src/scripts --out-dir dist/scripts --source-maps --minified --no-comments",
+    "watch": "babel src/scripts --out-dir dist/scripts --source-maps --watch",
+    "clean": "rm -rf dist/scripts/*.js dist/scripts/*.map",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

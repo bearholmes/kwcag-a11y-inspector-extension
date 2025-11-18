@@ -5,22 +5,22 @@
   "version": "0.13.0",
   "default_locale": "en",
   "icons": {
-    "16": "img/16.png",
-    "22": "img/22.png",
-    "24": "img/24.png",
-    "32": "img/32.png",
-    "48": "img/48.png",
-    "128": "img/128-crap.png"
+    "16": "assets/icons/16.png",
+    "22": "assets/icons/22.png",
+    "24": "assets/icons/24.png",
+    "32": "assets/icons/32.png",
+    "48": "assets/icons/48.png",
+    "128": "assets/icons/128-crap.png"
   },
   "action": {
-    "default_icon": "img/16.png",
+    "default_icon": "assets/icons/16.png",
     "default_title": "kwcag a11y inspector"
   },
   "background": {
-    "service_worker": "js/service-worker.js"
+    "service_worker": "dist/scripts/service-worker.js"
   },
   "options_ui": {
-    "page": "option.html",
+    "page": "src/pages/option.html",
     "browser_style": true
   },
   "permissions": ["contextMenus", "tabs", "scripting", "storage"],
