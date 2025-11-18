@@ -1,0 +1,294 @@
+{
+  "extName": {
+    "message": "KWCAG A11y Inspector",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Ferramenta de medição de critérios operáveis ​​KWCAG 2.1.3",
+    "description": "Extension description"
+  },
+  "contextMenuCalc": {
+    "message": "Abrir calculadora manual",
+    "description": "Context menu item"
+  },
+  "alertChromeInternal": {
+    "message": "Não funciona em páginas internas do Chrome/Edge.",
+    "description": "Internal page warning"
+  },
+  "alertStorePage": {
+    "message": "Não funciona em páginas da loja.",
+    "description": "Store page warning"
+  },
+  "alertRestrictedPage": {
+    "message": "Não é possível usar a extensão nesta página.\n(Página restrita)",
+    "description": "Restricted page warning"
+  },
+  "alertExtensionError": {
+    "message": "Ocorreu um erro ao executar a extensão.\nPor favor, verifique o console.",
+    "description": "General error message"
+  },
+  "calcTitle": {
+    "message": "Cálculo manual",
+    "description": "Calculator title"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "Height label"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "Width label"
+  },
+  "calcConfirm": {
+    "message": "Confirmar",
+    "description": "Confirm button"
+  },
+  "calcClose": {
+    "message": "Fechar",
+    "description": "Close button"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "Results title"
+  },
+  "calcStandard": {
+    "message": "Padrão",
+    "description": "Standard label"
+  },
+  "errorInvalidInput": {
+    "message": "Valor de entrada inválido.",
+    "description": "Invalid input error"
+  },
+  "errorMissingElement": {
+    "message": "Elemento necessário não encontrado.",
+    "description": "Element missing error"
+  },
+  "errorStorage": {
+    "message": "Não é possível ler dados do armazenamento.",
+    "description": "Storage error"
+  },
+  "errorCalculation": {
+    "message": "Ocorreu um erro durante o cálculo.",
+    "description": "Calculation error"
+  },
+  "errorInputValidation": {
+    "message": "Apenas números positivos são permitidos.",
+    "description": "Input validation error"
+  },
+  "errorUIInit": {
+    "message": "Falha ao inicializar a interface.",
+    "description": "UI initialization error"
+  },
+  "errorResultDisplay": {
+    "message": "Erro ao exibir os resultados.",
+    "description": "Result display error"
+  },
+  "errorCalcInit": {
+    "message": "Falha ao inicializar a calculadora.",
+    "description": "Calculator initialization error"
+  },
+  "pauseMessage": {
+    "message": "Pausado. Pressione ESC para retomar.",
+    "description": "Pause message"
+  },
+  "resumeMessage": {
+    "message": "Retomado.",
+    "description": "Resume message"
+  },
+  "optionPageTitle": {
+    "message": "kwcag a11y inspector - Opções",
+    "description": "Options page title"
+  },
+  "optionVersion": {
+    "message": "Versão",
+    "description": "Version label"
+  },
+  "optionMenu": {
+    "message": "Menu de opções",
+    "description": "Options menu title"
+  },
+  "optionContent": {
+    "message": "Conteúdo de opções",
+    "description": "Options content title"
+  },
+  "menuIntro": {
+    "message": "Introdução",
+    "description": "Introduction menu"
+  },
+  "menuShortcuts": {
+    "message": "Atalhos",
+    "description": "Shortcuts menu"
+  },
+  "menuSettings": {
+    "message": "Configurações",
+    "description": "Settings menu"
+  },
+  "menuReferences": {
+    "message": "Referências",
+    "description": "References menu"
+  },
+  "menuSupport": {
+    "message": "Suporte",
+    "description": "Support menu"
+  },
+  "introDesc1": {
+    "message": "Fornece funcionalidade para medir os itens de teste operáveis ​​2.1.3 do KWCAG 2.1",
+    "description": "Introduction description 1"
+  },
+  "introDesc2": {
+    "message": "Fornece funcionalidade auxiliar útil ao medir itens de teste de contraste de cor 1.3.3",
+    "description": "Introduction description 2"
+  },
+  "introDesc3": {
+    "message": "Padrão: box + padding + border",
+    "description": "Introduction description 3"
+  },
+  "introTip": {
+    "message": "dica",
+    "description": "Tip label"
+  },
+  "introWarning1": {
+    "message": "* Nota: Infelizmente, devido às características do Chrome, o conteúdo dentro de iframe/frame não pode ser verificado.",
+    "description": "Introduction warning 1"
+  },
+  "introWarning2": {
+    "message": "* Você pode abrir a calculadora manual no menu de contexto exibido ao clicar com o botão direito.",
+    "description": "Introduction warning 2"
+  },
+  "shortcutDesc": {
+    "message": "Usar atalhos é mais conveniente.",
+    "description": "Shortcut description"
+  },
+  "shortcutEsc": {
+    "message": "Pausar / Retomar (disponível quando ativado)",
+    "description": "ESC shortcut description"
+  },
+  "settingResolution": {
+    "message": "Padrão de resolução",
+    "description": "Resolution setting label"
+  },
+  "settingMonitor": {
+    "message": "Padrão do monitor",
+    "description": "Monitor setting label"
+  },
+  "settingContrastCheck": {
+    "message": "Verificação de contraste",
+    "description": "Contrast check setting label"
+  },
+  "settingSelectorLine": {
+    "message": "Linha do seletor",
+    "description": "Selector line setting label"
+  },
+  "settingSelectorColor": {
+    "message": "Cor do seletor",
+    "description": "Selector color setting label"
+  },
+  "settingSelectorBorder": {
+    "message": "Borda do seletor",
+    "description": "Selector border setting label"
+  },
+  "settingLinkMode": {
+    "message": "Modo de link",
+    "description": "Link mode setting label"
+  },
+  "settingLinkModeOn": {
+    "message": "ATIVADO (limitado aos elementos a, button, input)",
+    "description": "Link mode ON label"
+  },
+  "settingLinkModeDesc": {
+    "message": "- Verificar apenas até elementos pai",
+    "description": "Link mode description"
+  },
+  "settingLinkModeOff": {
+    "message": "DESATIVADO (todos os elementos)",
+    "description": "Link mode OFF label"
+  },
+  "settingTrackingMode": {
+    "message": "Seletor separado (link)",
+    "description": "Tracking mode setting label"
+  },
+  "settingTrackingModeOn": {
+    "message": "ATIVADO (incluir cor de fundo)",
+    "description": "Tracking mode ON label"
+  },
+  "settingTrackingModeOff": {
+    "message": "DESATIVADO",
+    "description": "Tracking mode OFF label"
+  },
+  "settingBgMode": {
+    "message": "Fundo do seletor separado",
+    "description": "Background mode setting label"
+  },
+  "settingBgModeOn": {
+    "message": "ATIVADO (incluir fundo transparente)",
+    "description": "Background mode ON label"
+  },
+  "settingBgModeOff": {
+    "message": "DESATIVADO",
+    "description": "Background mode OFF label"
+  },
+  "settingLineTypeSolid": {
+    "message": "Sólido",
+    "description": "Solid line label"
+  },
+  "settingLineTypeDashed": {
+    "message": "Tracejado",
+    "description": "Dashed line label"
+  },
+  "settingLineTypeDotted": {
+    "message": "Pontilhado",
+    "description": "Dotted line label"
+  },
+  "settingSaveButton": {
+    "message": "Salvar configurações",
+    "description": "Save settings button"
+  },
+  "settingOn": {
+    "message": "ATIVADO",
+    "description": "ON label"
+  },
+  "settingOff": {
+    "message": "DESATIVADO",
+    "description": "OFF label"
+  },
+  "refBasedOn": {
+    "message": "Construído com base no CSSViewer.",
+    "description": "CSSViewer reference description"
+  },
+  "refContrast": {
+    "message": "O recurso de verificação de contraste faz referência ao Color Contrast Checker do WebAIM.",
+    "description": "WebAIM reference description"
+  },
+  "refDiagonal": {
+    "message": "Referencia o método de diagnóstico da ferramenta diagonal de componentes de acessibilidade.",
+    "description": "Diagonal tool reference description"
+  },
+  "refPageRuler": {
+    "message": "A ideia de calcular elementos com largura/altura automática vem do Page Ruler.",
+    "description": "Page Ruler reference description"
+  },
+  "refMoreLink": {
+    "message": "mais",
+    "description": "More link text"
+  },
+  "supportDesc": {
+    "message": "Entre em contato conosco a qualquer momento se tiver dúvidas ou sugestões de melhoria.",
+    "description": "Support description"
+  },
+  "supportLink": {
+    "message": "Fale conosco",
+    "description": "Contact link text"
+  },
+  "settingSaved": {
+    "message": "Configurações salvas com sucesso.",
+    "description": "Settings saved message"
+  },
+  "translationDisclaimer": {
+    "message": "As traduções são fornecidas por tradução automática e podem conter erros. Por favor, relate quaisquer imprecisões.",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "Relatar erro de tradução",
+    "description": "Report translation error link"
+  }
+}

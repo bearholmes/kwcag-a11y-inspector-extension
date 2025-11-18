@@ -1,0 +1,294 @@
+{
+  "extName": {
+    "message": "KWCAG A11y Inspector",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Outil de mesure des critères opérables KWCAG 2.1.3",
+    "description": "Extension description"
+  },
+  "contextMenuCalc": {
+    "message": "Ouvrir la calculatrice manuelle",
+    "description": "Context menu item"
+  },
+  "alertChromeInternal": {
+    "message": "Ne fonctionne pas sur les pages internes de Chrome/Edge.",
+    "description": "Internal page warning"
+  },
+  "alertStorePage": {
+    "message": "Ne fonctionne pas sur les pages du store.",
+    "description": "Store page warning"
+  },
+  "alertRestrictedPage": {
+    "message": "Impossible d'utiliser l'extension sur cette page.\n(Page restreinte)",
+    "description": "Restricted page warning"
+  },
+  "alertExtensionError": {
+    "message": "Une erreur s'est produite lors de l'exécution de l'extension.\nVeuillez vérifier la console.",
+    "description": "General error message"
+  },
+  "calcTitle": {
+    "message": "Calcul manuel",
+    "description": "Calculator title"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "Height label"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "Width label"
+  },
+  "calcConfirm": {
+    "message": "Confirmer",
+    "description": "Confirm button"
+  },
+  "calcClose": {
+    "message": "Fermer",
+    "description": "Close button"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "Results title"
+  },
+  "calcStandard": {
+    "message": "Standard",
+    "description": "Standard label"
+  },
+  "errorInvalidInput": {
+    "message": "Valeur d'entrée invalide.",
+    "description": "Invalid input error"
+  },
+  "errorMissingElement": {
+    "message": "Élément requis introuvable.",
+    "description": "Element missing error"
+  },
+  "errorStorage": {
+    "message": "Impossible de lire les données du stockage.",
+    "description": "Storage error"
+  },
+  "errorCalculation": {
+    "message": "Une erreur s'est produite lors du calcul.",
+    "description": "Calculation error"
+  },
+  "errorInputValidation": {
+    "message": "Seuls les nombres positifs sont autorisés.",
+    "description": "Input validation error"
+  },
+  "errorUIInit": {
+    "message": "Échec de l'initialisation de l'interface.",
+    "description": "UI initialization error"
+  },
+  "errorResultDisplay": {
+    "message": "Erreur lors de l'affichage des résultats.",
+    "description": "Result display error"
+  },
+  "errorCalcInit": {
+    "message": "Échec de l'initialisation de la calculatrice.",
+    "description": "Calculator initialization error"
+  },
+  "pauseMessage": {
+    "message": "En pause. Appuyez sur ESC pour reprendre.",
+    "description": "Pause message"
+  },
+  "resumeMessage": {
+    "message": "Repris.",
+    "description": "Resume message"
+  },
+  "optionPageTitle": {
+    "message": "kwcag a11y inspector - Options",
+    "description": "Options page title"
+  },
+  "optionVersion": {
+    "message": "Version",
+    "description": "Version label"
+  },
+  "optionMenu": {
+    "message": "Menu des options",
+    "description": "Options menu title"
+  },
+  "optionContent": {
+    "message": "Contenu des options",
+    "description": "Options content title"
+  },
+  "menuIntro": {
+    "message": "Introduction",
+    "description": "Introduction menu"
+  },
+  "menuShortcuts": {
+    "message": "Raccourcis",
+    "description": "Shortcuts menu"
+  },
+  "menuSettings": {
+    "message": "Paramètres",
+    "description": "Settings menu"
+  },
+  "menuReferences": {
+    "message": "Références",
+    "description": "References menu"
+  },
+  "menuSupport": {
+    "message": "Support",
+    "description": "Support menu"
+  },
+  "introDesc1": {
+    "message": "Fournit des fonctionnalités pour mesurer les éléments de test opérables 2.1.3 de KWCAG 2.1",
+    "description": "Introduction description 1"
+  },
+  "introDesc2": {
+    "message": "Fournit des fonctionnalités auxiliaires utiles lors de la mesure des éléments de test de contraste de couleur 1.3.3",
+    "description": "Introduction description 2"
+  },
+  "introDesc3": {
+    "message": "Standard : box + padding + border",
+    "description": "Introduction description 3"
+  },
+  "introTip": {
+    "message": "astuce",
+    "description": "Tip label"
+  },
+  "introWarning1": {
+    "message": "* Note : Malheureusement, en raison des caractéristiques de Chrome, le contenu à l'intérieur des iframe/frame ne peut pas être vérifié.",
+    "description": "Introduction warning 1"
+  },
+  "introWarning2": {
+    "message": "* Vous pouvez ouvrir la calculatrice manuelle depuis le menu contextuel affiché lors d'un clic droit.",
+    "description": "Introduction warning 2"
+  },
+  "shortcutDesc": {
+    "message": "L'utilisation de raccourcis est plus pratique.",
+    "description": "Shortcut description"
+  },
+  "shortcutEsc": {
+    "message": "Pause / Reprendre (disponible lorsqu'activé)",
+    "description": "ESC shortcut description"
+  },
+  "settingResolution": {
+    "message": "Standard de résolution",
+    "description": "Resolution setting label"
+  },
+  "settingMonitor": {
+    "message": "Standard du moniteur",
+    "description": "Monitor setting label"
+  },
+  "settingContrastCheck": {
+    "message": "Vérification du contraste",
+    "description": "Contrast check setting label"
+  },
+  "settingSelectorLine": {
+    "message": "Ligne de sélecteur",
+    "description": "Selector line setting label"
+  },
+  "settingSelectorColor": {
+    "message": "Couleur du sélecteur",
+    "description": "Selector color setting label"
+  },
+  "settingSelectorBorder": {
+    "message": "Bordure du sélecteur",
+    "description": "Selector border setting label"
+  },
+  "settingLinkMode": {
+    "message": "Mode lien",
+    "description": "Link mode setting label"
+  },
+  "settingLinkModeOn": {
+    "message": "ACTIVÉ (limité aux éléments a, button, input)",
+    "description": "Link mode ON label"
+  },
+  "settingLinkModeDesc": {
+    "message": "- Vérifier uniquement jusqu'aux éléments parents",
+    "description": "Link mode description"
+  },
+  "settingLinkModeOff": {
+    "message": "DÉSACTIVÉ (tous les éléments)",
+    "description": "Link mode OFF label"
+  },
+  "settingTrackingMode": {
+    "message": "Sélecteur séparé (lien)",
+    "description": "Tracking mode setting label"
+  },
+  "settingTrackingModeOn": {
+    "message": "ACTIVÉ (inclure la couleur d'arrière-plan)",
+    "description": "Tracking mode ON label"
+  },
+  "settingTrackingModeOff": {
+    "message": "DÉSACTIVÉ",
+    "description": "Tracking mode OFF label"
+  },
+  "settingBgMode": {
+    "message": "Arrière-plan du sélecteur séparé",
+    "description": "Background mode setting label"
+  },
+  "settingBgModeOn": {
+    "message": "ACTIVÉ (inclure l'arrière-plan transparent)",
+    "description": "Background mode ON label"
+  },
+  "settingBgModeOff": {
+    "message": "DÉSACTIVÉ",
+    "description": "Background mode OFF label"
+  },
+  "settingLineTypeSolid": {
+    "message": "Solide",
+    "description": "Solid line label"
+  },
+  "settingLineTypeDashed": {
+    "message": "Tirets",
+    "description": "Dashed line label"
+  },
+  "settingLineTypeDotted": {
+    "message": "Points",
+    "description": "Dotted line label"
+  },
+  "settingSaveButton": {
+    "message": "Enregistrer les paramètres",
+    "description": "Save settings button"
+  },
+  "settingOn": {
+    "message": "ACTIVÉ",
+    "description": "ON label"
+  },
+  "settingOff": {
+    "message": "DÉSACTIVÉ",
+    "description": "OFF label"
+  },
+  "refBasedOn": {
+    "message": "Construit sur la base de CSSViewer.",
+    "description": "CSSViewer reference description"
+  },
+  "refContrast": {
+    "message": "La fonction de vérification du contraste fait référence au Color Contrast Checker de WebAIM.",
+    "description": "WebAIM reference description"
+  },
+  "refDiagonal": {
+    "message": "Référence la méthode de diagnostic de l'outil diagonal de composant d'accessibilité.",
+    "description": "Diagonal tool reference description"
+  },
+  "refPageRuler": {
+    "message": "L'idée de calculer les éléments avec largeur/hauteur automatique provient de Page Ruler.",
+    "description": "Page Ruler reference description"
+  },
+  "refMoreLink": {
+    "message": "plus",
+    "description": "More link text"
+  },
+  "supportDesc": {
+    "message": "N'hésitez pas à nous contacter si vous avez des questions ou des suggestions d'amélioration.",
+    "description": "Support description"
+  },
+  "supportLink": {
+    "message": "Nous contacter",
+    "description": "Contact link text"
+  },
+  "settingSaved": {
+    "message": "Paramètres enregistrés avec succès.",
+    "description": "Settings saved message"
+  },
+  "translationDisclaimer": {
+    "message": "Les traductions sont fournies par traduction automatique et peuvent contenir des erreurs. Veuillez signaler toute inexactitude.",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "Signaler une erreur de traduction",
+    "description": "Report translation error link"
+  }
+}
