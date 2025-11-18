@@ -1,12 +1,12 @@
 // Import CSS
 import './inspector.css';
-import { StorageManager } from '../../shared/storage-utils.js';
-import { CONSTANTS } from './constants.js';
+import { StorageManager } from '../../shared/storage-utils.ts';
+import { CONSTANTS } from './constants.ts';
 import { Inspector } from './inspector-core.js';
 import {
   createShortcutManager,
   setShortcutManager,
-} from './shortcut-manager.js';
+} from './shortcut-manager.ts';
 
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.

@@ -19,7 +19,7 @@ export default defineConfig({
       input: {
         'background/service-worker': resolve(
           __dirname,
-          'src/background/service-worker.js',
+          'src/background/service-worker.ts',
         ),
         'content/inspector': resolve(
           __dirname,
