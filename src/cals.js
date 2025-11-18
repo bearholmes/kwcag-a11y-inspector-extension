@@ -1,166 +1,496 @@
 (function () {
+  // ==================== CONSTANTS ====================
+
+  /**
+   * UI 요소 ID 상수
+   * @const {Object}
+   */
+  const ELEMENT_IDS = {
+    CONTAINER: 'dkInspect_cals',
+    INPUT_HEIGHT: 'dkInspect_input_height',
+    INPUT_WIDTH: 'dkInspect_input_width',
+    BTN_SUBMIT: 'dkInspect_btn_submit',
+    BTN_CLOSE: 'dkInspect_btn_close',
+    RESULT: 'dkInspect_cals_result',
+  };
+
+  /**
+   * CSS 클래스 상수
+   * @const {Object}
+   */
+  const CSS_CLASSES = {
+    PROPERTY: 'dkInspect_property',
+    BUTTON: 'btn',
+  };
+
+  /**
+   * 스토리지 키 상수
+   * @const {Object}
+   */
+  const STORAGE_KEYS = {
+    RESOLUTIONS: 'resolutions',
+    MONITORS: 'monitors',
+  };
+
+  /**
+   * 계산 상수
+   * @const {Object}
+   */
+  const CALCULATION_CONSTANTS = {
+    MM_PER_INCH: 25.4,
+    DECIMAL_PLACES_STANDARD: 2,
+    DECIMAL_PLACES_RESULT: 1,
+  };
+
+  /**
+   * 기본 에러 메시지
+   * @const {Object}
+   */
+  const ERROR_MESSAGES = {
+    INVALID_INPUT: '유효하지 않은 입력값입니다.',
+    MISSING_ELEMENT: '필수 요소를 찾을 수 없습니다.',
+    STORAGE_ERROR: '저장소에서 데이터를 읽을 수 없습니다.',
+    CALCULATION_ERROR: '계산 중 오류가 발생했습니다.',
+  };
+
+  // ==================== UTILITY FUNCTIONS ====================
+
   // document 객체와 html 요소를 변수에 할당합니다.
   const doc = document;
 
-  // $ 함수를 정의합니다. 이 함수는 ID를 인자로 받아 해당 ID를 가진 요소를 반환합니다.
-  const $ = function () {
-    return document.getElementById(arguments[0]);
+  /**
+   * ID를 인자로 받아 해당 ID를 가진 DOM 요소를 반환합니다.
+   *
+   * @function $
+   * @param {string} id - 찾고자 하는 요소의 ID
+   * @returns {HTMLElement|null} 찾은 DOM 요소 또는 null
+   * @example
+   * const element = $('myElementId');
+   */
+  const $ = function (id) {
+    try {
+      if (!id || typeof id !== 'string') {
+        console.error('Invalid ID provided to $ function:', id);
+        return null;
+      }
+      return document.getElementById(id);
+    } catch (error) {
+      console.error('Error in $ function:', error);
+      return null;
+    }
   };
 
-  // "chrome.storage.sync" API를 이용하여, 저장된 데이터를 읽어오는 함수를 정의합니다.
+  /**
+   * Chrome Storage Sync API를 이용하여 저장된 데이터를 읽어오는 함수입니다.
+   *
+   * @async
+   * @function readData
+   * @param {string} myKey - 읽어올 데이터의 키
+   * @returns {Promise<Object>} 저장소에서 읽어온 데이터를 포함한 Promise 객체
+   * @throws {Error} 스토리지 읽기 실패 시 에러
+   * @example
+   * const data = await readData('myKey');
+   */
   function readData(myKey) {
-    // Promise 객체를 생성합니다.
-    return new Promise((resolve) => {
-      // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
-      chrome.storage.sync.get(myKey, function (data) {
-        // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
-        resolve(data);
-      });
+    return new Promise((resolve, reject) => {
+      try {
+        // 입력 검증
+        if (!myKey || typeof myKey !== 'string') {
+          reject(new Error('Invalid key provided to readData'));
+          return;
+        }
+
+        // Chrome Storage API 사용 가능 여부 확인
+        if (!chrome || !chrome.storage || !chrome.storage.sync) {
+          reject(new Error('Chrome storage API not available'));
+          return;
+        }
+
+        // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
+        chrome.storage.sync.get(myKey, function (data) {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError.message));
+            return;
+          }
+          // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
+          resolve(data);
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
+  /**
+   * 숫자 입력값의 유효성을 검증하는 함수입니다.
+   *
+   * @function validateNumericInput
+   * @param {string|number} value - 검증할 값
+   * @returns {boolean} 유효한 숫자인 경우 true, 그렇지 않으면 false
+   * @example
+   * validateNumericInput('123'); // true
+   * validateNumericInput('abc'); // false
+   */
+  function validateNumericInput(value) {
+    if (value === null || value === undefined || value === '') {
+      return false;
+    }
+    const num = Number(value);
+    return !isNaN(num) && isFinite(num) && num > 0;
+  }
+
+  /**
+   * DOM 요소가 존재하는지 확인하는 함수입니다.
+   *
+   * @function validateElement
+   * @param {HTMLElement|null} element - 검증할 DOM 요소
+   * @param {string} elementName - 요소의 이름 (에러 메시지용)
+   * @returns {boolean} 요소가 존재하면 true, 그렇지 않으면 false
+   */
+  function validateElement(element, elementName) {
+    if (!element) {
+      console.error(`${ERROR_MESSAGES.MISSING_ELEMENT}: ${elementName}`);
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * 에러 메시지를 사용자에게 표시하는 함수입니다.
+   *
+   * @function displayError
+   * @param {string} message - 표시할 에러 메시지
+   * @returns {void}
+   */
+  function displayError(message) {
+    const resultElement = $(ELEMENT_IDS.RESULT);
+    if (resultElement) {
+      resultElement.textContent = '';
+      const errorDiv = doc.createElement('div');
+      errorDiv.style.color = 'red';
+      errorDiv.style.padding = '10px';
+      errorDiv.textContent = `오류: ${message}`;
+      resultElement.appendChild(errorDiv);
+    }
+    alert(`오류: ${message}`);
+  }
+
+  // ==================== MAIN CALCULATOR OBJECT ====================
+
   const cals = {
-    // "dkInspect_cals" ID를 가진 "div" 요소를 생성하고, 이를 화면에 추가하는 함수를 정의합니다.
+    /**
+     * "dkInspect_cals" ID를 가진 "div" 요소를 생성하고, 이를 화면에 추가하는 함수입니다.
+     * 계산기 UI의 초기 구조를 생성합니다.
+     *
+     * @function initialize
+     * @memberof cals
+     * @returns {void}
+     * @throws {Error} DOM 요소 생성 또는 추가 실패 시 에러
+     * @example
+     * cals.initialize();
+     */
     initialize: function () {
-      // "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals"로 설정합니다.
-      const a = doc.createElement('div');
-      a.id = 'dkInspect_cals';
+      try {
+        // "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals"로 설정합니다.
+        const container = doc.createElement('div');
+        container.id = ELEMENT_IDS.CONTAINER;
 
-      // "h1" 요소를 생성하고, 이 요소에 "수동 계산"이라는 텍스트 노드를 추가합니다.
-      const header = doc.createElement('h1');
-      header.appendChild(doc.createTextNode('수동 계산'));
-      a.appendChild(header);
+        // "h1" 요소를 생성하고, 이 요소에 "수동 계산"이라는 텍스트 노드를 추가합니다.
+        const header = doc.createElement('h1');
+        header.appendChild(doc.createTextNode('수동 계산'));
+        container.appendChild(header);
 
-      // "div" 요소를 하나 더 생성하고, 이 요소에 "ul" 요소를 추가합니다.
-      const input = doc.createElement('div');
-      const ul = doc.createElement('ul');
-      const list = [
-        // 높이
-        "<span class='dkInspect_property'><label for='dkInspect_input_height'>Height</label></span><span><input type='text' id='dkInspect_input_height'> px</span>",
-        // 너비
-        "<span class='dkInspect_property'><label for='dkInspect_input_width'>Width</label></span><span><input type='text' id='dkInspect_input_width'> px</span>",
-        // 하단 버튼
-        "<span style='float:right'><button id='dkInspect_btn_submit' class='btn'>확인</button><button id='dkInspect_btn_close' class='btn'>닫기</buttton></span>",
-      ];
+        // "div" 요소를 하나 더 생성하고, 이 요소에 "ul" 요소를 추가합니다.
+        const inputContainer = doc.createElement('div');
+        const ul = doc.createElement('ul');
 
-      // "li" 요소를 생성하고, "ul" 요소에 추가합니다.
-      list.forEach((item) => {
-        const li = doc.createElement('li');
-        li.innerHTML = item;
-        ul.appendChild(li);
-      });
-
-      // "ul" 요소를 "div" 요소에 추가합니다.
-      input.appendChild(ul);
-      a.appendChild(input);
-
-      // 결과를 출력할 "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals_result"로 설정합니다.
-      const result = doc.createElement('div');
-      result.id = 'dkInspect_cals_result';
-      a.appendChild(result);
-
-      // 새로 생성한 "div" 요소를 "body" 요소에 추가합니다.
-      window.document.getElementsByTagName('BODY')[0].appendChild(a);
-    },
-
-    // "dkInspect_cals" ID를 가진 "div" 요소를 제거하는 함수를 정의합니다.
-    close: function () {
-      // "dkInspect_cals" ID를 가진 "div" 요소를 가져와 "a" 변수에 할당합니다.
-      const a = $('dkInspect_cals');
-
-      // "body" 요소에서 "a" 요소를 제거합니다.
-      window.document.getElementsByTagName('BODY')[0].removeChild(a);
-    },
-
-    // 입력 필드에서 값을 가져와 계산을 수행한 다음, 결과를 "dkInspect_cals_result" ID를 가진 요소에 출력하는 함수를 정의합니다.
-    submit: async function () {
-      // "dkInspect_input_height"와 "dkInspect_input_width" ID를 가진 입력 필드의 값을 가져와 "h"와 "w" 변수에 할당합니다.
-      const h = $('dkInspect_input_height').value,
-        w = $('dkInspect_input_width').value;
-
-      // "setDiagonal" 함수를 호출하여 계산을 수행합니다.
-      await cals.setDiagonal(h, w, function (cb) {
-        // 결과를 출력하기 위해 "dkInspect_cals_result" ID를 가진 요소를 찾아 가져옵니다.
-        const res = $('dkInspect_cals_result');
-
-        // 이전 내용을 모두 지우고, "h2" 요소를 추가하여 "Results"라는 텍스트 노드를 출력합니다.
-        res.textContent = '';
-        const header = doc.createElement('h2');
-        header.appendChild(doc.createTextNode('Results'));
-        res.appendChild(header);
-
-        // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
+        // 입력 필드 목록
         const list = [
-          `<span class='dkInspect_property'> height : </span><span>${cb.height} mm (${h}px)</span>`,
-          `<span class='dkInspect_property'> width : </span><span>${cb.width} mm (${w}px)</span>`,
-          `<span class='dkInspect_property'> diagonal : </span><span>${cb.diagonal} mm (${cb.diagonal_px}px)</span>`,
+          // 높이
+          `<span class='${CSS_CLASSES.PROPERTY}'><label for='${ELEMENT_IDS.INPUT_HEIGHT}'>Height</label></span><span><input type='text' id='${ELEMENT_IDS.INPUT_HEIGHT}'> px</span>`,
+          // 너비
+          `<span class='${CSS_CLASSES.PROPERTY}'><label for='${ELEMENT_IDS.INPUT_WIDTH}'>Width</label></span><span><input type='text' id='${ELEMENT_IDS.INPUT_WIDTH}'> px</span>`,
+          // 하단 버튼
+          `<span style='float:right'><button id='${ELEMENT_IDS.BTN_SUBMIT}' class='${CSS_CLASSES.BUTTON}'>확인</button><button id='${ELEMENT_IDS.BTN_CLOSE}' class='${CSS_CLASSES.BUTTON}'>닫기</button></span>`,
         ];
 
-        // "list" 배열에 저장된 값들을 이용하여 "ul" 요소를 생성하고, 이 요소에 "li" 요소들을 추가하는 함수를 정의합니다.
-        const ul = doc.createElement('ul');
+        // "li" 요소를 생성하고, "ul" 요소에 추가합니다.
         list.forEach((item) => {
-          // "li" 요소를 생성하고, 해당 요소에 "innerHTML" 속성을 이용하여 값을 할당합니다.
           const li = doc.createElement('li');
           li.innerHTML = item;
-
-          // 생성된 "li" 요소를 "ul" 요소에 추가합니다.
           ul.appendChild(li);
         });
 
-        // "ul" 요소를 "dkInspect_cals_result" 요소에 추가합니다.
-        res.appendChild(ul);
+        // "ul" 요소를 "div" 요소에 추가합니다.
+        inputContainer.appendChild(ul);
+        container.appendChild(inputContainer);
 
-        // 해상도와 모니터 크기 정보를 "span" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
-        const span = doc.createElement('span');
-        span.textContent =
-          ' * 기준 : ' + cb.resolution + ' (' + cb.monitor + ' inch)';
-        res.appendChild(span);
-      });
+        // 결과를 출력할 "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals_result"로 설정합니다.
+        const result = doc.createElement('div');
+        result.id = ELEMENT_IDS.RESULT;
+        container.appendChild(result);
+
+        // 새로 생성한 "div" 요소를 "body" 요소에 추가합니다.
+        const body = window.document.getElementsByTagName('BODY')[0];
+        if (!body) {
+          throw new Error('Body element not found');
+        }
+        body.appendChild(container);
+      } catch (error) {
+        console.error('Error in initialize:', error);
+        displayError('UI 초기화에 실패했습니다.');
+      }
     },
 
-    // 입력받은 높이와 너비를 사용하여, 모니터의 대각선 길이, 해상도, 그리고 픽셀당 mm 길이를 계산하는 함수를 정의합니다.
+    /**
+     * "dkInspect_cals" ID를 가진 "div" 요소를 제거하는 함수입니다.
+     * 계산기 UI를 화면에서 제거합니다.
+     *
+     * @function close
+     * @memberof cals
+     * @returns {void}
+     * @throws {Error} 요소 제거 실패 시 에러
+     * @example
+     * cals.close();
+     */
+    close: function () {
+      try {
+        // "dkInspect_cals" ID를 가진 "div" 요소를 가져와 변수에 할당합니다.
+        const container = $(ELEMENT_IDS.CONTAINER);
+
+        if (!validateElement(container, ELEMENT_IDS.CONTAINER)) {
+          return;
+        }
+
+        // "body" 요소에서 "container" 요소를 제거합니다.
+        const body = window.document.getElementsByTagName('BODY')[0];
+        if (!body) {
+          throw new Error('Body element not found');
+        }
+
+        body.removeChild(container);
+      } catch (error) {
+        console.error('Error in close:', error);
+        // 닫기 실패는 심각한 문제가 아니므로 사용자에게 알리지 않음
+      }
+    },
+
+    /**
+     * 입력 필드에서 값을 가져와 계산을 수행한 다음, 결과를 화면에 출력하는 함수입니다.
+     *
+     * @async
+     * @function submit
+     * @memberof cals
+     * @returns {Promise<void>} 비동기 작업 완료를 나타내는 Promise
+     * @throws {Error} 입력값 검증 실패 또는 계산 중 에러 발생 시
+     * @example
+     * await cals.submit();
+     */
+    submit: async function () {
+      try {
+        // 입력 요소들을 가져옵니다.
+        const heightInput = $(ELEMENT_IDS.INPUT_HEIGHT);
+        const widthInput = $(ELEMENT_IDS.INPUT_WIDTH);
+
+        // 요소 존재 여부 확인
+        if (!validateElement(heightInput, 'Height Input') ||
+            !validateElement(widthInput, 'Width Input')) {
+          displayError(ERROR_MESSAGES.MISSING_ELEMENT);
+          return;
+        }
+
+        // "dkInspect_input_height"와 "dkInspect_input_width" ID를 가진 입력 필드의 값을 가져옵니다.
+        const h = heightInput.value;
+        const w = widthInput.value;
+
+        // 입력값 검증
+        if (!validateNumericInput(h) || !validateNumericInput(w)) {
+          displayError(ERROR_MESSAGES.INVALID_INPUT + ' 양수 숫자만 입력 가능합니다.');
+          return;
+        }
+
+        // "setDiagonal" 함수를 호출하여 계산을 수행합니다.
+        await cals.setDiagonal(h, w, function (cb) {
+          try {
+            // 결과를 출력하기 위해 "dkInspect_cals_result" ID를 가진 요소를 찾아 가져옵니다.
+            const res = $(ELEMENT_IDS.RESULT);
+
+            if (!validateElement(res, 'Result Container')) {
+              return;
+            }
+
+            // 이전 내용을 모두 지우고, "h2" 요소를 추가하여 "Results"라는 텍스트 노드를 출력합니다.
+            res.textContent = '';
+            const header = doc.createElement('h2');
+            header.appendChild(doc.createTextNode('Results'));
+            res.appendChild(header);
+
+            // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
+            const list = [
+              `<span class='${CSS_CLASSES.PROPERTY}'> height : </span><span>${cb.height} mm (${h}px)</span>`,
+              `<span class='${CSS_CLASSES.PROPERTY}'> width : </span><span>${cb.width} mm (${w}px)</span>`,
+              `<span class='${CSS_CLASSES.PROPERTY}'> diagonal : </span><span>${cb.diagonal} mm (${cb.diagonal_px}px)</span>`,
+            ];
+
+            // "list" 배열에 저장된 값들을 이용하여 "ul" 요소를 생성하고, 이 요소에 "li" 요소들을 추가합니다.
+            const ul = doc.createElement('ul');
+            list.forEach((item) => {
+              // "li" 요소를 생성하고, 해당 요소에 "innerHTML" 속성을 이용하여 값을 할당합니다.
+              const li = doc.createElement('li');
+              li.innerHTML = item;
+
+              // 생성된 "li" 요소를 "ul" 요소에 추가합니다.
+              ul.appendChild(li);
+            });
+
+            // "ul" 요소를 "dkInspect_cals_result" 요소에 추가합니다.
+            res.appendChild(ul);
+
+            // 해상도와 모니터 크기 정보를 "span" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
+            const span = doc.createElement('span');
+            span.textContent =
+              ' * 기준 : ' + cb.resolution + ' (' + cb.monitor + ' inch)';
+            res.appendChild(span);
+          } catch (error) {
+            console.error('Error in submit callback:', error);
+            displayError('결과 표시 중 오류가 발생했습니다.');
+          }
+        });
+      } catch (error) {
+        console.error('Error in submit:', error);
+        displayError(ERROR_MESSAGES.CALCULATION_ERROR);
+      }
+    },
+
+    /**
+     * 입력받은 높이와 너비를 사용하여 모니터의 대각선 길이, 해상도, 픽셀당 mm 길이를 계산하는 함수입니다.
+     *
+     * @async
+     * @function setDiagonal
+     * @memberof cals
+     * @param {string|number} h - 높이 값 (픽셀 단위)
+     * @param {string|number} w - 너비 값 (픽셀 단위)
+     * @param {Function} callback - 계산 결과를 전달받을 콜백 함수
+     * @param {Object} callback.result - 계산 결과 객체
+     * @param {string} callback.result.monitor - 모니터 크기 (인치)
+     * @param {string} callback.result.resolution - 해상도
+     * @param {string} callback.result.height - 계산된 높이 (mm)
+     * @param {string} callback.result.width - 계산된 너비 (mm)
+     * @param {string} callback.result.diagonal - 계산된 대각선 길이 (mm)
+     * @param {string} callback.result.diagonal_px - 계산된 대각선 길이 (픽셀)
+     * @returns {Promise<void>} 비동기 작업 완료를 나타내는 Promise
+     * @throws {Error} 스토리지 읽기 실패 또는 계산 중 에러 발생 시
+     * @example
+     * await cals.setDiagonal(1920, 1080, (result) => {
+     *   console.log(result.diagonal);
+     * });
+     */
     setDiagonal: async function (h, w, callback) {
-      // "chrome.storage.sync" API를 이용하여 저장된 "resolutions"와 "monitors" 값을 가져옵니다.
-      const { resolutions } = await readData('resolutions');
-      const { monitors } = await readData('monitors');
+      try {
+        // 입력값 검증
+        if (!validateNumericInput(h) || !validateNumericInput(w)) {
+          throw new Error(ERROR_MESSAGES.INVALID_INPUT);
+        }
 
-      // 계산 결과를 저장할 객체를 생성합니다.
-      const cb = {};
-      cb.monitor = monitors;
-      cb.resolution = resolutions;
+        if (typeof callback !== 'function') {
+          throw new Error('Callback must be a function');
+        }
 
-      // 해상도의 가로 세로 값을 구합니다.
-      const std_res = cb.resolution.split('x');
+        // "chrome.storage.sync" API를 이용하여 저장된 "resolutions"와 "monitors" 값을 가져옵니다.
+        const resolutionsData = await readData(STORAGE_KEYS.RESOLUTIONS);
+        const monitorsData = await readData(STORAGE_KEYS.MONITORS);
 
-      // 가로 세로 값을 이용하여 표준 대각선 길이를 구합니다.
-      const std_diagonal = Math.sqrt(
-        Math.pow(parseInt(std_res[0]), 2) + Math.pow(parseInt(std_res[1]), 2),
-      ).toFixed(2);
+        // 데이터 검증
+        if (!resolutionsData || !resolutionsData.resolutions) {
+          throw new Error(`${ERROR_MESSAGES.STORAGE_ERROR}: resolutions`);
+        }
+        if (!monitorsData || !monitorsData.monitors) {
+          throw new Error(`${ERROR_MESSAGES.STORAGE_ERROR}: monitors`);
+        }
 
-      // 표준 대각선 길이를 이용하여 픽셀당 mm 길이를 구합니다.
-      const std_px = 25.4 / (std_diagonal / cb.monitor); // mm 기준
+        const { resolutions } = resolutionsData;
+        const { monitors } = monitorsData;
 
-      // 입력받은 높이와 너비를 이용하여, 실제 높이와 너비를 구합니다.
-      cb.height = (h * std_px).toFixed(1); // to mm
-      cb.width = (w * std_px).toFixed(1); // to mm
-      cb.diagonal = Math.sqrt(
-        Math.pow(cb.width, 2) + Math.pow(cb.height, 2),
-      ).toFixed(1); // to mm
+        // 계산 결과를 저장할 객체를 생성합니다.
+        const cb = {};
+        cb.monitor = monitors;
+        cb.resolution = resolutions;
 
-      // 입력받은 높이와 너비를 이용하여 대각선 길이(px)를 구합니다.
-      cb.diagonal_px = Math.sqrt(Math.pow(h, 2) + Math.pow(w, 2)).toFixed(1); // to px
+        // 해상도의 가로 세로 값을 구합니다.
+        const std_res = cb.resolution.split('x');
 
-      // 계산 결과를 콜백 함수에 전달합니다.
-      callback(cb);
+        if (std_res.length !== 2) {
+          throw new Error('Invalid resolution format');
+        }
+
+        const resWidth = parseInt(std_res[0]);
+        const resHeight = parseInt(std_res[1]);
+
+        if (!validateNumericInput(resWidth) || !validateNumericInput(resHeight)) {
+          throw new Error('Invalid resolution values');
+        }
+
+        // 가로 세로 값을 이용하여 표준 대각선 길이를 구합니다.
+        const std_diagonal = Math.sqrt(
+          Math.pow(resWidth, 2) + Math.pow(resHeight, 2),
+        ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_STANDARD);
+
+        // 모니터 크기 검증
+        const monitorSize = parseFloat(cb.monitor);
+        if (!validateNumericInput(monitorSize)) {
+          throw new Error('Invalid monitor size');
+        }
+
+        // 표준 대각선 길이를 이용하여 픽셀당 mm 길이를 구합니다.
+        const std_px = CALCULATION_CONSTANTS.MM_PER_INCH / (std_diagonal / monitorSize); // mm 기준
+
+        // 입력값을 숫자로 변환
+        const heightNum = parseFloat(h);
+        const widthNum = parseFloat(w);
+
+        // 입력받은 높이와 너비를 이용하여, 실제 높이와 너비를 구합니다.
+        cb.height = (heightNum * std_px).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
+        cb.width = (widthNum * std_px).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
+        cb.diagonal = Math.sqrt(
+          Math.pow(cb.width, 2) + Math.pow(cb.height, 2),
+        ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
+
+        // 입력받은 높이와 너비를 이용하여 대각선 길이(px)를 구합니다.
+        cb.diagonal_px = Math.sqrt(
+          Math.pow(heightNum, 2) + Math.pow(widthNum, 2)
+        ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to px
+
+        // 계산 결과를 콜백 함수에 전달합니다.
+        callback(cb);
+      } catch (error) {
+        console.error('Error in setDiagonal:', error);
+        displayError(error.message || ERROR_MESSAGES.CALCULATION_ERROR);
+        throw error;
+      }
     },
   };
 
-  // "dkInspect_cals" 요소가 없을 경우에만 "cals.initialize()" 함수를 호출하여 계산기 UI를 초기화합니다.
-  if (!$('dkInspect_cals')) {
-    cals.initialize();
-  }
+  // ==================== INITIALIZATION ====================
 
-  // "dkInspect_btn_close" 요소와 "dkInspect_btn_submit" 요소에 이벤트 리스너를 추가합니다.
-  $('dkInspect_btn_close').addEventListener('click', cals.close);
-  $('dkInspect_btn_submit').addEventListener('click', cals.submit);
+  try {
+    // "dkInspect_cals" 요소가 없을 경우에만 "cals.initialize()" 함수를 호출하여 계산기 UI를 초기화합니다.
+    if (!$(ELEMENT_IDS.CONTAINER)) {
+      cals.initialize();
+    }
+
+    // "dkInspect_btn_close" 요소와 "dkInspect_btn_submit" 요소에 이벤트 리스너를 추가합니다.
+    const closeBtn = $(ELEMENT_IDS.BTN_CLOSE);
+    const submitBtn = $(ELEMENT_IDS.BTN_SUBMIT);
+
+    if (validateElement(closeBtn, 'Close Button')) {
+      closeBtn.addEventListener('click', cals.close);
+    }
+
+    if (validateElement(submitBtn, 'Submit Button')) {
+      submitBtn.addEventListener('click', cals.submit);
+    }
+  } catch (error) {
+    console.error('Error during initialization:', error);
+    displayError('계산기 초기화에 실패했습니다.');
+  }
 })();

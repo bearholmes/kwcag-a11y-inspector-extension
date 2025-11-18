@@ -11,15 +11,110 @@
  * Version 2. See the file COPYING for more details.
  */
 
-// "chrome.storage.sync" API를 이용하여, 저장된 데이터를 읽어오는 함수를 정의합니다.
+/*
+ * ============================================================================
+ * CONSTANTS SECTION
+ * ============================================================================
+ */
+
+// COLOR & STYLING CONSTANTS
+const CONSTANTS = {
+  // 색상 및 스타일 상수
+  COLOR: {
+    DEFAULT_WHITE: '#FFFFFF',
+    DEFAULT_BLACK: '#000000',
+    TRANSPARENT_HEX: '#00000000',
+    TRANSPARENT_HEX_SHORT: '00000000',
+    MESSAGE_BG: '#3c77eb',
+    MESSAGE_TEXT: '#ffffff',
+  },
+
+  // 측정 및 계산 상수
+  MEASUREMENT: {
+    MM_PER_INCH: 25.4,
+    BLOCK_WIDTH: 332,
+    DECIMAL_PLACES: 2,
+    SIZE_PRECISION: 1,
+  },
+
+  // WCAG 명도 대비 계산 상수
+  WCAG_CONTRAST: {
+    LUMINANCE_RED: 0.2126,
+    LUMINANCE_GREEN: 0.7152,
+    LUMINANCE_BLUE: 0.0722,
+    SRGB_THRESHOLD: 0.03928,
+    SRGB_DIVISOR: 12.92,
+    SRGB_OFFSET: 0.055,
+    SRGB_MULTIPLIER: 1.055,
+    SRGB_EXPONENT: 2.4,
+    CONTRAST_OFFSET: 0.05,
+    MAX_RGB_VALUE: 255,
+  },
+
+  // 타이밍 상수 (밀리초)
+  TIMING: {
+    MESSAGE_DISPLAY: 3000,
+  },
+
+  // UI 위치 및 크기 상수
+  UI: {
+    POSITION_OFFSET: 20,
+    POSITION_OFFSET_LARGE: 40,
+    POSITION_MIN: 10,
+    Z_INDEX_MAX: '99999999',
+    BORDER_WIDTH: 1,
+    INLINE_BLOCK_SIZE: 8,
+  },
+
+  // 상호작용 요소 태그명
+  INTERACTIVE_ELEMENTS: ['a', 'button', 'input', 'area'],
+
+  // 부모 상호작용 요소 태그명
+  PARENT_INTERACTIVE_ELEMENTS: ['a', 'button', 'input'],
+
+  // 스타일 속성 값
+  STYLE_VALUES: {
+    NONE: 'none',
+    AUTO: 'auto',
+    TRANSPARENT: 'transparent',
+    ZERO_PX: '0px',
+    ZERO: '0',
+    ZERO_MARGIN_PADDING: '0 0 0 0',
+  },
+
+  // 노드 타입
+  NODE_TYPE: {
+    ELEMENT: 1,
+  },
+
+  // HEX 색상 길이
+  COLOR_LENGTH: {
+    SHORT: 3,
+    FULL: 6,
+  },
+};
+
+/**
+ * Chrome Storage API를 사용하여 저장된 데이터를 읽어오는 함수
+ * @param {string} myKey - 읽어올 데이터의 키
+ * @returns {Promise} 저장된 데이터를 포함하는 Promise 객체
+ */
 function readData(myKey) {
   // Promise 객체를 생성합니다.
-  return new Promise((resolve) => {
-    // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
-    chrome.storage.sync.get(myKey, function (data) {
-      // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
-      resolve(data);
-    });
+  return new Promise((resolve, reject) => {
+    try {
+      // "chrome.storage.sync.get" 함수를 호출하여 데이터를 읽어옵니다.
+      chrome.storage.sync.get(myKey, function (data) {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError);
+        } else {
+          // 읽어온 데이터를 Promise 객체를 통해 반환합니다.
+          resolve(data);
+        }
+      });
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
@@ -38,8 +133,8 @@ async function myApp() {
   const [width, height] = resolutions.split('x');
   const diagonal = Math.sqrt(
     Math.pow(parseInt(width), 2) + Math.pow(parseInt(height), 2),
-  ).toFixed(2);
-  const std_px = 25.4 / (diagonal / monitors);
+  ).toFixed(CONSTANTS.MEASUREMENT.DECIMAL_PLACES);
+  const std_px = CONSTANTS.MEASUREMENT.MM_PER_INCH / (diagonal / monitors);
 
   // "opt" 객체에 각 값을 저장합니다.
   const opt = {
@@ -125,86 +220,146 @@ async function myApp() {
     return dkInspect_hexa[Math.floor(nb / 16)] + dkInspect_hexa[nb % 16];
   }
 
-  // RGB 색상 값을 16진수로 변환하고, HTML 요소를 생성하여 16진수 색상 값과 함께 반환하는 함수입니다.
+  /**
+   * RGB 색상 값을 16진수로 변환하고, HTML 요소를 생성하여 16진수 색상 값과 함께 반환하는 함수
+   * @param {string} str - RGB 형식의 색상 문자열 (예: "rgb(255, 0, 0)")
+   * @returns {string} 색상 박스와 16진수 값을 포함한 HTML 문자열
+   */
   function RGBToHex(str) {
-    // RGB 색상 값을 추출하여 10진수에서 16진수로 변환한 배열을 만듭니다.
-    const hexValues = str.match(/\d+/g).map((val) => DecToHex(parseInt(val)));
-    // 각각의 16진수 값을 조합하여 최종 16진수 색상 값을 만듭니다.
-    let hexStr = `#${hexValues.join('')}`;
+    try {
+      // RGB 색상 값을 추출하여 10진수에서 16진수로 변환한 배열을 만듭니다.
+      const matches = str.match(/\d+/g);
+      if (!matches || matches.length < 3) {
+        return `<span style='border: ${CONSTANTS.UI.BORDER_WIDTH}px solid ${CONSTANTS.COLOR.DEFAULT_BLACK} !important;width: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;height: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;display: inline-block !important;background-color:${CONSTANTS.COLOR.DEFAULT_WHITE} !important;'></span> ${CONSTANTS.COLOR.DEFAULT_WHITE}`;
+      }
 
-    // 만약 hexStr이 #00000000이라면, #FFFFFF으로 대체합니다.
-    if (hexStr === '#00000000') {
-      hexStr = '#FFFFFF';
+      const hexValues = matches.map((val) => DecToHex(parseInt(val)));
+      // 각각의 16진수 값을 조합하여 최종 16진수 색상 값을 만듭니다.
+      let hexStr = `#${hexValues.join('')}`;
+
+      // 만약 hexStr이 #00000000이라면, #FFFFFF으로 대체합니다.
+      if (hexStr === CONSTANTS.COLOR.TRANSPARENT_HEX) {
+        hexStr = CONSTANTS.COLOR.DEFAULT_WHITE;
+      }
+
+      // 생성된 16진수 색상 값을 포함한 HTML 요소를 반환합니다.
+      return `<span style='border: ${CONSTANTS.UI.BORDER_WIDTH}px solid ${CONSTANTS.COLOR.DEFAULT_BLACK} !important;width: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;height: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;display: inline-block !important;background-color:${hexStr} !important;'></span> ${hexStr}`;
+    } catch (error) {
+      console.error('RGBToHex 변환 오류:', error);
+      return `<span style='border: ${CONSTANTS.UI.BORDER_WIDTH}px solid ${CONSTANTS.COLOR.DEFAULT_BLACK} !important;width: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;height: ${CONSTANTS.UI.INLINE_BLOCK_SIZE}px !important;display: inline-block !important;background-color:${CONSTANTS.COLOR.DEFAULT_WHITE} !important;'></span> ${CONSTANTS.COLOR.DEFAULT_WHITE}`;
     }
-
-    // 생성된 16진수 색상 값을 포함한 HTML 요소를 반환합니다.
-    return `<span style='border: 1px solid #000000 !important;width: 8px !important;height: 8px !important;display: inline-block !important;background-color:${hexStr} !important;'></span> ${hexStr}`;
   }
 
-  // RGB 색상 값을 16진수 문자열로 변환하여 반환하는 함수입니다.
+  /**
+   * RGB 색상 값을 16진수 문자열로 변환하여 반환하는 함수
+   * @param {string} str - RGB 형식의 색상 문자열
+   * @returns {string} 16진수 색상 문자열 (예: "FF0000")
+   */
   function RGBToHexStr(str) {
-    // 문자열에서 괄호 안의 값만 추출합니다.
-    const hexValues = str.match(/\((.*?)\)/)[1].split(', ');
-    let hexStr = '';
+    try {
+      // 문자열에서 괄호 안의 값만 추출합니다.
+      const matches = str.match(/\((.*?)\)/);
+      if (!matches || !matches[1]) {
+        return CONSTANTS.COLOR.DEFAULT_WHITE.substring(1);
+      }
 
-    // RGB 값을 16진수 문자열로 변환합니다.
-    for (const item of hexValues) {
-      hexStr += DecToHex(item);
+      const hexValues = matches[1].split(', ');
+      let hexStr = '';
+
+      // RGB 값을 16진수 문자열로 변환합니다.
+      for (const item of hexValues) {
+        hexStr += DecToHex(item);
+      }
+
+      // 만약 hexStr이 '00000000'이라면, 'FFFFFF'으로 대체합니다.
+      if (hexStr === CONSTANTS.COLOR.TRANSPARENT_HEX_SHORT) {
+        hexStr = CONSTANTS.COLOR.DEFAULT_WHITE.substring(1);
+      }
+
+      return hexStr;
+    } catch (error) {
+      console.error('RGBToHexStr 변환 오류:', error);
+      return CONSTANTS.COLOR.DEFAULT_WHITE.substring(1);
     }
-
-    // 만약 hexStr이 '00000000'이라면, 'FFFFFF'으로 대체합니다.
-    if (hexStr === '00000000') {
-      hexStr = 'FFFFFF';
-    }
-
-    return hexStr;
   }
 
   // 문자열에서 'px'를 제거하고, 반올림한 값을 문자열로 반환하는 함수입니다.
   function RemoveExtraFloat(nb) {
-    nb = nb.substr(0, nb.length - 2);
+    nb = nb.substring(0, nb.length - 2);
     return `${Math.round(nb)}px`;
   }
 
   /**
-   * RGB 색상에서 Luminance 값을 계산하여 반환하는 함수입니다.
+   * RGB 색상에서 Luminance 값을 계산하여 반환하는 함수
    * @param {string} color - RGB 색상 코드 문자열 (3자리 또는 6자리)
    * @returns {number|false} 계산된 Luminance 값 (0 ~ 255) 또는 false
    */
   function getL(color) {
-    let R, G, B;
-    if (color.length === 3) {
-      R = getsRGB(color.substring(0, 1) + color.substring(0, 1));
-      G = getsRGB(color.substring(1, 2) + color.substring(1, 2));
-      B = getsRGB(color.substring(2, 3) + color.substring(2, 3));
-    } else if (color.length === 6) {
-      R = getsRGB(color.substring(0, 2));
-      G = getsRGB(color.substring(2, 4));
-      B = getsRGB(color.substring(4, 6));
-    } else {
+    try {
+      let R, G, B;
+      if (color.length === CONSTANTS.COLOR_LENGTH.SHORT) {
+        R = getsRGB(color.substring(0, 1) + color.substring(0, 1));
+        G = getsRGB(color.substring(1, 2) + color.substring(1, 2));
+        B = getsRGB(color.substring(2, 3) + color.substring(2, 3));
+      } else if (color.length === CONSTANTS.COLOR_LENGTH.FULL) {
+        R = getsRGB(color.substring(0, 2));
+        G = getsRGB(color.substring(2, 4));
+        B = getsRGB(color.substring(4, 6));
+      } else {
+        return false;
+      }
+
+      // 값 유효성 검사
+      if (R === false || G === false || B === false) {
+        return false;
+      }
+
+      // Luminance 값 계산하여 반환
+      return (
+        CONSTANTS.WCAG_CONTRAST.LUMINANCE_RED * R +
+        CONSTANTS.WCAG_CONTRAST.LUMINANCE_GREEN * G +
+        CONSTANTS.WCAG_CONTRAST.LUMINANCE_BLUE * B
+      );
+    } catch (error) {
+      console.error('Luminance 계산 오류:', error);
       return false;
     }
-    // Luminance 값 계산하여 반환
-    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
   }
 
-  // 16진수 색상코드를 10진수 RGB 값으로 변환하는 함수
+  /**
+   * 16진수 색상코드를 10진수 RGB 값으로 변환하는 함수
+   * @param {string} color - 16진수 색상 코드
+   * @returns {number|false} 10진수 RGB 값 또는 false
+   */
   function getRGB(color) {
-    const tmp = parseInt(color, 16);
-    return isNaN(tmp) ? false : tmp;
+    try {
+      const tmp = parseInt(color, 16);
+      return isNaN(tmp) ? false : tmp;
+    } catch (error) {
+      console.error('RGB 변환 오류:', error);
+      return false;
+    }
   }
 
-  // 16진수 색상코드를 sRGB 값으로 변환하는 함수
+  /**
+   * 16진수 색상코드를 sRGB 값으로 변환하는 함수
+   * @param {string} color - 16진수 색상 코드
+   * @returns {number|false} sRGB 값 또는 false
+   */
   function getsRGB(color) {
     const tmp = getRGB(color);
     if (tmp === false) {
       return false;
     }
 
-    const sRGB = tmp / 255;
-    return sRGB <= 0.03928
-      ? sRGB / 12.92
-      : Math.pow((sRGB + 0.055) / 1.055, 2.4);
+    const sRGB = tmp / CONSTANTS.WCAG_CONTRAST.MAX_RGB_VALUE;
+    return sRGB <= CONSTANTS.WCAG_CONTRAST.SRGB_THRESHOLD
+      ? sRGB / CONSTANTS.WCAG_CONTRAST.SRGB_DIVISOR
+      : Math.pow(
+          (sRGB + CONSTANTS.WCAG_CONTRAST.SRGB_OFFSET) /
+            CONSTANTS.WCAG_CONTRAST.SRGB_MULTIPLIER,
+          CONSTANTS.WCAG_CONTRAST.SRGB_EXPONENT,
+        );
   }
   /*
    * CSSFunc
@@ -220,6 +375,11 @@ async function myApp() {
     const document = GetCurrentDocument();
     const li = document.getElementById(`dkInspect_${property}`);
 
+    if (!li) {
+      console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
+      return;
+    }
+
     li.lastChild.innerHTML = ` : ${element.getPropertyValue(property)}`;
   }
 
@@ -229,6 +389,11 @@ async function myApp() {
     const document = GetCurrentDocument();
     // 해당 property의 ID를 가진 엘리먼트 가져오기
     const li = document.getElementById(`dkInspect_${property}`);
+
+    if (!li) {
+      console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
+      return 0;
+    }
 
     // 조건이 참일 경우
     if (condition) {
@@ -298,13 +463,26 @@ async function myApp() {
     return boundingRect.height || 0;
   }
 
-  // 요소의 대각선 길이와 너비, 높이 값을 계산하고 이를 li 엘리먼트에 표시하는 함수
+  /**
+   * 요소의 대각선 길이와 너비, 높이 값을 계산하고 이를 li 엘리먼트에 표시하는 함수
+   * @param {CSSStyleDeclaration} element - CSS 스타일 객체
+   * @param {Object} opt - 옵션 객체 (stdpx 포함)
+   * @param {HTMLElement} e - DOM 요소
+   * @param {boolean} w_condition - 너비 조건
+   * @param {boolean} h_condition - 높이 조건
+   * @returns {number} 성공 시 1, 실패 시 0
+   */
   function SetCSSDiagonal(element, opt, e, w_condition, h_condition) {
     const document = GetCurrentDocument();
     // li 엘리먼트 가져오기
     const li_h = document.getElementById('dkInspect_h');
     const li_w = document.getElementById('dkInspect_w');
     const li_d = document.getElementById('dkInspect_diagonal');
+
+    if (!li_h || !li_w || !li_d) {
+      console.warn('대각선 표시 요소를 찾을 수 없습니다');
+      return 0;
+    }
 
     // 표준 픽셀 값 가져오기
     const std_px = opt.stdpx;
@@ -358,15 +536,15 @@ async function myApp() {
       const d_px = Math.sqrt(w_px * w_px + h_px * h_px);
 
       // li 엘리먼트에 값을 넣고 보여주기
-      li_h.lastChild.textContent = ` : ${h.toFixed(1)}mm (${h_px.toFixed(
-        1,
-      )}px)`;
-      li_w.lastChild.textContent = ` : ${w.toFixed(1)}mm (${w_px.toFixed(
-        1,
-      )}px)`;
-      li_d.lastChild.textContent = ` : ${d.toFixed(1)}mm (${d_px.toFixed(
-        1,
-      )}px)`;
+      li_h.lastChild.textContent = ` : ${h.toFixed(
+        CONSTANTS.MEASUREMENT.SIZE_PRECISION,
+      )}mm (${h_px.toFixed(CONSTANTS.MEASUREMENT.SIZE_PRECISION)}px)`;
+      li_w.lastChild.textContent = ` : ${w.toFixed(
+        CONSTANTS.MEASUREMENT.SIZE_PRECISION,
+      )}mm (${w_px.toFixed(CONSTANTS.MEASUREMENT.SIZE_PRECISION)}px)`;
+      li_d.lastChild.textContent = ` : ${d.toFixed(
+        CONSTANTS.MEASUREMENT.SIZE_PRECISION,
+      )}mm (${d_px.toFixed(CONSTANTS.MEASUREMENT.SIZE_PRECISION)}px)`;
       li_h.style.display = 'block';
       li_w.style.display = 'block';
       li_d.style.display = 'block';
@@ -381,30 +559,57 @@ async function myApp() {
     }
   }
 
-  // 요소의 전경색과 배경색의 대비를 계산하고 이를 li 엘리먼트에 표시하는 함수
+  /**
+   * 요소의 전경색과 배경색의 대비를 계산하고 이를 li 엘리먼트에 표시하는 함수
+   * @param {CSSStyleDeclaration} element - CSS 스타일 객체
+   * @param {boolean} condition - 표시 조건
+   * @returns {number} 성공 시 1, 실패 시 0
+   */
   function SetCSSColorContrast(element, condition) {
     const document = GetCurrentDocument();
     // li 엘리먼트 가져오기
     const li = document.getElementById('dkInspect_contrast');
-    // 전경색과 배경색 추출하여 L값 계산
-    const foreground_color = RGBToHexStr(GetCSSProperty(element, 'color')); // 전경색 값 추출
-    const background_color = RGBToHexStr(
-      GetCSSProperty(element, 'background-color'),
-    ); // 배경색 값 추출
-    const L1 = getL(foreground_color); // 전경색의 L값 계산
-    const L2 = getL(background_color); // 배경색의 L값 계산
 
-    // 대비 비율 계산
-    const ratio = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
-
-    // 조건이 참일 경우 li 엘리먼트에 대비 비율 값을 넣고 보여주기
-    if (condition) {
-      li.lastChild.innerHTML = ` : ${Math.round(ratio * 100) / 100}:1`;
-      li.style.display = 'block';
-      return 1;
+    if (!li) {
+      console.warn('대비 표시 요소를 찾을 수 없습니다');
+      return 0;
     }
-    // 조건이 거짓일 경우 li 엘리먼트를 숨기고 0 반환
-    else {
+
+    try {
+      // 전경색과 배경색 추출하여 L값 계산
+      const foreground_color = RGBToHexStr(GetCSSProperty(element, 'color')); // 전경색 값 추출
+      const background_color = RGBToHexStr(
+        GetCSSProperty(element, 'background-color'),
+      ); // 배경색 값 추출
+      const L1 = getL(foreground_color); // 전경색의 L값 계산
+      const L2 = getL(background_color); // 배경색의 L값 계산
+
+      // L 값이 유효한지 확인
+      if (L1 === false || L2 === false) {
+        li.style.display = 'none';
+        return 0;
+      }
+
+      // 대비 비율 계산
+      const ratio =
+        (Math.max(L1, L2) + CONSTANTS.WCAG_CONTRAST.CONTRAST_OFFSET) /
+        (Math.min(L1, L2) + CONSTANTS.WCAG_CONTRAST.CONTRAST_OFFSET);
+
+      // 조건이 참일 경우 li 엘리먼트에 대비 비율 값을 넣고 보여주기
+      if (condition) {
+        li.lastChild.innerHTML = ` : ${
+          Math.round(ratio * 100) / 100
+        }:1`;
+        li.style.display = 'block';
+        return 1;
+      }
+      // 조건이 거짓일 경우 li 엘리먼트를 숨기고 0 반환
+      else {
+        li.style.display = 'none';
+        return 0;
+      }
+    } catch (error) {
+      console.error('색상 대비 계산 오류:', error);
       li.style.display = 'none';
       return 0;
     }
@@ -415,6 +620,12 @@ async function myApp() {
     const document = GetCurrentDocument();
     // li 엘리먼트 가져오기
     const li = document.getElementById(`dkInspect_${property}`);
+
+    if (!li) {
+      console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
+      return;
+    }
+
     // li 엘리먼트의 텍스트 변경 및 보여주기
     li.lastChild.innerHTML = ` : ${value}`;
     li.style.display = 'block';
@@ -425,6 +636,12 @@ async function myApp() {
     const document = GetCurrentDocument();
     // li 엘리먼트 가져오기
     const li = document.getElementById(`dkInspect_${property}`);
+
+    if (!li) {
+      console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
+      return 0;
+    }
+
     // 조건이 참일 경우 li 엘리먼트의 텍스트 변경 및 보여주기
     if (condition) {
       li.lastChild.innerHTML = ` : ${value}`;
@@ -479,13 +696,15 @@ async function myApp() {
       element,
       'background-color',
       RGBToHex(GetCSSProperty(element, 'background-color')),
-      GetCSSProperty(element, 'background-color') !== 'transparent',
+      GetCSSProperty(element, 'background-color') !==
+        CONSTANTS.STYLE_VALUES.TRANSPARENT,
     );
 
     // 배경색이 투명하지 않은 경우 대비 비율을 계산하여 li 엘리먼트에 표시
     SetCSSColorContrast(
       element,
-      GetCSSProperty(element, 'background-color') !== 'transparent',
+      GetCSSProperty(element, 'background-color') !==
+        CONSTANTS.STYLE_VALUES.TRANSPARENT,
     );
   }
 
@@ -501,18 +720,23 @@ async function myApp() {
     );
   }
 
-  // 요소의 Box 모델 정보를 업데이트하는 함수
+  /**
+   * 요소의 Box 모델 정보를 업데이트하는 함수
+   * @param {CSSStyleDeclaration} element - CSS 스타일 객체
+   */
   function UpdateBox(element) {
     // Height와 Width 속성 값이 auto가 아닌 경우에만 height와 width 속성 값을 li 엘리먼트에 표시합니다.
     SetCSSPropertyIf(
       element,
       'height',
-      RemoveExtraFloat(GetCSSProperty(element, 'height')) !== 'auto',
+      RemoveExtraFloat(GetCSSProperty(element, 'height')) !==
+        CONSTANTS.STYLE_VALUES.AUTO,
     );
     SetCSSPropertyIf(
       element,
       'width',
-      RemoveExtraFloat(GetCSSProperty(element, 'width')) !== 'auto',
+      RemoveExtraFloat(GetCSSProperty(element, 'width')) !==
+        CONSTANTS.STYLE_VALUES.AUTO,
     );
 
     // Border 정보를 가져와 각각의 속성 값에 따라 border-top, border-bottom, border-right, border-left 또는 border 속성에 값을 할당하고 표시합니다.
@@ -545,7 +769,8 @@ async function myApp() {
       borderTop === borderBottom &&
       borderBottom === borderRight &&
       borderRight === borderLeft &&
-      GetCSSProperty(element, 'border-top-style') !== 'none'
+      GetCSSProperty(element, 'border-top-style') !==
+        CONSTANTS.STYLE_VALUES.NONE
     ) {
       SetCSSPropertyValue(element, 'border', borderTop);
 
@@ -558,25 +783,29 @@ async function myApp() {
         element,
         'border-top',
         borderTop,
-        GetCSSProperty(element, 'border-top-style') !== 'none',
+        GetCSSProperty(element, 'border-top-style') !==
+          CONSTANTS.STYLE_VALUES.NONE,
       );
       SetCSSPropertyValueIf(
         element,
         'border-bottom',
         borderBottom,
-        GetCSSProperty(element, 'border-bottom-style') !== 'none',
+        GetCSSProperty(element, 'border-bottom-style') !==
+          CONSTANTS.STYLE_VALUES.NONE,
       );
       SetCSSPropertyValueIf(
         element,
         'border-right',
         borderRight,
-        GetCSSProperty(element, 'border-right-style') !== 'none',
+        GetCSSProperty(element, 'border-right-style') !==
+          CONSTANTS.STYLE_VALUES.NONE,
       );
       SetCSSPropertyValueIf(
         element,
         'border-left',
         borderLeft,
-        GetCSSProperty(element, 'border-left-style') !== 'none',
+        GetCSSProperty(element, 'border-left-style') !==
+          CONSTANTS.STYLE_VALUES.NONE,
       );
 
       HideCSSProperty('border');
@@ -591,12 +820,29 @@ async function myApp() {
       GetCSSProperty(element, 'margin-right'),
     );
     const marginLeft = RemoveExtraFloat(GetCSSProperty(element, 'margin-left'));
-    const margin = `${marginTop === '0px' ? '0' : marginTop} ${
-      marginRight === '0px' ? '0' : marginRight
-    } ${marginBottom === '0px' ? '0' : marginBottom} ${
-      marginLeft === '0px' ? '0' : marginLeft
+    const margin = `${
+      marginTop === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : marginTop
+    } ${
+      marginRight === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : marginRight
+    } ${
+      marginBottom === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : marginBottom
+    } ${
+      marginLeft === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : marginLeft
     }`;
-    SetCSSPropertyValueIf(element, 'margin', margin, margin !== '0 0 0 0');
+    SetCSSPropertyValueIf(
+      element,
+      'margin',
+      margin,
+      margin !== CONSTANTS.STYLE_VALUES.ZERO_MARGIN_PADDING,
+    );
 
     // padding
     const paddingTop = RemoveExtraFloat(GetCSSProperty(element, 'padding-top'));
@@ -609,33 +855,50 @@ async function myApp() {
     const paddingLeft = RemoveExtraFloat(
       GetCSSProperty(element, 'padding-left'),
     );
-    const padding = `${paddingTop === '0px' ? '0' : paddingTop} ${
-      paddingRight === '0px' ? '0' : paddingRight
-    } ${paddingBottom === '0px' ? '0' : paddingBottom} ${
-      paddingLeft === '0px' ? '0' : paddingLeft
+    const padding = `${
+      paddingTop === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : paddingTop
+    } ${
+      paddingRight === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : paddingRight
+    } ${
+      paddingBottom === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : paddingBottom
+    } ${
+      paddingLeft === CONSTANTS.STYLE_VALUES.ZERO_PX
+        ? CONSTANTS.STYLE_VALUES.ZERO
+        : paddingLeft
     }`;
 
-    SetCSSPropertyValueIf(element, 'padding', padding, padding !== '0 0 0 0');
+    SetCSSPropertyValueIf(
+      element,
+      'padding',
+      padding,
+      padding !== CONSTANTS.STYLE_VALUES.ZERO_MARGIN_PADDING,
+    );
 
     SetCSSPropertyIf(
       element,
       'min-height',
-      GetCSSProperty(element, 'min-height') !== '0px',
+      GetCSSProperty(element, 'min-height') !== CONSTANTS.STYLE_VALUES.ZERO_PX,
     );
     SetCSSPropertyIf(
       element,
       'max-height',
-      GetCSSProperty(element, 'max-height') !== 'none',
+      GetCSSProperty(element, 'max-height') !== CONSTANTS.STYLE_VALUES.NONE,
     );
     SetCSSPropertyIf(
       element,
       'min-width',
-      GetCSSProperty(element, 'min-width') !== '0px',
+      GetCSSProperty(element, 'min-width') !== CONSTANTS.STYLE_VALUES.ZERO_PX,
     );
     SetCSSPropertyIf(
       element,
       'max-width',
-      GetCSSProperty(element, 'max-width') !== 'none',
+      GetCSSProperty(element, 'max-width') !== CONSTANTS.STYLE_VALUES.NONE,
     );
   }
 
@@ -643,7 +906,10 @@ async function myApp() {
    ** Event Handlers
    */
 
-  // dkInspectMouseOver 함수는 마우스 오버 이벤트를 처리하는 함수입니다.
+  /**
+   * dkInspectMouseOver 함수는 마우스 오버 이벤트를 처리하는 함수입니다.
+   * @param {MouseEvent} e - 마우스 이벤트 객체
+   */
   function dkInspectMouseOver(e) {
     // 필요한 변수들을 선언합니다.
     const document = GetCurrentDocument();
@@ -745,12 +1011,7 @@ async function myApp() {
         const tagName = this.tagName.toLowerCase();
         const parentTagName = this.parentElement?.nodeName.toLowerCase();
         // 링크(a), 버튼(button), 입력란(input), 이미지 맵(area) 요소의 태그 이름과 유형(type)을 제목에 추가한다.
-        if (
-          tagName === 'a' ||
-          tagName === 'button' ||
-          tagName === 'input' ||
-          tagName === 'area'
-        ) {
+        if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
           type1();
         } else {
           // 블록을 숨긴다.
@@ -758,11 +1019,7 @@ async function myApp() {
         }
 
         // 요소를 포함하는 링크(a), 버튼(button), 입력란(input) 요소의 태그 이름과 유형(type)을 제목에 추가한다.
-        if (
-          parentTagName === 'a' ||
-          parentTagName === 'button' ||
-          parentTagName === 'input'
-        ) {
+        if (CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)) {
           type2();
           trackingEl.style.display = 'block';
         }
@@ -772,20 +1029,11 @@ async function myApp() {
       const parentTagName = this.parentElement?.nodeName.toLowerCase();
 
       // 링크(a), 버튼(button), 입력란(input), 이미지 맵(area) 요소의 태그 이름과 유형(type)을 제목에 추가한다.
-      if (
-        tagName === 'a' ||
-        tagName === 'button' ||
-        tagName === 'input' ||
-        tagName === 'area'
-      ) {
+      if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
         type1();
       }
       // 요소를 포함하는 링크(a), 버튼(button), 입력란(input) 요소의 태그 이름과 유형(type)을 제목에 추가한다.
-      else if (
-        parentTagName === 'a' ||
-        parentTagName === 'button' ||
-        parentTagName === 'input'
-      ) {
+      else if (CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)) {
         type2();
       } else {
         // 블록을 숨긴다.
@@ -825,7 +1073,10 @@ async function myApp() {
     e.stopPropagation();
   }
 
-  // 마우스 이동 이벤트 핸들러 함수
+  /**
+   * 마우스 이동 이벤트 핸들러 함수
+   * @param {MouseEvent} e - 마우스 이벤트 객체
+   */
   function dkInspectMouseMove(e) {
     const document = GetCurrentDocument();
     const block = document.getElementById('dkInspect_block');
@@ -835,38 +1086,30 @@ async function myApp() {
       return;
     }
     if (opt.trackingmode) {
-      if (
-        this.tagName.toLowerCase() === 'a' ||
-        this.tagName.toLowerCase() === 'button' ||
-        this.tagName.toLowerCase() === 'input' ||
-        this.tagName.toLowerCase() === 'area'
-      ) {
+      const tagName = this.tagName.toLowerCase();
+      if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
         trackingEl.style.display = 'block';
       } else {
         if (this.id === 'dkInspect_tracking') {
           trackingEl.style.display = 'block';
-        } else if (
-          this.parentElement.nodeName.toLowerCase() === 'a' ||
-          this.parentElement.nodeName.toLowerCase() === 'button' ||
-          this.parentElement.nodeName.toLowerCase() === 'input'
-        ) {
-          trackingEl.style.display = 'block';
         } else {
-          trackingEl.style.display = 'none';
+          const parentTagName = this.parentElement?.nodeName.toLowerCase();
+          if (
+            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
+          ) {
+            trackingEl.style.display = 'block';
+          } else {
+            trackingEl.style.display = 'none';
+          }
         }
       }
     } else if (opt.linkmode === 1) {
-      if (
-        this.tagName.toLowerCase() === 'a' ||
-        this.tagName.toLowerCase() === 'button' ||
-        this.tagName.toLowerCase() === 'input' ||
-        this.tagName.toLowerCase() === 'area'
-      ) {
+      const tagName = this.tagName.toLowerCase();
+      const parentTagName = this.parentElement?.nodeName.toLowerCase();
+      if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
         block.style.display = 'block';
       } else if (
-        this.parentElement.nodeName.toLowerCase() === 'a' ||
-        this.parentElement.nodeName.toLowerCase() === 'button' ||
-        this.parentElement.nodeName.toLowerCase() === 'input'
+        CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
       ) {
         block.style.display = 'block';
       } else {
@@ -891,7 +1134,7 @@ async function myApp() {
     // dkInspect_block의 위치를 설정하는 코드
     const pageWidth = window.innerWidth;
     const pageHeight = window.innerHeight;
-    const blockWidth = 332;
+    const blockWidth = CONSTANTS.MEASUREMENT.BLOCK_WIDTH;
 
     // dkInspect_block의 높이를 가져옴
     const blockHeight = parseInt(
@@ -901,24 +1144,39 @@ async function myApp() {
     // dkInspect_block이 페이지 너비를 벗어나는 경우
     if (e.pageX + blockWidth > pageWidth) {
       // dkInspect_block을 왼쪽으로 이동시킴
-      if (e.pageX - blockWidth - 10 > 0)
-        block.style.left = `${e.pageX - blockWidth - 40}px`;
+      if (
+        e.pageX - blockWidth - CONSTANTS.UI.POSITION_MIN >
+        0
+      )
+        block.style.left = `${
+          e.pageX - blockWidth - CONSTANTS.UI.POSITION_OFFSET_LARGE
+        }px`;
       else block.style.left = `0px`;
-    } else block.style.left = `${e.pageX + 20}px`;
+    } else
+      block.style.left = `${e.pageX + CONSTANTS.UI.POSITION_OFFSET}px`;
 
     // dkInspect_block이 페이지 높이를 벗어나는 경우
     if (e.pageY + blockHeight > pageHeight) {
       // dkInspect_block을 위쪽으로 이동시킴
-      if (e.pageY - blockHeight - 10 > 0)
-        block.style.top = `${e.pageY - blockHeight - 20}px`;
+      if (
+        e.pageY - blockHeight - CONSTANTS.UI.POSITION_MIN >
+        0
+      )
+        block.style.top = `${
+          e.pageY - blockHeight - CONSTANTS.UI.POSITION_OFFSET
+        }px`;
       else block.style.top = `0px`;
-    } else block.style.top = `${e.pageY + 20}px`;
+    } else
+      block.style.top = `${e.pageY + CONSTANTS.UI.POSITION_OFFSET}px`;
 
     // dkInspect_block의 위치를 스크롤 위치에 맞게 조정하는 코드
     const inView = dkInspectIsElementInViewport(block);
 
     // dkInspect_block이 화면에 보이지 않는 경우
-    if (!inView) block.style.top = `${window.scrollY + 20}px`;
+    if (!inView)
+      block.style.top = `${
+        window.scrollY + CONSTANTS.UI.POSITION_OFFSET
+      }px`;
 
     // 이벤트 전파 방지
     e.stopPropagation();
@@ -1028,7 +1286,7 @@ async function myApp() {
           if (child[i].hasChildNodes()) {
             // 자식 요소가 또 자식 요소를 가지고 있는 경우, 재귀 호출을 통해 해당 요소의 모든 자식 요소를 가져온다.
             elements = elements.concat(this.GetAllElements(child[i]));
-          } else if (child[i].nodeType === 1) {
+          } else if (child[i].nodeType === CONSTANTS.NODE_TYPE.ELEMENT) {
             // 자식 요소가 텍스트 노드가 아닌 요소인 경우, elements 배열에 추가한다.
             elements.push(child[i]);
           }
@@ -1045,28 +1303,43 @@ async function myApp() {
       // 문서의 모든 요소를 가져온다.
       const elements = this.GetAllElements(document.body);
 
-      // FRAMESET 요소가 포함되어 있는 경우, 진단이 불가능하므로 경고 메시지를 출력하고 함수를 종료한다.
-      if (window.frames.document.body.nodeName === 'FRAMESET') {
-        alert('크롬 브라우저에서는 FRAMESET의 진단이 불가능합니다.');
-        dkInspectRemoveElement('dkInspectInsertMessage');
-        return false;
-      } else {
-        // 모든 요소에 대해 이벤트 리스너를 추가한다.
-        elements.forEach((item) => {
-          item.addEventListener('mouseover', dkInspectMouseOver, false);
-          item.addEventListener('mouseout', dkInspectMouseOut, false);
-          item.addEventListener('mousemove', dkInspectMouseMove, false);
-        });
-        // 만약 프레임이 존재하는 경우, 모든 프레임 내의 요소에 대해 이벤트 리스너를 추가한다.
-        if (window.frames.length > 0) {
-          for (let k = 0; k < window.frames.length; k++) {
+      try {
+        // FRAMESET 요소가 포함되어 있는 경우, 진단이 불가능하므로 경고 메시지를 출력하고 함수를 종료한다.
+        if (
+          window.frames.document &&
+          window.frames.document.body &&
+          window.frames.document.body.nodeName === 'FRAMESET'
+        ) {
+          alert('크롬 브라우저에서는 FRAMESET의 진단이 불가능합니다.');
+          dkInspectRemoveElement('dkInspectInsertMessage');
+          return false;
+        }
+      } catch (error) {
+        console.warn('프레임 접근 오류:', error);
+      }
+
+      // 모든 요소에 대해 이벤트 리스너를 추가한다.
+      elements.forEach((item) => {
+        item.addEventListener('mouseover', dkInspectMouseOver, false);
+        item.addEventListener('mouseout', dkInspectMouseOut, false);
+        item.addEventListener('mousemove', dkInspectMouseMove, false);
+      });
+
+      // 만약 프레임이 존재하는 경우, 모든 프레임 내의 요소에 대해 이벤트 리스너를 추가한다.
+      if (window.frames.length > 0) {
+        for (let k = 0; k < window.frames.length; k++) {
+          try {
             const frameEl = window.frames[k].document.body;
-            const frameEls = this.GetAllElements(frameEl);
-            frameEls.forEach((item) => {
-              item.addEventListener('mouseover', dkInspectMouseOver, false);
-              item.addEventListener('mouseout', dkInspectMouseOut, false);
-              item.addEventListener('mousemove', dkInspectMouseMove, false);
-            });
+            if (frameEl) {
+              const frameEls = this.GetAllElements(frameEl);
+              frameEls.forEach((item) => {
+                item.addEventListener('mouseover', dkInspectMouseOver, false);
+                item.addEventListener('mouseout', dkInspectMouseOut, false);
+                item.addEventListener('mousemove', dkInspectMouseMove, false);
+              });
+            }
+          } catch (error) {
+            console.warn(`프레임 ${k} 접근 오류:`, error);
           }
         }
       }
@@ -1088,14 +1361,18 @@ async function myApp() {
       // 만약 프레임이 존재하는 경우, 모든 프레임 내의 요소에 대해 이벤트 리스너를 제거한다.
       if (window.frames.length > 0) {
         for (let k = 0; k < window.frames.length; k++) {
-          const frameEl = window.frames[k].document.body;
-          if (frameEl) {
-            const frameEls = this.GetAllElements(frameEl);
-            frameEls.forEach((item) => {
-              item.removeEventListener('mouseover', dkInspectMouseOver, false);
-              item.removeEventListener('mouseout', dkInspectMouseOut, false);
-              item.removeEventListener('mousemove', dkInspectMouseMove, false);
-            });
+          try {
+            const frameEl = window.frames[k].document.body;
+            if (frameEl) {
+              const frameEls = this.GetAllElements(frameEl);
+              frameEls.forEach((item) => {
+                item.removeEventListener('mouseover', dkInspectMouseOver, false);
+                item.removeEventListener('mouseout', dkInspectMouseOut, false);
+                item.removeEventListener('mousemove', dkInspectMouseMove, false);
+              });
+            }
+          } catch (error) {
+            console.warn(`프레임 ${k} 접근 오류:`, error);
           }
         }
       }
@@ -1198,10 +1475,13 @@ async function myApp() {
 
     if (block) {
       // 블록 엘리먼트가 존재하면
-      document.getElementsByTagName('BODY')[0].removeChild(block); // body에서 블록 엘리먼트 제거
-      if (opt.trackingmode) {
-        // 트래킹 모드가 켜져 있으면
-        document.getElementsByTagName('BODY')[0].removeChild(trackingEl); // body에서 트래킹 엘리먼트 제거
+      const bodyEl = document.getElementsByTagName('BODY')[0];
+      if (bodyEl) {
+        bodyEl.removeChild(block); // body에서 블록 엘리먼트 제거
+        if (opt.trackingmode && trackingEl) {
+          // 트래킹 모드가 켜져 있으면
+          bodyEl.removeChild(trackingEl); // body에서 트래킹 엘리먼트 제거
+        }
       }
       this.RemoveEventListeners(); // 이벤트 리스너 제거
       return true; // 제거 성공 반환
@@ -1218,12 +1498,12 @@ async function myApp() {
     // p 태그 속성 설정
     oNewP.appendChild(oText); // p 태그에 text 노드 추가
     oNewP.id = 'dkInspectInsertMessage';
-    oNewP.style.backgroundColor = '#3c77eb';
-    oNewP.style.color = '#ffffff';
+    oNewP.style.backgroundColor = CONSTANTS.COLOR.MESSAGE_BG;
+    oNewP.style.color = CONSTANTS.COLOR.MESSAGE_TEXT;
     oNewP.style.position = 'fixed';
-    oNewP.style.top = '10px';
-    oNewP.style.left = '10px';
-    oNewP.style.zIndex = '99999999';
+    oNewP.style.top = `${CONSTANTS.UI.POSITION_MIN}px`;
+    oNewP.style.left = `${CONSTANTS.UI.POSITION_MIN}px`;
+    oNewP.style.zIndex = CONSTANTS.UI.Z_INDEX_MAX;
     oNewP.style.padding = '5px';
     oNewP.style.fontSize = '14px';
     oNewP.style.fontWeight = 'bold';
@@ -1236,7 +1516,10 @@ async function myApp() {
     const element = document.getElementById(divId);
 
     if (element) {
-      document.getElementsByTagName('BODY')[0].removeChild(element);
+      const bodyEl = document.getElementsByTagName('BODY')[0];
+      if (bodyEl) {
+        bodyEl.removeChild(element);
+      }
     }
   }
 
@@ -1247,31 +1530,43 @@ async function myApp() {
     // 초기화 함수
     // 단축키를 설정하고, 해당 단축키를 눌렀을 때 dkInspect 이벤트 리스너 일시정지 혹은 다시 시작하는 함수를 호출
     initialize: function () {
-      // 백그라운드 스크립트에 pause 메시지를 보냄
-      chrome.runtime.sendMessage(
-        {
-          cmd: 'pause',
-        },
-        // 응답 받은 후 실행될 콜백 함수
-        function (response) {
-          // window 객체에 keyup 이벤트 리스너를 추가함
-          window.addEventListener(
-            'keyup',
-            function (e) {
-              // 응답으로 받은 값과 눌린 키가 같은지 비교함
-              if (e.key === response) {
-                // dkInspectPause 변수가 true일 경우, shortcut을 재개하고 그렇지 않을 경우 일시정지함
-                if (dkInspectPause) {
-                  shortcut.resume();
-                } else {
-                  shortcut.pause();
+      try {
+        // 백그라운드 스크립트에 pause 메시지를 보냄
+        chrome.runtime.sendMessage(
+          {
+            cmd: 'pause',
+          },
+          // 응답 받은 후 실행될 콜백 함수
+          function (response) {
+            if (chrome.runtime.lastError) {
+              console.warn(
+                '단축키 초기화 오류:',
+                chrome.runtime.lastError.message,
+              );
+              return;
+            }
+
+            // window 객체에 keyup 이벤트 리스너를 추가함
+            window.addEventListener(
+              'keyup',
+              function (e) {
+                // 응답으로 받은 값과 눌린 키가 같은지 비교함
+                if (e.key === response) {
+                  // dkInspectPause 변수가 true일 경우, shortcut을 재개하고 그렇지 않을 경우 일시정지함
+                  if (dkInspectPause) {
+                    shortcut.resume();
+                  } else {
+                    shortcut.pause();
+                  }
                 }
-              }
-            },
-            false,
-          );
-        },
-      );
+              },
+              false,
+            );
+          },
+        );
+      } catch (error) {
+        console.error('단축키 초기화 실패:', error);
+      }
     },
     // 일시정지 함수
     // dkInspect 이벤트 리스너를 일시정지합니다. 이 때, '일시정지' 메시지를 추가로 출력하고 3초 후에 메시지를 제거
@@ -1293,7 +1588,7 @@ async function myApp() {
         dkInspectInsertMessage('일시정지');
         setTimeout(function () {
           dkInspectRemoveElement('dkInspectInsertMessage');
-        }, 3000);
+        }, CONSTANTS.TIMING.MESSAGE_DISPLAY);
 
         // 함수 실행을 종료하고 true 반환
         return true;
@@ -1323,7 +1618,7 @@ async function myApp() {
         dkInspectInsertMessage('재개');
         setTimeout(function () {
           dkInspectRemoveElement('dkInspectInsertMessage');
-        }, 3000);
+        }, CONSTANTS.TIMING.MESSAGE_DISPLAY);
 
         // 함수 실행을 종료하고 true 반환
         return true;

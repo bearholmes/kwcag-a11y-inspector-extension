@@ -1,89 +1,121 @@
-"use strict";
-
-// 익스텐션 설치 시 발생하는 이벤트 리스너
-chrome.runtime.onInstalled.addListener(function (details) {
-  // 익스텐션을 처음 설치한 경우
-  if (details.reason === 'install') {
-    console.log('install');
-    // option.html 페이지를 생성함
-    chrome.tabs.create({
-      url: 'option.html'
-    });
-
-    // 기본 설정 값을 저장함
-    chrome.storage.sync.set({
-      monitors: '17',
-      resolutions: '1366x768',
-      ccshow: '1',
-      linkmode: '0',
-      bgmode: '1',
-      linetype: 'dashed',
-      colortype: 'ff0000',
-      bordersize: '2'
-    });
+chrome.runtime.onInstalled.addListener(details => {
+  try {
+    if (details.reason === 'install') {
+      console.log('[KWCAG Inspector] Extension installed');
+      chrome.tabs.create({
+        url: 'option.html'
+      }).catch(error => {
+        console.error('[KWCAG Inspector] Failed to open options page:', error);
+      });
+      const defaultSettings = {
+        monitors: '17',
+        resolutions: '1366x768',
+        ccshow: '1',
+        linkmode: '0',
+        bgmode: '1',
+        linetype: 'dashed',
+        colortype: 'ff0000',
+        bordersize: '2'
+      };
+      chrome.storage.sync.set(defaultSettings).catch(error => {
+        console.error('[KWCAG Inspector] Failed to save default settings:', error);
+      });
+    } else if (details.reason === 'update') {
+      console.log(`[KWCAG Inspector] Extension updated from ${details.previousVersion}`);
+    }
+  } catch (error) {
+    console.error('[KWCAG Inspector] Error in onInstalled listener:', error);
   }
 });
-
-// 컨텍스트 메뉴 항목 생성 코드
-chrome.contextMenus.create({
-  id: 'dkinspectContextMenu',
-  // 항목의 고유 ID
-  title: '수동계산 팝업 열기',
-  // 항목에 표시될 텍스트
-  contexts: ['page', 'frame'] // 항목이 표시될 컨텍스트
+try {
+  chrome.contextMenus.create({
+    id: 'dkinspectContextMenu',
+    title: '수동계산 팝업 열기',
+    contexts: ['page', 'frame']
+  });
+} catch (error) {
+  console.error('[KWCAG Inspector] Failed to create context menu:', error);
+}
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  try {
+    if (info.menuItemId === 'dkinspectContextMenu') {
+      if (!tab?.id) {
+        console.error('[KWCAG Inspector] Invalid tab ID');
+        return;
+      }
+      await chrome.scripting.executeScript({
+        target: {
+          tabId: tab.id
+        },
+        files: ['js/cals.js']
+      });
+      await chrome.scripting.insertCSS({
+        target: {
+          tabId: tab.id
+        },
+        files: ['css/cals.css']
+      });
+      console.log('[KWCAG Inspector] Calculator popup injected');
+    }
+  } catch (error) {
+    console.error('[KWCAG Inspector] Error in context menu handler:', error);
+    if (error.message?.includes('Cannot access')) {
+      console.warn('[KWCAG Inspector] Cannot inject script on this page (restricted)');
+    }
+  }
 });
-
-// 컨텍스트 메뉴 항목 클릭 시 실행될 코드
-chrome.contextMenus.onClicked.addListener(function (info, tab) {
-  // 항목의 고유 ID가 "dkinspectContextMenu"인 경우
-  if (info.menuItemId === 'dkinspectContextMenu') {
-    // 현재 탭에서 cals.js 파일을 실행함
-    chrome.scripting.executeScript({
+chrome.action.onClicked.addListener(async tab => {
+  try {
+    if (tab.url?.startsWith('chrome://') || tab.url?.startsWith('edge://')) {
+      alert('Chrome/Edge 내부 페이지에서는 동작하지 않습니다.');
+      return;
+    }
+    if (tab.url?.includes('chrome.google.com/webstore') || tab.url?.includes('microsoftedge.microsoft.com/addons')) {
+      alert('스토어 페이지에서는 동작하지 않습니다.');
+      return;
+    }
+    if (!tab?.id) {
+      console.error('[KWCAG Inspector] Invalid tab ID');
+      return;
+    }
+    await chrome.scripting.executeScript({
       target: {
         tabId: tab.id
       },
-      files: ['js/cals.js']
+      files: ['js/dkinspect.js']
     });
-
-    // 현재 탭에서 cals.css 파일을 삽입함
-    chrome.scripting.insertCSS({
+    await chrome.scripting.insertCSS({
       target: {
         tabId: tab.id
       },
-      files: ['css/cals.css']
+      files: ['css/dkinspect.css']
+    });
+    console.log('[KWCAG Inspector] Inspector activated');
+  } catch (error) {
+    console.error('[KWCAG Inspector] Error in action click handler:', error);
+    if (error.message?.includes('Cannot access')) {
+      alert('이 페이지에서는 확장프로그램을 사용할 수 없습니다.\n(권한이 제한된 페이지입니다)');
+    } else {
+      alert('확장프로그램 실행 중 오류가 발생했습니다.\n콘솔을 확인해주세요.');
+    }
+  }
+});
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  try {
+    if (request.cmd === 'pause') {
+      sendResponse('Escape');
+      return true;
+    }
+    console.warn('[KWCAG Inspector] Unknown command:', request.cmd);
+    sendResponse({
+      error: 'Unknown command'
+    });
+  } catch (error) {
+    console.error('[KWCAG Inspector] Error in message handler:', error);
+    sendResponse({
+      error: error.message
     });
   }
+  return true;
 });
-
-// 확장 아이콘 클릭 시 실행될 코드
-chrome.action.onClicked.addListener(function (tab) {
-  // 현재 탭이 구글 크롬 내부 페이지인 경우
-  if (tab.url.startsWith('chrome://')) {
-    alert('It does not work on Google Chrome internal pages.');
-    return;
-  }
-
-  // 현재 탭에서 dkinspect.js 파일을 실행함
-  chrome.scripting.executeScript({
-    target: {
-      tabId: tab.id
-    },
-    files: ['js/dkinspect.js']
-  });
-
-  // 현재 탭에서 dkinspect.css 파일을 삽입함
-  chrome.scripting.insertCSS({
-    target: {
-      tabId: tab.id
-    },
-    files: ['css/dkinspect.css']
-  });
-});
-
-// 백그라운드 스크립트에서 메시지 수신 시 실행될 코드
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  // cmd 값이 'pause'인 경우
-  if (request.cmd === 'pause') {
-    sendResponse('Escape'); // esc 키 값 반환
-  }
-});
+//# sourceMappingURL=service-worker.js.map
