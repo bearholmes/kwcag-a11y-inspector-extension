@@ -9,7 +9,7 @@ import {
   updateColorBackground,
   updateLength,
   updateBox,
-} from '../../src/content/inspector/css-handlers.js';
+} from '../../src/content/inspector/css-handlers.ts';
 
 describe('CSS Handlers', () => {
   beforeEach(() => {

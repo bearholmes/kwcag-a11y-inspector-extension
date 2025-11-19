@@ -12,7 +12,7 @@ import {
   getsRGB,
   getL,
   getContrastRatio,
-} from '../../src/content/inspector/color-utils.js';
+} from '../../src/content/inspector/color-utils.ts';
 
 describe('Color Utilities', () => {
   describe('DecToHex', () => {

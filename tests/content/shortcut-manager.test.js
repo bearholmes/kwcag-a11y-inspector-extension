@@ -14,7 +14,7 @@ import {
 import {
   createShortcutManager,
   setShortcutManager,
-} from '../../src/content/inspector/shortcut-manager.js';
+} from '../../src/content/inspector/shortcut-manager.ts';
 
 // Chrome API Mock
 global.chrome = {

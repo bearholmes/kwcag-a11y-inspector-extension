@@ -85,7 +85,7 @@ describe('Service Worker', () => {
     test('service-worker module can be loaded', async () => {
       // service-worker는 부수 효과가 있는 모듈이지만, import는 가능해야 함
       await expect(
-        import('../../src/background/service-worker.js'),
+        import('../../src/background/service-worker.ts'),
       ).resolves.toBeDefined();
     });
   });

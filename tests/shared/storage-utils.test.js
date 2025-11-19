@@ -4,7 +4,7 @@
  */
 
 import { describe, test, expect, beforeEach, jest } from '@jest/globals';
-import { StorageManager } from '../../src/shared/storage-utils.js';
+import { StorageManager } from '../../src/shared/storage-utils.ts';
 
 describe('StorageManager', () => {
   beforeEach(() => {

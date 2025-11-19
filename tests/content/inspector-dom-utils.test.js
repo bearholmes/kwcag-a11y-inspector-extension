@@ -8,7 +8,7 @@ import {
   getCurrentDocument,
   insertMessage,
   removeElement,
-} from '../../src/content/inspector/dom-utils.js';
+} from '../../src/content/inspector/dom-utils.ts';
 
 describe('Inspector DOM Utilities', () => {
   beforeEach(() => {

@@ -6,8 +6,10 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 
-  // Transform ES modules
-  transform: {},
+  // Transform ES modules and TypeScript
+  transform: {
+    '^.+\\.ts$': 'ts-jest',
+  },
 
   // File extensions
   moduleFileExtensions: ['js', 'ts', 'json'],

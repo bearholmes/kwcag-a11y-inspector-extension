@@ -13,7 +13,7 @@ import {
   toggleDisplay,
   addClassToElements,
   removeClassFromElements,
-} from '../../src/shared/dom-utils.js';
+} from '../../src/shared/dom-utils.ts';
 
 describe('DOM Utilities', () => {
   beforeEach(() => {
