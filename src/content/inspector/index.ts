@@ -2,7 +2,7 @@
 import './inspector.css';
 import { StorageManager } from '../../shared/storage-utils.ts';
 import { CONSTANTS } from './constants.ts';
-import { Inspector } from './inspector-core.ts';
+import { Inspector, InspectorOptions } from './inspector-core.ts';
 import {
   createShortcutManager,
   setShortcutManager,
@@ -22,13 +22,55 @@ import {
  */
 
 /**
+ * 스토리지에서 가져온 설정값 타입
+ */
+interface StorageSettings {
+  ccshow?: string;
+  resolutions: string;
+  monitors: number;
+  linkmode: string;
+  bgmode: string | number;
+  linetype: string;
+  colortype: string;
+  trackingmode?: string;
+  bordersize?: number;
+}
+
+/**
+ * CSS 속성 카테고리 타입
+ */
+interface Categories {
+  pLength: string[];
+  pBox: string[];
+  pColorBg: string[];
+}
+
+/**
+ * CSS 속성 카테고리 제목 타입
+ */
+interface CategoriesTitle {
+  pLength: string;
+  pBox: string;
+  pColorBg: string;
+}
+
+/**
+ * 애플리케이션 설정 타입
+ */
+interface AppConfig {
+  opt: InspectorOptions;
+  dkInspect_categories: Categories;
+  dkInspect_categoriesTitle: CategoriesTitle;
+}
+
+/**
  * 애플리케이션 초기화 함수
  * 설정을 로드하고 Inspector 설정 객체를 생성합니다.
- * @returns {Promise<Object>} Inspector 설정 객체
+ * @returns Inspector 설정 객체
  */
-async function myApp() {
+async function myApp(): Promise<AppConfig> {
   // StorageManager를 이용하여 여러 개의 데이터를 한 번에 읽어옵니다.
-  const settings = await StorageManager.getMultiple([
+  const settings = (await StorageManager.getMultiple([
     'ccshow',
     'resolutions',
     'monitors',
@@ -38,7 +80,7 @@ async function myApp() {
     'colortype',
     'trackingmode',
     'bordersize',
-  ]);
+  ])) as StorageSettings;
 
   const {
     ccshow,
@@ -59,7 +101,7 @@ async function myApp() {
   const std_px = CONSTANTS.MEASUREMENT.MM_PER_INCH / (diagonal / monitors);
 
   // "opt" 객체에 각 값을 저장합니다.
-  const opt = {
+  const opt: InspectorOptions = {
     ccshow,
     stdpx: std_px,
     linkmode,
@@ -95,14 +137,14 @@ async function myApp() {
   ];
 
   // CSS Property 카테고리
-  const dkInspect_categories = {
+  const dkInspect_categories: Categories = {
     pLength: dkInspect_pLength,
     pBox: dkInspect_pBox,
     pColorBg: dkInspect_pColorBg,
   };
 
   // CSS Property 카테고리 제목
-  const dkInspect_categoriesTitle = {
+  const dkInspect_categoriesTitle: CategoriesTitle = {
     pLength: 'Length',
     pBox: 'Box',
     pColorBg: 'Color Contrast',

@@ -12,7 +12,7 @@ import {
   calculateStandardPixelSize,
   convertPixelsToMm,
   calculateDimensions,
-} from '../../src/content/calculator/calculator-math.js';
+} from '../../src/content/calculator/calculator-math.ts';
 
 describe('Calculator Math', () => {
   describe('CALCULATION_CONSTANTS', () => {

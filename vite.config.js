@@ -23,10 +23,10 @@ export default defineConfig({
         ),
         'content/inspector': resolve(
           __dirname,
-          'src/content/inspector/index.js',
+          'src/content/inspector/index.ts',
         ),
-        'content/calculator': resolve(__dirname, 'src/content/calculator.js'),
-        'options/settings': resolve(__dirname, 'src/options/settings.js'),
+        'content/calculator': resolve(__dirname, 'src/content/calculator.ts'),
+        'options/settings': resolve(__dirname, 'src/options/settings.ts'),
       },
       output: {
         entryFileNames: '[name].js',
