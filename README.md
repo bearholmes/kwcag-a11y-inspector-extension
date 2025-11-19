@@ -425,28 +425,21 @@ in the Software without restriction...
 
 ### v0.14.0 (진행 중) 🚧
 
-- [x] TypeScript 마이그레이션 (핵심 유틸리티 완료)
-  - [x] constants.ts
-  - [x] storage-utils.ts
-  - [x] dom-utils.ts (shared)
-  - [x] color-utils.ts
-  - [x] shortcut-manager.ts
-  - [x] service-worker.ts
-- [ ] TypeScript 마이그레이션 (나머지 모듈)
-  - [ ] inspector-core.ts
-  - [ ] css-handlers.ts
-  - [ ] event-handlers.ts
-  - [ ] calculator.ts
-  - [ ] settings.ts
+- [x] **TypeScript 마이그레이션 100% 완료** ✅
+  - [x] 핵심 유틸리티 (constants, storage-utils, dom-utils, color-utils, shortcut-manager, service-worker)
+  - [x] Inspector 모듈 (inspector-core, css-handlers, event-handlers)
+  - [x] Calculator 모듈 (calculator)
+  - [x] Settings 모듈 (settings)
+  - 총 12개 파일 마이그레이션 완료
 - [ ] 테스트 커버리지 80% 달성
 - [ ] CI/CD 파이프라인 구현 (Phase 1)
 - [ ] E2E 테스트 구현 시작
 
 ### v0.15.0 (계획 중)
 
-- [ ] TypeScript 마이그레이션 100% 완료
 - [ ] CI/CD 파이프라인 완전 자동화 (Phase 2-3)
 - [ ] E2E 테스트 커버리지 100% (핵심 시나리오)
+- [ ] 테스트 커버리지 80% 달성
 - [ ] 추가 WCAG 지침 지원 (2.5.5 목표 크기)
 - [ ] 성능 최적화 및 프로파일링
 

@@ -425,28 +425,21 @@ Have issues or questions?
 
 ### v0.14.0 (In Progress) 🚧
 
-- [x] TypeScript migration (core utilities completed)
-  - [x] constants.ts
-  - [x] storage-utils.ts
-  - [x] dom-utils.ts (shared)
-  - [x] color-utils.ts
-  - [x] shortcut-manager.ts
-  - [x] service-worker.ts
-- [ ] TypeScript migration (remaining modules)
-  - [ ] inspector-core.ts
-  - [ ] css-handlers.ts
-  - [ ] event-handlers.ts
-  - [ ] calculator.ts
-  - [ ] settings.ts
+- [x] **TypeScript migration 100% complete** ✅
+  - [x] Core utilities (constants, storage-utils, dom-utils, color-utils, shortcut-manager, service-worker)
+  - [x] Inspector modules (inspector-core, css-handlers, event-handlers)
+  - [x] Calculator module (calculator)
+  - [x] Settings module (settings)
+  - 12 files migrated in total
 - [ ] Achieve 80% test coverage
 - [ ] Implement CI/CD pipeline (Phase 1)
 - [ ] Start E2E test implementation
 
 ### v0.15.0 (Planned)
 
-- [ ] Complete TypeScript migration (100%)
 - [ ] Fully automate CI/CD pipeline (Phase 2-3)
 - [ ] 100% E2E test coverage (core scenarios)
+- [ ] Achieve 80% test coverage
 - [ ] Support additional WCAG guidelines (2.5.5 target size)
 - [ ] Performance optimization and profiling
 
