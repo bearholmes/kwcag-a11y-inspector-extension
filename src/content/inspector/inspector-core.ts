@@ -5,7 +5,7 @@
  */
 
 import { CONSTANTS } from './constants.ts';
-import { createEventHandlers, EventHandlers } from './event-handlers.js';
+import { createEventHandlers, EventHandlers } from './event-handlers.ts';
 import {
   getCurrentDocument,
   insertMessage,
