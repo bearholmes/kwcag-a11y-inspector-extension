@@ -2,7 +2,7 @@
 import './inspector.css';
 import { StorageManager } from '../../shared/storage-utils.ts';
 import { CONSTANTS } from './constants.ts';
-import { Inspector } from './inspector-core.js';
+import { Inspector } from './inspector-core.ts';
 import {
   createShortcutManager,
   setShortcutManager,
