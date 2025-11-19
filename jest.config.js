@@ -17,8 +17,8 @@ export default {
 
   // Coverage
   collectCoverageFrom: [
-    'src/**/*.{js,ts}',
-    '!src/**/*.test.{js,ts}',
+    'src/**/*.js',
+    '!src/**/*.test.js',
     '!src/**/index.js', // Entry points often have low coverage
     '!**/node_modules/**',
   ],
@@ -38,10 +38,10 @@ export default {
       lines: 95,
     },
     'src/content/inspector/color-utils.js': {
-      statements: 85,
+      statements: 96,
       branches: 100,
       functions: 100,
-      lines: 85,
+      lines: 96,
     },
     'src/content/calculator/calculator-math.js': {
       statements: 100,

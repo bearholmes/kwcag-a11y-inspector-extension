@@ -3,7 +3,7 @@
  * Tests RGB/Hex conversion, WCAG luminance and contrast ratio calculations
  */
 
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
 import {
   DecToHex,
   RGBToHex,
@@ -78,6 +78,16 @@ describe('Color Utilities', () => {
       expect(result).toContain('#FFFFFF'); // Default fallback
     });
 
+    test('handles null/undefined input gracefully', () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const result1 = RGBToHex(null);
+      const result2 = RGBToHex(undefined);
+      expect(result1).toContain('#FFFFFF');
+      expect(result2).toContain('#FFFFFF');
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
+    });
+
     test('handles RGB with extra spaces', () => {
       const result = RGBToHex('rgb(  100 ,  150 ,  200  )');
       expect(result).toContain('#6496C8');
@@ -114,6 +124,16 @@ describe('Color Utilities', () => {
       expect(result).toBe('FFFFFF'); // Default fallback
     });
 
+    test('handles null/undefined input gracefully', () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const result1 = RGBToHexStr(null);
+      const result2 = RGBToHexStr(undefined);
+      expect(result1).toBe('FFFFFF');
+      expect(result2).toBe('FFFFFF');
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
+    });
+
     test('handles gray scale colors', () => {
       expect(RGBToHexStr('rgb(128, 128, 128)')).toBe('808080');
     });
@@ -140,6 +160,13 @@ describe('Color Utilities', () => {
     test('returns false for invalid hex', () => {
       expect(getRGB('ZZ')).toBe(false);
       expect(getRGB('XY')).toBe(false);
+    });
+
+    test('handles null/undefined input gracefully', () => {
+      const result1 = getRGB(null);
+      const result2 = getRGB(undefined);
+      expect(result1).toBe(false);
+      expect(result2).toBe(false);
     });
   });
 
@@ -222,6 +249,16 @@ describe('Color Utilities', () => {
       const luminance = getL('808080');
       expect(luminance).toBeGreaterThan(0);
       expect(luminance).toBeLessThan(1);
+    });
+
+    test('handles null/undefined input gracefully', () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const result1 = getL(null);
+      const result2 = getL(undefined);
+      expect(result1).toBe(false);
+      expect(result2).toBe(false);
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
     });
   });
 
