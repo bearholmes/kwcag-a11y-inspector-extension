@@ -1,5 +1,5 @@
 /**
- * Tests for inspector/css-handlers.js
+ * Tests for inspector/css-handlers.ts
  * CSS 속성 핸들러 테스트 (핵심 기능만)
  */
 

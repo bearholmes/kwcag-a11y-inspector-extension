@@ -10,15 +10,15 @@ export default {
   transform: {},
 
   // File extensions
-  moduleFileExtensions: ['js', 'json'],
+  moduleFileExtensions: ['js', 'ts', 'json'],
 
   // Test patterns
   testMatch: ['**/tests/**/*.test.js'],
 
   // Coverage
   collectCoverageFrom: [
-    'src/**/*.js',
-    '!src/**/*.test.js',
+    'src/**/*.{js,ts}',
+    '!src/**/*.test.{js,ts}',
     '!src/**/index.js', // Entry points often have low coverage
     '!**/node_modules/**',
   ],

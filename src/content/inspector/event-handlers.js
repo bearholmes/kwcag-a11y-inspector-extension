@@ -4,14 +4,14 @@
  * @module inspector/event-handlers
  */
 
-import { CONSTANTS } from './constants.js';
+import { CONSTANTS } from './constants.ts';
 import {
   updateColorBackground,
   updateLength,
   updateBox,
   hideCSSCategory,
-} from './css-handlers.js';
-import { getCurrentDocument, removeElement } from './dom-utils.js';
+} from './css-handlers.ts';
+import { getCurrentDocument, removeElement } from './dom-utils.ts';
 
 /**
  * 요소의 왼쪽 위치를 계산 (스크롤 오프셋 포함)
