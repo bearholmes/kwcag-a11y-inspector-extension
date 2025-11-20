@@ -76,6 +76,23 @@ function getHeight(element: HTMLElement): number {
 }
 
 /**
+ * 현재 요소에서 가장 가까운 인터랙티브 조상 요소를 찾습니다
+ * @param element - 시작 요소
+ * @returns 인터랙티브 조상 요소 또는 null
+ */
+function findInteractiveAncestor(element: HTMLElement): HTMLElement | null {
+  let current = element.parentElement;
+  while (current && current.tagName.toLowerCase() !== 'body') {
+    const tagName = current.tagName.toLowerCase();
+    if (CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(tagName)) {
+      return current;
+    }
+    current = current.parentElement;
+  }
+  return null;
+}
+
+/**
  * 요소가 현재 뷰포트 내에 있는지 확인
  * @param element - 확인할 요소
  * @returns 뷰포트 내에 있으면 true
@@ -131,64 +148,73 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
     if (this.tagName.toLowerCase() !== 'body') {
       if (opt.trackingmode) {
-        // Tracking mode에서도 부모 interactive 요소를 찾아서 추적
-        let targetElement: HTMLElement = this;
+        // Tracking mode는 항상 interactive 요소만 추적
         const tagName = this.tagName.toLowerCase();
         const isInteractive = CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
 
-        if (!isInteractive && this.parentElement) {
-          const parentTagName = this.parentElement.nodeName.toLowerCase();
-          const isParentInteractive =
-            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName);
+        let targetElement: HTMLElement | null = null;
 
-          if (isParentInteractive) {
-            // 부모가 interactive면 부모를 추적
-            targetElement = this.parentElement;
-          }
+        if (isInteractive) {
+          // 현재 요소가 interactive면 현재 요소 타겟팅
+          targetElement = this;
+        } else {
+          // 가장 가까운 인터랙티브 조상 요소 찾기
+          targetElement = findInteractiveAncestor(this);
         }
 
-        if ((e.target as HTMLElement).id !== 'dkInspect_tracking') {
+        // targetElement가 있을 때만 tracking div 표시
+        if (
+          targetElement &&
+          (e.target as HTMLElement).id !== 'dkInspect_tracking'
+        ) {
           trackingEl!.style.width = `${parseInt(String(getWidth(targetElement)))}px`;
           trackingEl!.style.height = `${parseInt(String(getHeight(targetElement)))}px`;
           trackingEl!.style.left = `${parseInt(String(getLeft(targetElement)))}px`;
           trackingEl!.style.top = `${parseInt(String(getTop(targetElement)))}px`;
           trackingEl!.style.display = 'block';
+          lastHoveredElement = targetElement;
+        } else {
+          // interactive 요소가 아니면 tracking div 숨김
+          if (trackingEl) trackingEl.style.display = 'none';
+          lastHoveredElement = null;
         }
-        // trackingmode에서도 lastHoveredElement 업데이트 (targetElement로)
-        lastHoveredElement = targetElement;
       } else {
-        // Link 모드일 때는 인터랙티브 요소이거나 부모가 인터랙티브 요소일 때만 아웃라인 표시
-        let shouldShowOutline = true;
-        let targetElement: HTMLElement = this;
-
-        if (String(opt.linkmode) === '1') {
-          const tagName = this.tagName.toLowerCase();
-          const parentTagName = this.parentElement?.nodeName.toLowerCase();
-          const isInteractive =
-            CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
-          const isParentInteractive =
-            parentTagName &&
-            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName);
-
-          if (isInteractive) {
-            // 현재 요소가 interactive면 현재 요소에 outline
-            targetElement = this;
-          } else if (isParentInteractive) {
-            // 부모가 interactive면 부모에 outline
-            targetElement = this.parentElement!;
-          } else {
-            // 둘 다 아니면 outline 없음
-            shouldShowOutline = false;
-          }
-        }
-
-        // 이전 요소의 outline 제거 (shouldShowOutline과 무관하게)
+        // 이전 요소의 outline 제거
         if (lastHoveredElement) {
           lastHoveredElement.style.outlineWidth = '';
           lastHoveredElement.style.outlineColor = '';
           lastHoveredElement.style.outlineStyle = '';
           lastHoveredElement.style.outlineOffset = '';
         }
+
+        // Non-tracking mode
+        // trackingmode와 linkmode가 동기화되어야 하지만, 과거 설정 호환을 위해 둘 다 체크
+        const isLinkModeOn = opt.trackingmode || String(opt.linkmode) === '1';
+        let shouldShowOutline = true;
+        let targetElement: HTMLElement = this;
+
+        if (isLinkModeOn) {
+          // Link 모드 ON: 인터랙티브 요소이거나 조상이 인터랙티브 요소일 때만 아웃라인 표시
+          const tagName = this.tagName.toLowerCase();
+          const isInteractive =
+            CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
+
+          if (isInteractive) {
+            // 현재 요소가 interactive면 현재 요소에 outline
+            targetElement = this;
+          } else {
+            // 가장 가까운 인터랙티브 조상 요소 찾기
+            const interactiveAncestor = findInteractiveAncestor(this);
+            if (interactiveAncestor) {
+              // 조상이 interactive면 조상에 outline
+              targetElement = interactiveAncestor;
+            } else {
+              // 조상 중에 interactive 없으면 outline 없음
+              shouldShowOutline = false;
+            }
+          }
+        }
+        // linkmode === '0' (OFF)이면 모든 요소에 outline 표시
 
         if (shouldShowOutline) {
           targetElement.style.setProperty(
@@ -215,8 +241,8 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           // outline을 설정한 요소를 lastHoveredElement로 설정
           lastHoveredElement = targetElement;
         } else {
-          // outline을 설정하지 않아도 현재 요소를 추적
-          lastHoveredElement = this;
+          // outline을 설정하지 않으면 lastHoveredElement를 null로 설정
+          lastHoveredElement = null;
         }
       }
     }
@@ -248,26 +274,22 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
       }
     };
 
-    // 부모 요소 정보를 표시하는 함수
-    const showParentInfo = (): void => {
-      let title = `<${this.parentElement!.nodeName}`;
-      if ((this.parentElement as HTMLInputElement).type) {
-        title += ` [${(this.parentElement as HTMLInputElement).type}]`;
+    // 조상 요소 정보를 표시하는 함수
+    const showAncestorInfo = (ancestorElement: HTMLElement): void => {
+      let title = `<${ancestorElement.nodeName}`;
+      if ((ancestorElement as HTMLInputElement).type) {
+        title += ` [${(ancestorElement as HTMLInputElement).type}]`;
       }
-      title += `>${
-        this.parentElement!.id === '' ? '' : ` #${this.parentElement!.id}`
-      }${
-        this.parentElement!.className === ''
-          ? ''
-          : ` .${this.parentElement!.className}`
+      title += `>${ancestorElement.id === '' ? '' : ` #${ancestorElement.id}`}${
+        ancestorElement.className === '' ? '' : ` .${ancestorElement.className}`
       }`;
       block.firstChild!.textContent = title;
 
       const element = document.defaultView!.getComputedStyle(
-        this.parentElement!,
+        ancestorElement,
         null,
       );
-      updateLength(element, opt, this.parentElement!);
+      updateLength(element, opt, ancestorElement);
       updateBox(element);
 
       if (String(opt.ccshow) === '1') {
@@ -285,7 +307,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
     if (opt.trackingmode) {
       if (this.id !== 'dkInspect_tracking') {
         const tagName = this.tagName.toLowerCase();
-        const parentTagName = this.parentElement?.nodeName.toLowerCase();
+        const interactiveAncestor = findInteractiveAncestor(this);
 
         if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
           showElementInfo();
@@ -293,30 +315,25 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           block.style.display = 'none';
         }
 
-        if (
-          parentTagName &&
-          CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
-        ) {
-          showParentInfo();
+        if (interactiveAncestor) {
+          showAncestorInfo(interactiveAncestor);
           trackingEl!.style.display = 'block';
         }
       }
     } else if (String(opt.linkmode) === '1') {
       const tagName = this.tagName.toLowerCase();
-      const parentTagName = this.parentElement?.nodeName.toLowerCase();
+      const interactiveAncestor = findInteractiveAncestor(this);
 
       if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
         showElementInfo();
-      } else if (
-        parentTagName &&
-        CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
-      ) {
-        showParentInfo();
+      } else if (interactiveAncestor) {
+        showAncestorInfo(interactiveAncestor);
       } else {
         block.style.display = 'none';
       }
     } else {
-      block.style.display = 'block';
+      // 링크 모드 OFF (모든 요소 모드) - 모든 요소의 정보 표시
+      showElementInfo();
     }
 
     removeElement('dkInspectInsertMessage');
@@ -330,26 +347,52 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    * @this HTMLElement 이벤트가 발생한 요소
    */
   function handleMouseOut(this: HTMLElement, e: MouseEvent): void {
-    if (opt.trackingmode) {
-      const trackingEl = document.getElementById('dkInspect_tracking');
+    const document = getCurrentDocument();
+    const block = document.getElementById('dkInspect_block');
 
-      // lastHoveredElement를 벗어났을 때만 초기화
-      if (this === lastHoveredElement) {
-        lastHoveredElement = null;
+    // lastHoveredElement가 없으면 아무것도 할 필요 없음
+    if (!lastHoveredElement) {
+      return;
+    }
+
+    // 현재 요소가 lastHoveredElement의 자손인지 확인
+    const isDescendantOfHovered = (element: HTMLElement): boolean => {
+      let current: HTMLElement | null = element;
+      while (current) {
+        if (current === lastHoveredElement) {
+          return true;
+        }
+        current = current.parentElement;
+      }
+      return false;
+    };
+
+    // 현재 요소 또는 조상이 lastHoveredElement인 경우에만 초기화
+    const shouldClear =
+      this === lastHoveredElement || isDescendantOfHovered(this);
+
+    if (shouldClear) {
+      if (opt.trackingmode) {
+        const trackingEl = document.getElementById('dkInspect_tracking');
         if (this.id === 'dkInspect_tracking') {
           trackingEl!.style.display = 'block';
         } else {
           if (trackingEl) trackingEl.style.display = 'none';
+          // trackingmode에서도 팝업 숨기기
+          if (block) block.style.display = 'none';
         }
+      } else {
+        // Non-tracking mode에서는 outline 제거
+        lastHoveredElement.style.outlineWidth = '';
+        lastHoveredElement.style.outlineColor = '';
+        lastHoveredElement.style.outlineStyle = '';
+        lastHoveredElement.style.outlineOffset = '';
+        // 팝업도 함께 숨기기
+        if (block) block.style.display = 'none';
       }
-      // 자식 요소에서 벗어나는 경우는 무시 (부모가 lastHoveredElement이면 유지)
-    } else {
-      // Non-tracking mode에서는 lastHoveredElement 초기화
-      if (this === lastHoveredElement) {
-        lastHoveredElement = null;
-      }
+      lastHoveredElement = null;
     }
-    // outline 제거 로직 삭제 - handleMouseOver에서만 처리
+
     e.stopPropagation();
   }
 

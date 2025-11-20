@@ -253,6 +253,7 @@ function loadCCShowSettings(): void {
 
 /**
  * Chrome Storage에서 링크 모드 설정을 로드합니다
+ * 링크 모드에 따라 배경 옵션을 활성화/비활성화합니다
  *
  * @returns void
  */
@@ -263,8 +264,10 @@ function loadLinkModeSettings(): void {
 
       if (linkmode === STATE_ENABLED) {
         safeSetChecked('linkModeOn', true);
+        enableBackgroundModeOption();
       } else {
         safeSetChecked('linkModeOff', true);
+        disableBackgroundModeOption();
       }
     });
   } catch (error) {
@@ -337,23 +340,65 @@ function loadColorTypeSettings(pickrInstance: Pickr | null): void {
 }
 
 /**
- * Chrome Storage에서 추적 모드 설정을 로드합니다
+ * 배경 모드 옵션을 활성화합니다
  *
  * @returns void
  */
-function loadTrackingModeSettings(): void {
+function enableBackgroundModeOption(): void {
   try {
-    safeStorageGet('trackingmode', function (result) {
-      const trackingmode = result.trackingmode as string | undefined;
+    const bgModeOn = $('bgModeOn') as HTMLInputElement | null;
+    const bgModeOff = $('bgModeOff') as HTMLInputElement | null;
+    const bgModeItem = $('bgModeItem');
 
-      if (trackingmode === TRACKING_MODE_ENABLED) {
-        safeSetChecked('trackingModeOn', true);
-      } else {
-        safeSetChecked('trackingModeOff', true);
-      }
-    });
+    if (bgModeOn) bgModeOn.disabled = false;
+    if (bgModeOff) bgModeOff.disabled = false;
+    if (bgModeItem) bgModeItem.style.opacity = '1';
   } catch (error) {
-    console.error('Error loading tracking mode settings:', error);
+    console.error('Error enabling background mode option:', error);
+  }
+}
+
+/**
+ * 배경 모드 옵션을 비활성화합니다
+ *
+ * @returns void
+ */
+function disableBackgroundModeOption(): void {
+  try {
+    const bgModeOn = $('bgModeOn') as HTMLInputElement | null;
+    const bgModeOff = $('bgModeOff') as HTMLInputElement | null;
+    const bgModeItem = $('bgModeItem');
+
+    if (bgModeOn) {
+      bgModeOn.disabled = true;
+      bgModeOn.checked = false;
+    }
+    if (bgModeOff) {
+      bgModeOff.disabled = true;
+      bgModeOff.checked = true;
+    }
+    if (bgModeItem) bgModeItem.style.opacity = '0.5';
+  } catch (error) {
+    console.error('Error disabling background mode option:', error);
+  }
+}
+
+/**
+ * 링크 모드 변경 시 호출되는 이벤트 핸들러
+ *
+ * @returns void
+ */
+function handleLinkModeChange(): void {
+  try {
+    const linkModeOn = $('linkModeOn') as HTMLInputElement | null;
+
+    if (linkModeOn && linkModeOn.checked) {
+      enableBackgroundModeOption();
+    } else {
+      disableBackgroundModeOption();
+    }
+  } catch (error) {
+    console.error('Error handling link mode change:', error);
   }
 }
 
@@ -456,7 +501,6 @@ function loadEvent(pickrInstance: Pickr | null = null): void {
     loadBackgroundModeSettings();
     loadLineTypeSettings();
     loadColorTypeSettings(pickrInstance);
-    loadTrackingModeSettings();
     loadBorderSizeSettings();
   } catch (error) {
     console.error('Error in loadEvent:', error);
@@ -631,8 +675,11 @@ function resRegEvent(): void {
       }
     }
 
-    const trackingmode = getCheckboxBooleanState('trackingModeOn');
     const bordersize = safeGetValue('bordersize');
+
+    // 링크 모드에 따라 trackingmode 자동 설정
+    // 링크 모드 ON = 분리형 선택자 활성화
+    const trackingmode = lm_sw === STATE_ENABLED;
 
     // 입력 검증
     if (!monitor || !resolution) {
@@ -641,13 +688,16 @@ function resRegEvent(): void {
       return;
     }
 
+    // 링크 모드가 OFF일 때는 배경 모드도 OFF로 설정
+    const finalBgMode = lm_sw === STATE_ENABLED ? bg_sw : false;
+
     // 입력된 값을 저장함
     const settingsData: Record<string, unknown> = {
       monitors: monitor,
       resolutions: resolution,
       ccshow: cc_sw,
       linkmode: lm_sw,
-      bgmode: bg_sw,
+      bgmode: finalBgMode,
       linetype: linetype,
       colortype: colortype,
       trackingmode: trackingmode,
@@ -720,6 +770,10 @@ function initializePage(): void {
 
     // id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
     safeAddEventListener('resBtn', 'click', resRegEvent);
+
+    // 링크 모드 변경 이벤트 리스너 추가
+    safeAddEventListener('linkModeOn', 'change', handleLinkModeChange);
+    safeAddEventListener('linkModeOff', 'change', handleLinkModeChange);
 
     // loadEvent 함수를 실행함 (Pickr 인스턴스 전달)
     loadEvent(pickrInstance);
