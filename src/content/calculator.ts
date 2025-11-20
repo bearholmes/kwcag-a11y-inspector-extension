@@ -257,6 +257,19 @@ type CalculatorCallback = (result: CalculatorResult) => void;
           throw new Error('Body element not found');
         }
         body.appendChild(container);
+
+        // 이벤트 전파 방지 (포커스 유지 및 외부 이벤트 간섭 방지)
+        const stopPropagation = (e: Event) => e.stopPropagation();
+        [
+          'click',
+          'mousedown',
+          'mouseup',
+          'keydown',
+          'keyup',
+          'keypress',
+        ].forEach((eventType) => {
+          container.addEventListener(eventType, stopPropagation);
+        });
       } catch (error) {
         console.error('Error in initialize:', error);
         displayError('UI 초기화에 실패했습니다.');

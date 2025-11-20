@@ -17,10 +17,11 @@
     "default_title": "kwcag a11y inspector"
   },
   "background": {
-    "service_worker": "dist/background/service-worker.js"
+    "service_worker": "background/service-worker.js",
+    "type": "module"
   },
   "options_ui": {
-    "page": "src/options/settings.html",
+    "page": "options/settings.html",
     "browser_style": true
   },
   "permissions": [
@@ -31,6 +32,12 @@
     "notifications"
   ],
   "host_permissions": ["https://*/*", "http://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["content/*.js", "chunks/*.js", "assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }

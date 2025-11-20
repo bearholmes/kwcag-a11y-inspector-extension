@@ -98,6 +98,12 @@ function isElementInViewport(element: HTMLElement): boolean {
  * @returns 이벤트 핸들러 객체
  */
 export function createEventHandlers(opt: InspectorOptions): EventHandlers {
+  // 마지막으로 hover한 요소를 추적하여 중복 업데이트 방지
+  let lastHoveredElement: HTMLElement | null = null;
+
+  // mousemove throttling을 위한 변수
+  let isUpdatingPosition = false;
+
   /**
    * 마우스 오버 이벤트 핸들러
    * 요소 위에 마우스를 올렸을 때 요소를 강조하고 정보를 표시
@@ -113,28 +119,105 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
       return;
     }
 
+    // 인스펙터 자체 UI 요소는 무시
+    if (this.id && this.id.startsWith('dkInspect')) {
+      return;
+    }
+
+    // 같은 요소에 대한 중복 처리 방지
+    if (this === lastHoveredElement) {
+      return;
+    }
+
     if (this.tagName.toLowerCase() !== 'body') {
       if (opt.trackingmode) {
+        // Tracking mode에서도 부모 interactive 요소를 찾아서 추적
+        let targetElement: HTMLElement = this;
+        const tagName = this.tagName.toLowerCase();
+        const isInteractive = CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
+
+        if (!isInteractive && this.parentElement) {
+          const parentTagName = this.parentElement.nodeName.toLowerCase();
+          const isParentInteractive =
+            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName);
+
+          if (isParentInteractive) {
+            // 부모가 interactive면 부모를 추적
+            targetElement = this.parentElement;
+          }
+        }
+
         if ((e.target as HTMLElement).id !== 'dkInspect_tracking') {
-          trackingEl!.style.width = `${parseInt(String(getWidth(this)))}px`;
-          trackingEl!.style.height = `${parseInt(String(getHeight(this)))}px`;
-          trackingEl!.style.left = `${parseInt(String(getLeft(this)))}px`;
-          trackingEl!.style.top = `${parseInt(String(getTop(this)))}px`;
+          trackingEl!.style.width = `${parseInt(String(getWidth(targetElement)))}px`;
+          trackingEl!.style.height = `${parseInt(String(getHeight(targetElement)))}px`;
+          trackingEl!.style.left = `${parseInt(String(getLeft(targetElement)))}px`;
+          trackingEl!.style.top = `${parseInt(String(getTop(targetElement)))}px`;
           trackingEl!.style.display = 'block';
         }
+        // trackingmode에서도 lastHoveredElement 업데이트 (targetElement로)
+        lastHoveredElement = targetElement;
       } else {
-        this.style.setProperty(
-          'outline-width',
-          `${opt.bordersize}px`,
-          'important',
-        );
-        this.style.setProperty('outline-color', opt.colortype, 'important');
-        this.style.setProperty('outline-style', opt.linetype, 'important');
-        this.style.setProperty(
-          'outline-offset',
-          `-${opt.bordersize}px`,
-          'important',
-        );
+        // Link 모드일 때는 인터랙티브 요소이거나 부모가 인터랙티브 요소일 때만 아웃라인 표시
+        let shouldShowOutline = true;
+        let targetElement: HTMLElement = this;
+
+        if (String(opt.linkmode) === '1') {
+          const tagName = this.tagName.toLowerCase();
+          const parentTagName = this.parentElement?.nodeName.toLowerCase();
+          const isInteractive =
+            CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
+          const isParentInteractive =
+            parentTagName &&
+            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName);
+
+          if (isInteractive) {
+            // 현재 요소가 interactive면 현재 요소에 outline
+            targetElement = this;
+          } else if (isParentInteractive) {
+            // 부모가 interactive면 부모에 outline
+            targetElement = this.parentElement!;
+          } else {
+            // 둘 다 아니면 outline 없음
+            shouldShowOutline = false;
+          }
+        }
+
+        // 이전 요소의 outline 제거 (shouldShowOutline과 무관하게)
+        if (lastHoveredElement) {
+          lastHoveredElement.style.outlineWidth = '';
+          lastHoveredElement.style.outlineColor = '';
+          lastHoveredElement.style.outlineStyle = '';
+          lastHoveredElement.style.outlineOffset = '';
+        }
+
+        if (shouldShowOutline) {
+          targetElement.style.setProperty(
+            'outline-width',
+            `${opt.bordersize}px`,
+            'important',
+          );
+          targetElement.style.setProperty(
+            'outline-color',
+            opt.colortype,
+            'important',
+          );
+          targetElement.style.setProperty(
+            'outline-style',
+            opt.linetype,
+            'important',
+          );
+          targetElement.style.setProperty(
+            'outline-offset',
+            `-${opt.bordersize}px`,
+            'important',
+          );
+
+          // outline을 설정한 요소를 lastHoveredElement로 설정
+          lastHoveredElement = targetElement;
+        } else {
+          // outline을 설정하지 않아도 현재 요소를 추적
+          lastHoveredElement = this;
+        }
       }
     }
 
@@ -153,13 +236,16 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
       updateLength(element, opt, this);
       updateBox(element);
 
-      if (opt.ccshow === '1' || opt.ccshow === 1) {
+      if (String(opt.ccshow) === '1') {
         updateColorBackground(element);
       } else {
         hideCSSCategory('pColorBg');
       }
 
-      block.style.display = 'block';
+      // display가 이미 block이 아닐 때만 변경 (DOM 변경 최소화)
+      if (block.style.display !== 'block') {
+        block.style.display = 'block';
+      }
     };
 
     // 부모 요소 정보를 표시하는 함수
@@ -184,13 +270,16 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
       updateLength(element, opt, this.parentElement!);
       updateBox(element);
 
-      if (opt.ccshow === '1' || opt.ccshow === 1) {
+      if (String(opt.ccshow) === '1') {
         updateColorBackground(element);
       } else {
         hideCSSCategory('pColorBg');
       }
 
-      block.style.display = 'block';
+      // display가 이미 block이 아닐 때만 변경 (DOM 변경 최소화)
+      if (block.style.display !== 'block') {
+        block.style.display = 'block';
+      }
     };
 
     if (opt.trackingmode) {
@@ -212,7 +301,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           trackingEl!.style.display = 'block';
         }
       }
-    } else if (opt.linkmode === '1' || opt.linkmode === 1) {
+    } else if (String(opt.linkmode) === '1') {
       const tagName = this.tagName.toLowerCase();
       const parentTagName = this.parentElement?.nodeName.toLowerCase();
 
@@ -227,7 +316,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         block.style.display = 'none';
       }
     } else {
-      showElementInfo();
+      block.style.display = 'block';
     }
 
     removeElement('dkInspectInsertMessage');
@@ -243,17 +332,24 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
   function handleMouseOut(this: HTMLElement, e: MouseEvent): void {
     if (opt.trackingmode) {
       const trackingEl = document.getElementById('dkInspect_tracking');
-      if (this.id === 'dkInspect_tracking') {
-        trackingEl!.style.display = 'block';
-      } else {
-        if (trackingEl) trackingEl.style.display = 'none';
+
+      // lastHoveredElement를 벗어났을 때만 초기화
+      if (this === lastHoveredElement) {
+        lastHoveredElement = null;
+        if (this.id === 'dkInspect_tracking') {
+          trackingEl!.style.display = 'block';
+        } else {
+          if (trackingEl) trackingEl.style.display = 'none';
+        }
       }
+      // 자식 요소에서 벗어나는 경우는 무시 (부모가 lastHoveredElement이면 유지)
     } else {
-      this.style.outlineWidth = '';
-      this.style.outlineColor = '';
-      this.style.outlineStyle = '';
-      this.style.outlineOffset = '';
+      // Non-tracking mode에서는 lastHoveredElement 초기화
+      if (this === lastHoveredElement) {
+        lastHoveredElement = null;
+      }
     }
+    // outline 제거 로직 삭제 - handleMouseOver에서만 처리
     e.stopPropagation();
   }
 
@@ -266,98 +362,53 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
   function handleMouseMove(this: HTMLElement, e: MouseEvent): void {
     const document = getCurrentDocument();
     const block = document.getElementById('dkInspect_block');
-    const trackingEl = document.getElementById('dkInspect_tracking');
 
-    if (!block) {
+    if (!block || block.style.display === 'none') {
       return;
     }
 
-    if (opt.trackingmode) {
-      const tagName = this.tagName.toLowerCase();
-      if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
-        trackingEl!.style.display = 'block';
-      } else {
-        if (this.id === 'dkInspect_tracking') {
-          trackingEl!.style.display = 'block';
-        } else {
-          const parentTagName = this.parentElement?.nodeName.toLowerCase();
-          if (
-            parentTagName &&
-            CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
-          ) {
-            trackingEl!.style.display = 'block';
+    // requestAnimationFrame으로 throttling
+    if (!isUpdatingPosition) {
+      isUpdatingPosition = true;
+      requestAnimationFrame(() => {
+        // 정보 블록 위치 설정
+        const pageWidth = window.innerWidth;
+        const pageHeight = window.innerHeight;
+        const blockWidth = CONSTANTS.MEASUREMENT.BLOCK_WIDTH;
+        const blockHeight = parseInt(
+          document.defaultView!.getComputedStyle(block, null).height,
+        );
+
+        // 블록이 페이지 너비를 벗어나는 경우
+        if (e.pageX + blockWidth > pageWidth) {
+          if (e.pageX - blockWidth - CONSTANTS.UI.POSITION_MIN > 0) {
+            block.style.left = `${e.pageX - blockWidth - CONSTANTS.UI.POSITION_OFFSET_LARGE}px`;
           } else {
-            trackingEl!.style.display = 'none';
+            block.style.left = '0px';
           }
+        } else {
+          block.style.left = `${e.pageX + CONSTANTS.UI.POSITION_OFFSET}px`;
         }
-      }
-    } else if (opt.linkmode === '1' || opt.linkmode === 1) {
-      const tagName = this.tagName.toLowerCase();
-      const parentTagName = this.parentElement?.nodeName.toLowerCase();
-      if (CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName)) {
-        block.style.display = 'block';
-      } else if (
-        parentTagName &&
-        CONSTANTS.PARENT_INTERACTIVE_ELEMENTS.includes(parentTagName)
-      ) {
-        block.style.display = 'block';
-      } else {
-        this.style.outlineWidth = '';
-        this.style.outlineColor = '';
-        this.style.outlineStyle = '';
-        this.style.outlineOffset = '';
-      }
-    } else {
-      block.style.display = 'block';
-    }
 
-    if (
-      this.tagName.toLowerCase() === 'body' ||
-      this.tagName.toLowerCase() === 'frame'
-    ) {
-      if (opt.trackingmode) {
-        trackingEl!.style.display = 'none';
-      }
-    }
+        // 블록이 페이지 높이를 벗어나는 경우
+        if (e.pageY + blockHeight > pageHeight) {
+          if (e.pageY - blockHeight - CONSTANTS.UI.POSITION_MIN > 0) {
+            block.style.top = `${e.pageY - blockHeight - CONSTANTS.UI.POSITION_OFFSET}px`;
+          } else {
+            block.style.top = '0px';
+          }
+        } else {
+          block.style.top = `${e.pageY + CONSTANTS.UI.POSITION_OFFSET}px`;
+        }
 
-    // 정보 블록 위치 설정
-    const pageWidth = window.innerWidth;
-    const pageHeight = window.innerHeight;
-    const blockWidth = CONSTANTS.MEASUREMENT.BLOCK_WIDTH;
-    const blockHeight = parseInt(
-      document.defaultView!.getComputedStyle(block, null).height,
-    );
+        // 블록이 화면에 보이지 않는 경우 스크롤 위치에 맞게 조정
+        const inView = isElementInViewport(block);
+        if (!inView) {
+          block.style.top = `${window.scrollY + CONSTANTS.UI.POSITION_OFFSET}px`;
+        }
 
-    // 블록이 페이지 너비를 벗어나는 경우
-    if (e.pageX + blockWidth > pageWidth) {
-      if (e.pageX - blockWidth - CONSTANTS.UI.POSITION_MIN > 0) {
-        block.style.left = `${
-          e.pageX - blockWidth - CONSTANTS.UI.POSITION_OFFSET_LARGE
-        }px`;
-      } else {
-        block.style.left = '0px';
-      }
-    } else {
-      block.style.left = `${e.pageX + CONSTANTS.UI.POSITION_OFFSET}px`;
-    }
-
-    // 블록이 페이지 높이를 벗어나는 경우
-    if (e.pageY + blockHeight > pageHeight) {
-      if (e.pageY - blockHeight - CONSTANTS.UI.POSITION_MIN > 0) {
-        block.style.top = `${
-          e.pageY - blockHeight - CONSTANTS.UI.POSITION_OFFSET
-        }px`;
-      } else {
-        block.style.top = '0px';
-      }
-    } else {
-      block.style.top = `${e.pageY + CONSTANTS.UI.POSITION_OFFSET}px`;
-    }
-
-    // 블록이 화면에 보이지 않는 경우 스크롤 위치에 맞게 조정
-    const inView = isElementInViewport(block);
-    if (!inView) {
-      block.style.top = `${window.scrollY + CONSTANTS.UI.POSITION_OFFSET}px`;
+        isUpdatingPosition = false;
+      });
     }
 
     e.stopPropagation();

@@ -1,6 +1,6 @@
 # KWCAG A11y Inspector
 
-<div align="center">
+<div style="text-align:center">
 
 **Languages**: 🇰🇷 [한국어](README.md) | 🇺🇸 [English](README.en.md)
 
@@ -459,7 +459,7 @@ If this project helped you, please give it a ⭐!
 
 ---
 
-<div align="center">
+<div style="text-align:center">
 
 **Made with ❤️ for Web Accessibility**
 

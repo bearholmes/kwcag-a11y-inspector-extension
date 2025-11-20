@@ -18,6 +18,7 @@ interface DefaultSettings {
   linetype: string;
   colortype: string;
   bordersize: string;
+  [key: string]: string; // Index signature for compatibility with Record<string, unknown>
 }
 
 /**
@@ -42,7 +43,7 @@ chrome.runtime.onInstalled.addListener((details) => {
     // 익스텐션을 처음 설치한 경우
     if (details.reason === 'install') {
       // 옵션 페이지를 새 탭으로 열기
-      chrome.tabs.create({ url: 'option.html' }).catch((error) => {
+      chrome.tabs.create({ url: 'options/settings.html' }).catch((error) => {
         console.error('[KWCAG Inspector] Failed to open options page:', error);
       });
 
@@ -104,13 +105,15 @@ chrome.contextMenus.onClicked.addListener(
         // calculator.js 스크립트 주입
         await chrome.scripting.executeScript({
           target: { tabId: tab.id },
-          files: ['dist/content/calculator.js'],
+          func: () => {
+            import(chrome.runtime.getURL('content/calculator.js'));
+          },
         });
 
         // calculator.css 스타일시트 주입
         await chrome.scripting.insertCSS({
           target: { tabId: tab.id },
-          files: ['dist/content/calculator.css'],
+          files: ['calculator.css'],
         });
       }
     } catch (error) {
@@ -158,13 +161,15 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
     // inspector.js 스크립트 주입
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      files: ['dist/content/inspector.js'],
+      func: () => {
+        import(chrome.runtime.getURL('content/inspector.js'));
+      },
     });
 
     // inspector.css 스타일시트 주입
     await chrome.scripting.insertCSS({
       target: { tabId: tab.id },
-      files: ['dist/content/inspector.css'],
+      files: ['inspector.css'],
     });
   } catch (error) {
     console.error('[KWCAG Inspector] Error in action click handler:', error);
@@ -194,7 +199,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
 chrome.runtime.onMessage.addListener(
   (
     request: { cmd: string },
-    sender: chrome.runtime.MessageSender,
+    _sender: chrome.runtime.MessageSender,
     sendResponse: (response?: unknown) => void,
   ): boolean => {
     try {

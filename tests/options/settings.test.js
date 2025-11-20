@@ -287,10 +287,7 @@ describe('Settings Page', () => {
 
     test('validates input before processing', () => {
       const validateInput = (value) => {
-        if (value === null || value === undefined || value === '') {
-          return false;
-        }
-        return true;
+        return !(value === null || value === undefined || value === '');
       };
 
       expect(validateInput('')).toBe(false);

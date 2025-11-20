@@ -136,6 +136,18 @@ export interface InspectorInterface {
 }
 
 /**
+ * Inspector 생성자 타입
+ */
+export interface InspectorConstructor {
+  new (
+    opt: InspectorOptions,
+    categories: Categories,
+    categoriesTitle: CategoriesTitle,
+  ): InspectorInterface;
+  prototype: InspectorInterface;
+}
+
+/**
  * Inspector 클래스
  * 페이지 요소 검사 및 정보 표시 기능을 제공합니다.
  * @param opt - 설정 객체
@@ -258,18 +270,18 @@ export function Inspector(
         return false;
       }
     } catch (error) {
-      console.warn('프레임 접근 오류:', error);
+      // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
     }
 
     // 이벤트 핸들러 추가
     elements.forEach((item) => {
       item.addEventListener(
-        'mouseover',
+        'mouseenter',
         this.eventHandlers.handleMouseOver,
         false,
       );
       item.addEventListener(
-        'mouseout',
+        'mouseleave',
         this.eventHandlers.handleMouseOut,
         false,
       );
@@ -289,12 +301,12 @@ export function Inspector(
             const frameEls = this.getAllElements(frameEl);
             frameEls.forEach((item) => {
               item.addEventListener(
-                'mouseover',
+                'mouseenter',
                 this.eventHandlers.handleMouseOver,
                 false,
               );
               item.addEventListener(
-                'mouseout',
+                'mouseleave',
                 this.eventHandlers.handleMouseOut,
                 false,
               );
@@ -306,7 +318,7 @@ export function Inspector(
             });
           }
         } catch (error) {
-          console.warn(`프레임 ${k} 접근 오류:`, error);
+          // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
         }
       }
     }
@@ -321,12 +333,12 @@ export function Inspector(
 
     elements.forEach((item) => {
       item.removeEventListener(
-        'mouseover',
+        'mouseenter',
         this.eventHandlers.handleMouseOver,
         false,
       );
       item.removeEventListener(
-        'mouseout',
+        'mouseleave',
         this.eventHandlers.handleMouseOut,
         false,
       );
@@ -346,12 +358,12 @@ export function Inspector(
             const frameEls = this.getAllElements(frameEl);
             frameEls.forEach((item) => {
               item.removeEventListener(
-                'mouseover',
+                'mouseenter',
                 this.eventHandlers.handleMouseOver,
                 false,
               );
               item.removeEventListener(
-                'mouseout',
+                'mouseleave',
                 this.eventHandlers.handleMouseOut,
                 false,
               );
@@ -363,7 +375,7 @@ export function Inspector(
             });
           }
         } catch (error) {
-          console.warn(`프레임 ${k} 접근 오류:`, error);
+          // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
         }
       }
     }

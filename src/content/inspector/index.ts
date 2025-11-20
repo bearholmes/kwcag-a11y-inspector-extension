@@ -2,7 +2,11 @@
 import './inspector.css';
 import { StorageManager } from '../../shared/storage-utils.ts';
 import { CONSTANTS } from './constants.ts';
-import { Inspector, InspectorOptions } from './inspector-core.ts';
+import {
+  Inspector,
+  InspectorConstructor,
+  InspectorOptions,
+} from './inspector-core.ts';
 import {
   createShortcutManager,
   setShortcutManager,
@@ -80,7 +84,7 @@ async function myApp(): Promise<AppConfig> {
     'colortype',
     'trackingmode',
     'bordersize',
-  ])) as StorageSettings;
+  ])) as unknown as StorageSettings;
 
   const {
     ccshow,
@@ -163,7 +167,7 @@ async function myApp(): Promise<AppConfig> {
  */
 myApp().then(({ opt, dkInspect_categories, dkInspect_categoriesTitle }) => {
   // Inspector 인스턴스 생성
-  const inspector = new Inspector(
+  const inspector = new (Inspector as unknown as InspectorConstructor)(
     opt,
     dkInspect_categories,
     dkInspect_categoriesTitle,
@@ -180,6 +184,4 @@ myApp().then(({ opt, dkInspect_categories, dkInspect_categoriesTitle }) => {
   } else {
     inspector.enable();
   }
-
-  console.log('Load');
 });

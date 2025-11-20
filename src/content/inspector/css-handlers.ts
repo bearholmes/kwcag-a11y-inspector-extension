@@ -53,7 +53,9 @@ function setCSSPropertyIf(
   }
 
   if (condition) {
-    li.lastChild!.textContent = ` : ${element.getPropertyValue(property)}`;
+    (li.lastChild as HTMLElement).innerHTML = ` : ${element.getPropertyValue(
+      property,
+    )}`;
     li.style.display = 'block';
     return 1;
   } else {
@@ -69,7 +71,7 @@ function setCSSPropertyIf(
  * @param value - 설정할 값
  */
 function setCSSPropertyValue(
-  element: CSSStyleDeclaration,
+  _element: CSSStyleDeclaration,
   property: string,
   value: string,
 ): void {
@@ -81,7 +83,7 @@ function setCSSPropertyValue(
     return;
   }
 
-  li.lastChild!.textContent = ` : ${value}`;
+  (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
   li.style.display = 'block';
 }
 
@@ -94,7 +96,7 @@ function setCSSPropertyValue(
  * @returns 성공 시 1, 실패 시 0
  */
 function setCSSPropertyValueIf(
-  element: CSSStyleDeclaration,
+  _element: CSSStyleDeclaration,
   property: string,
   value: string,
   condition: boolean,
@@ -108,7 +110,7 @@ function setCSSPropertyValueIf(
   }
 
   if (condition) {
-    li.lastChild!.textContent = ` : ${value}`;
+    (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
     li.style.display = 'block';
     return 1;
   } else {
@@ -258,7 +260,9 @@ function setCSSColorContrast(
       (Math.min(L1, L2) + CONSTANTS.WCAG_CONTRAST.CONTRAST_OFFSET);
 
     if (condition) {
-      li.lastChild!.textContent = ` : ${Math.round(ratio * 100) / 100}:1`;
+      (li.lastChild as HTMLElement).innerHTML = ` : ${
+        Math.round(ratio * 100) / 100
+      }:1`;
       li.style.display = 'block';
       return 1;
     } else {
