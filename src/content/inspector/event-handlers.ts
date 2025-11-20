@@ -179,11 +179,14 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           lastHoveredElement.style.outlineOffset = '';
         }
 
-        // Link 모드일 때는 인터랙티브 요소이거나 조상이 인터랙티브 요소일 때만 아웃라인 표시
+        // Non-tracking mode
+        // trackingmode와 linkmode가 동기화되어야 하지만, 과거 설정 호환을 위해 둘 다 체크
+        const isLinkModeOn = opt.trackingmode || String(opt.linkmode) === '1';
         let shouldShowOutline = true;
         let targetElement: HTMLElement = this;
 
-        if (String(opt.linkmode) === '1') {
+        if (isLinkModeOn) {
+          // Link 모드 ON: 인터랙티브 요소이거나 조상이 인터랙티브 요소일 때만 아웃라인 표시
           const tagName = this.tagName.toLowerCase();
           const isInteractive =
             CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
@@ -230,8 +233,8 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           // outline을 설정한 요소를 lastHoveredElement로 설정
           lastHoveredElement = targetElement;
         } else {
-          // outline을 설정하지 않아도 현재 요소를 추적
-          lastHoveredElement = this;
+          // outline을 설정하지 않으면 lastHoveredElement를 null로 설정
+          lastHoveredElement = null;
         }
       }
     }
@@ -339,12 +342,30 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
     const document = getCurrentDocument();
     const block = document.getElementById('dkInspect_block');
 
-    if (opt.trackingmode) {
-      const trackingEl = document.getElementById('dkInspect_tracking');
+    // lastHoveredElement가 없으면 아무것도 할 필요 없음
+    if (!lastHoveredElement) {
+      return;
+    }
 
-      // lastHoveredElement를 벗어났을 때만 초기화
-      if (this === lastHoveredElement) {
-        lastHoveredElement = null;
+    // 현재 요소가 lastHoveredElement의 자손인지 확인
+    const isDescendantOfHovered = (element: HTMLElement): boolean => {
+      let current: HTMLElement | null = element;
+      while (current) {
+        if (current === lastHoveredElement) {
+          return true;
+        }
+        current = current.parentElement;
+      }
+      return false;
+    };
+
+    // 현재 요소 또는 조상이 lastHoveredElement인 경우에만 초기화
+    const shouldClear =
+      this === lastHoveredElement || isDescendantOfHovered(this);
+
+    if (shouldClear) {
+      if (opt.trackingmode) {
+        const trackingEl = document.getElementById('dkInspect_tracking');
         if (this.id === 'dkInspect_tracking') {
           trackingEl!.style.display = 'block';
         } else {
@@ -352,26 +373,18 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           // trackingmode에서도 팝업 숨기기
           if (block) block.style.display = 'none';
         }
+      } else {
+        // Non-tracking mode에서는 outline 제거
+        lastHoveredElement.style.outlineWidth = '';
+        lastHoveredElement.style.outlineColor = '';
+        lastHoveredElement.style.outlineStyle = '';
+        lastHoveredElement.style.outlineOffset = '';
+        // 팝업도 함께 숨기기
+        if (block) block.style.display = 'none';
       }
-      // 자식 요소에서 벗어나는 경우는 무시 (부모가 lastHoveredElement이면 유지)
-    } else {
-      // Non-tracking mode에서는 outline 제거 및 lastHoveredElement 초기화
-      if (lastHoveredElement) {
-        // this 또는 this의 부모가 lastHoveredElement인 경우 outline 제거
-        if (
-          this === lastHoveredElement ||
-          this.parentElement === lastHoveredElement
-        ) {
-          lastHoveredElement.style.outlineWidth = '';
-          lastHoveredElement.style.outlineColor = '';
-          lastHoveredElement.style.outlineStyle = '';
-          lastHoveredElement.style.outlineOffset = '';
-          lastHoveredElement = null;
-          // 팝업도 함께 숨기기
-          if (block) block.style.display = 'none';
-        }
-      }
+      lastHoveredElement = null;
     }
+
     e.stopPropagation();
   }
 
