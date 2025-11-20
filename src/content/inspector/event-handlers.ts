@@ -346,12 +346,21 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
       }
       // 자식 요소에서 벗어나는 경우는 무시 (부모가 lastHoveredElement이면 유지)
     } else {
-      // Non-tracking mode에서는 lastHoveredElement 초기화
-      if (this === lastHoveredElement) {
-        lastHoveredElement = null;
+      // Non-tracking mode에서는 outline 제거 및 lastHoveredElement 초기화
+      if (lastHoveredElement) {
+        // this 또는 this의 부모가 lastHoveredElement인 경우 outline 제거
+        if (
+          this === lastHoveredElement ||
+          this.parentElement === lastHoveredElement
+        ) {
+          lastHoveredElement.style.outlineWidth = '';
+          lastHoveredElement.style.outlineColor = '';
+          lastHoveredElement.style.outlineStyle = '';
+          lastHoveredElement.style.outlineOffset = '';
+          lastHoveredElement = null;
+        }
       }
     }
-    // outline 제거 로직 삭제 - handleMouseOver에서만 처리
     e.stopPropagation();
   }
 
