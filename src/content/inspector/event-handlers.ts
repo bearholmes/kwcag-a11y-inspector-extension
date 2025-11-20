@@ -336,6 +336,9 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    * @this HTMLElement 이벤트가 발생한 요소
    */
   function handleMouseOut(this: HTMLElement, e: MouseEvent): void {
+    const document = getCurrentDocument();
+    const block = document.getElementById('dkInspect_block');
+
     if (opt.trackingmode) {
       const trackingEl = document.getElementById('dkInspect_tracking');
 
@@ -346,6 +349,8 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           trackingEl!.style.display = 'block';
         } else {
           if (trackingEl) trackingEl.style.display = 'none';
+          // trackingmode에서도 팝업 숨기기
+          if (block) block.style.display = 'none';
         }
       }
       // 자식 요소에서 벗어나는 경우는 무시 (부모가 lastHoveredElement이면 유지)
@@ -362,6 +367,8 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
           lastHoveredElement.style.outlineStyle = '';
           lastHoveredElement.style.outlineOffset = '';
           lastHoveredElement = null;
+          // 팝업도 함께 숨기기
+          if (block) block.style.display = 'none';
         }
       }
     }
