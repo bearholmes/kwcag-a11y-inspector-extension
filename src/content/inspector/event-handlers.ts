@@ -148,28 +148,36 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
     if (this.tagName.toLowerCase() !== 'body') {
       if (opt.trackingmode) {
-        // Tracking mode에서도 조상 interactive 요소를 찾아서 추적
-        let targetElement: HTMLElement = this;
+        // Tracking mode는 항상 interactive 요소만 추적
         const tagName = this.tagName.toLowerCase();
         const isInteractive = CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
 
-        if (!isInteractive) {
+        let targetElement: HTMLElement | null = null;
+
+        if (isInteractive) {
+          // 현재 요소가 interactive면 현재 요소 타겟팅
+          targetElement = this;
+        } else {
           // 가장 가까운 인터랙티브 조상 요소 찾기
-          const interactiveAncestor = findInteractiveAncestor(this);
-          if (interactiveAncestor) {
-            targetElement = interactiveAncestor;
-          }
+          targetElement = findInteractiveAncestor(this);
         }
 
-        if ((e.target as HTMLElement).id !== 'dkInspect_tracking') {
+        // targetElement가 있을 때만 tracking div 표시
+        if (
+          targetElement &&
+          (e.target as HTMLElement).id !== 'dkInspect_tracking'
+        ) {
           trackingEl!.style.width = `${parseInt(String(getWidth(targetElement)))}px`;
           trackingEl!.style.height = `${parseInt(String(getHeight(targetElement)))}px`;
           trackingEl!.style.left = `${parseInt(String(getLeft(targetElement)))}px`;
           trackingEl!.style.top = `${parseInt(String(getTop(targetElement)))}px`;
           trackingEl!.style.display = 'block';
+          lastHoveredElement = targetElement;
+        } else {
+          // interactive 요소가 아니면 tracking div 숨김
+          if (trackingEl) trackingEl.style.display = 'none';
+          lastHoveredElement = null;
         }
-        // trackingmode에서도 lastHoveredElement 업데이트 (targetElement로)
-        lastHoveredElement = targetElement;
       } else {
         // 이전 요소의 outline 제거
         if (lastHoveredElement) {
