@@ -239,9 +239,8 @@
                       <span class="inp_comm">
                         <input type="radio" id="linkModeOn" name="linkMode" />
                         <label for="linkModeOn"
-                          >ON (a, button, input요소로 한정)</label
+                          >ON (분리형 선택자 + a, button, input요소로 한정)</label
                         >
-                        - 부모 요소까지만 체크
                         <input
                           type="radio"
                           id="linkModeOff"
@@ -253,30 +252,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="info_item">
-                  <span class="tit_lab">분리형 선택자(link)</span>
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <span class="inp_comm">
-                        <input
-                          type="radio"
-                          id="trackingModeOn"
-                          name="trackingMode"
-                        />
-                        <label for="trackingModeOn">ON (배경색 포함)</label>
-                        <input
-                          type="radio"
-                          id="trackingModeOff"
-                          name="trackingMode"
-                          style="margin-left: 20px"
-                        />
-                        <label for="trackingModeOff">OFF</label>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <span class="tit_lab">분리형 선택자 배경</span>
+                <div class="info_item" id="bgModeItem">
+                  <span class="tit_lab">선택자 배경</span>
                   <div class="cont_item">
                     <div class="box_inptf" style="border: none">
                       <span class="inp_comm">

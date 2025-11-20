@@ -157,6 +157,14 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         // trackingmode에서도 lastHoveredElement 업데이트 (targetElement로)
         lastHoveredElement = targetElement;
       } else {
+        // 이전 요소의 outline 제거
+        if (lastHoveredElement) {
+          lastHoveredElement.style.outlineWidth = '';
+          lastHoveredElement.style.outlineColor = '';
+          lastHoveredElement.style.outlineStyle = '';
+          lastHoveredElement.style.outlineOffset = '';
+        }
+
         // Link 모드일 때는 인터랙티브 요소이거나 부모가 인터랙티브 요소일 때만 아웃라인 표시
         let shouldShowOutline = true;
         let targetElement: HTMLElement = this;
@@ -181,14 +189,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
             shouldShowOutline = false;
           }
         }
-
-        // 이전 요소의 outline 제거 (shouldShowOutline과 무관하게)
-        if (lastHoveredElement) {
-          lastHoveredElement.style.outlineWidth = '';
-          lastHoveredElement.style.outlineColor = '';
-          lastHoveredElement.style.outlineStyle = '';
-          lastHoveredElement.style.outlineOffset = '';
-        }
+        // linkmode === '0' (OFF)이면 모든 요소에 outline 표시
 
         if (shouldShowOutline) {
           targetElement.style.setProperty(
@@ -316,7 +317,8 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         block.style.display = 'none';
       }
     } else {
-      block.style.display = 'block';
+      // 링크 모드 OFF (모든 요소 모드) - 모든 요소의 정보 표시
+      showElementInfo();
     }
 
     removeElement('dkInspectInsertMessage');
