@@ -203,30 +203,6 @@
     "message": "OFF（所有元素）",
     "description": "链接模式OFF标签"
   },
-  "settingTrackingMode": {
-    "message": "分离式选择器（链接）",
-    "description": "分离式选择器设置标签"
-  },
-  "settingTrackingModeOn": {
-    "message": "ON（包含背景色）",
-    "description": "分离式选择器ON标签"
-  },
-  "settingTrackingModeOff": {
-    "message": "OFF",
-    "description": "分离式选择器OFF标签"
-  },
-  "settingBgMode": {
-    "message": "分离式选择器背景",
-    "description": "分离式选择器背景设置标签"
-  },
-  "settingBgModeOn": {
-    "message": "ON（包含透明背景）",
-    "description": "分离式选择器背景ON标签"
-  },
-  "settingBgModeOff": {
-    "message": "OFF",
-    "description": "分离式选择器背景OFF标签"
-  },
   "settingLineTypeSolid": {
     "message": "实线（solid）",
     "description": "实线标签"

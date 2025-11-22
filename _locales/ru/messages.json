@@ -203,30 +203,6 @@
     "message": "ВЫКЛ (все элементы)",
     "description": "Link mode OFF label"
   },
-  "settingTrackingMode": {
-    "message": "Отдельный селектор (ссылка)",
-    "description": "Tracking mode setting label"
-  },
-  "settingTrackingModeOn": {
-    "message": "ВКЛ (включить цвет фона)",
-    "description": "Tracking mode ON label"
-  },
-  "settingTrackingModeOff": {
-    "message": "ВЫКЛ",
-    "description": "Tracking mode OFF label"
-  },
-  "settingBgMode": {
-    "message": "Фон отдельного селектора",
-    "description": "Background mode setting label"
-  },
-  "settingBgModeOn": {
-    "message": "ВКЛ (включить прозрачный фон)",
-    "description": "Background mode ON label"
-  },
-  "settingBgModeOff": {
-    "message": "ВЫКЛ",
-    "description": "Background mode OFF label"
-  },
   "settingLineTypeSolid": {
     "message": "Сплошная",
     "description": "Solid line label"

@@ -203,30 +203,6 @@
     "message": "OFF（所有元素）",
     "description": "Link mode OFF label"
   },
-  "settingTrackingMode": {
-    "message": "分離式選擇器（連結）",
-    "description": "Tracking mode setting label"
-  },
-  "settingTrackingModeOn": {
-    "message": "ON（包含背景色）",
-    "description": "Tracking mode ON label"
-  },
-  "settingTrackingModeOff": {
-    "message": "OFF",
-    "description": "Tracking mode OFF label"
-  },
-  "settingBgMode": {
-    "message": "分離式選擇器背景",
-    "description": "Background mode setting label"
-  },
-  "settingBgModeOn": {
-    "message": "ON（包含透明背景）",
-    "description": "Background mode ON label"
-  },
-  "settingBgModeOff": {
-    "message": "OFF",
-    "description": "Background mode OFF label"
-  },
   "settingLineTypeSolid": {
     "message": "實線（solid）",
     "description": "Solid line label"

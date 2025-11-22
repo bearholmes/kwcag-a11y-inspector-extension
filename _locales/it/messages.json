@@ -203,30 +203,6 @@
     "message": "DISATTIVO (tutti gli elementi)",
     "description": "Link mode OFF label"
   },
-  "settingTrackingMode": {
-    "message": "Selettore separato (link)",
-    "description": "Tracking mode setting label"
-  },
-  "settingTrackingModeOn": {
-    "message": "ATTIVO (includi colore di sfondo)",
-    "description": "Tracking mode ON label"
-  },
-  "settingTrackingModeOff": {
-    "message": "DISATTIVO",
-    "description": "Tracking mode OFF label"
-  },
-  "settingBgMode": {
-    "message": "Sfondo selettore separato",
-    "description": "Background mode setting label"
-  },
-  "settingBgModeOn": {
-    "message": "ATTIVO (includi sfondo trasparente)",
-    "description": "Background mode ON label"
-  },
-  "settingBgModeOff": {
-    "message": "DISATTIVO",
-    "description": "Background mode OFF label"
-  },
   "settingLineTypeSolid": {
     "message": "Solido",
     "description": "Solid line label"

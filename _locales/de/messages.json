@@ -203,30 +203,6 @@
     "message": "AUS (alle Elemente)",
     "description": "Link mode OFF label"
   },
-  "settingTrackingMode": {
-    "message": "Separater Selektor (Link)",
-    "description": "Tracking mode setting label"
-  },
-  "settingTrackingModeOn": {
-    "message": "EIN (einschließlich Hintergrundfarbe)",
-    "description": "Tracking mode ON label"
-  },
-  "settingTrackingModeOff": {
-    "message": "AUS",
-    "description": "Tracking mode OFF label"
-  },
-  "settingBgMode": {
-    "message": "Separater Selektor-Hintergrund",
-    "description": "Background mode setting label"
-  },
-  "settingBgModeOn": {
-    "message": "EIN (einschließlich transparenter Hintergrund)",
-    "description": "Background mode ON label"
-  },
-  "settingBgModeOff": {
-    "message": "AUS",
-    "description": "Background mode OFF label"
-  },
   "settingLineTypeSolid": {
     "message": "Durchgezogen",
     "description": "Solid line label"

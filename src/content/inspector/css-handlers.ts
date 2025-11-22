@@ -66,7 +66,7 @@ function setCSSPropertyIf(
 
 /**
  * CSS 속성 값을 설정하고 표시
- * @param element - CSS 스타일 객체
+ * @param _element
  * @param property - CSS 속성명
  * @param value - 설정할 값
  */
@@ -89,7 +89,7 @@ function setCSSPropertyValue(
 
 /**
  * CSS 속성 값을 조건에 따라 설정하고 표시
- * @param element - CSS 스타일 객체
+ * @param _element
  * @param property - CSS 속성명
  * @param value - 설정할 값
  * @param condition - 표시 조건

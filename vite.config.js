@@ -1,10 +1,14 @@
 import { defineConfig } from 'vite';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { copyFileSync, mkdirSync } from 'fs';
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// package.json에서 버전 읽기
+const packageJson = JSON.parse(readFileSync('package.json', 'utf-8'));
+const version = packageJson.version;
 
 export default defineConfig({
   resolve: {
@@ -37,7 +41,8 @@ export default defineConfig({
           }
           return 'assets/[name]-[hash][extname]';
         },
-        inlineDynamicImports: false,
+        // 코드 스플리팅 비활성화 - 각 엔트리가 독립적인 번들로 생성
+        manualChunks: undefined,
       },
     },
   },
@@ -45,12 +50,21 @@ export default defineConfig({
     {
       name: 'copy-assets',
       closeBundle() {
-        // Copy manifest.json
-        copyFileSync('manifest.json', 'dist/manifest.json');
+        // Copy manifest.json with version injection
+        const manifest = JSON.parse(readFileSync('manifest.json', 'utf-8'));
+        manifest.version = version;
+        writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
 
         // Copy HTML files
         mkdirSync('dist/options', { recursive: true });
         copyFileSync('src/options/settings.html', 'dist/options/settings.html');
+
+        // Copy CSS files
+        copyFileSync('src/content/calculator.css', 'dist/calculator.css');
+        copyFileSync(
+          'src/content/inspector/inspector.css',
+          'dist/inspector.css',
+        );
 
         // Copy assets
         mkdirSync('dist/assets/icons', { recursive: true });

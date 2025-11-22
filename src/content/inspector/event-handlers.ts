@@ -152,7 +152,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         const tagName = this.tagName.toLowerCase();
         const isInteractive = CONSTANTS.INTERACTIVE_ELEMENTS.includes(tagName);
 
-        let targetElement: HTMLElement | null = null;
+        let targetElement: HTMLElement | null;
 
         if (isInteractive) {
           // 현재 요소가 interactive면 현재 요소 타겟팅

@@ -102,7 +102,7 @@ export function createTracking(opt: InspectorOptions): Tracking {
      */
     hexToRGB(hex: string, alpha: number = 1): string {
       const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+      hex = hex.replace(shorthandRegex, function (_m, r, g, b) {
         return r + r + g + g + b + b;
       });
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -241,7 +241,7 @@ export function Inspector(
       const children = element.childNodes;
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
-        if (child.hasChildNodes) {
+        if (child.hasChildNodes()) {
           elements = elements.concat(this.getAllElements(child));
         } else if (child.nodeType === CONSTANTS.NODE_TYPE.ELEMENT) {
           elements.push(child);

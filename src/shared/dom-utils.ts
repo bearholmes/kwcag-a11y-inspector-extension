@@ -10,7 +10,7 @@
  */
 export function $(id: string): HTMLElement | null {
   try {
-    if (typeof id !== 'string' || !id.trim()) {
+    if (!id.trim()) {
       console.error('Element ID must be a non-empty string');
       return null;
     }

@@ -26,12 +26,14 @@ interface DefaultSettings {
  * @param message - 표시할 메시지
  */
 function showNotification(message: string): void {
-  chrome.notifications.create({
-    type: 'basic',
-    iconUrl: 'assets/icons/48.png',
-    title: 'KWCAG A11y Inspector',
-    message: message,
-  });
+  chrome.notifications
+    .create({
+      type: 'basic',
+      iconUrl: 'assets/icons/48.png',
+      title: 'KWCAG A11y Inspector',
+      message: message,
+    })
+    .catch((e) => console.error('[KWCAG Inspector]', e));
 }
 
 /**
@@ -66,24 +68,18 @@ chrome.runtime.onInstalled.addListener((details) => {
         );
       });
     }
+
+    // 컨텍스트 메뉴 항목 생성
+    // 우클릭 시 수동 계산기 팝업을 열 수 있는 메뉴 추가
+    chrome.contextMenus.create({
+      id: 'dkinspectContextMenu',
+      title: '수동계산 팝업 열기',
+      contexts: ['page', 'frame'],
+    });
   } catch (error) {
     console.error('[KWCAG Inspector] Error in onInstalled listener:', error);
   }
 });
-
-/**
- * 컨텍스트 메뉴 항목 생성
- * 우클릭 시 수동 계산기 팝업을 열 수 있는 메뉴 추가
- */
-try {
-  chrome.contextMenus.create({
-    id: 'dkinspectContextMenu',
-    title: '수동계산 팝업 열기',
-    contexts: ['page', 'frame'],
-  });
-} catch (error) {
-  console.error('[KWCAG Inspector] Failed to create context menu:', error);
-}
 
 /**
  * 컨텍스트 메뉴 클릭 이벤트 처리
@@ -159,10 +155,13 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
     }
 
     // inspector.js 스크립트 주입
+    // 타임스탬프를 추가하여 모듈 캐싱 방지 (매번 IIFE 재실행)
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
-        import(chrome.runtime.getURL('content/inspector.js'));
+        import(
+          chrome.runtime.getURL('content/inspector.js') + '?t=' + Date.now()
+        );
       },
     });
 

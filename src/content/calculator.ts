@@ -1,5 +1,3 @@
-// Import CSS
-import './calculator.css';
 import { StorageManager } from '../shared/storage-utils.ts';
 
 /**
@@ -20,6 +18,12 @@ interface CalculatorResult {
 type CalculatorCallback = (result: CalculatorResult) => void;
 
 (function (): void {
+  // ==================== EARLY EXIT CHECK ====================
+  // calculator가 이미 존재하면 중복 초기화 방지
+  if (document.getElementById('dkInspect_cals')) {
+    return;
+  }
+
   // ==================== CONSTANTS ====================
 
   /**
@@ -64,15 +68,43 @@ type CalculatorCallback = (result: CalculatorResult) => void;
   } as const;
 
   /**
-   * 기본 에러 메시지
+   * 에러 메시지 상수 (영어로 고정 - 개발자/디버깅용)
    * @constant
    */
   const ERROR_MESSAGES = {
-    INVALID_INPUT: '유효하지 않은 입력값입니다.',
-    MISSING_ELEMENT: '필수 요소를 찾을 수 없습니다.',
-    STORAGE_ERROR: '저장소에서 데이터를 읽을 수 없습니다.',
-    CALCULATION_ERROR: '계산 중 오류가 발생했습니다.',
+    INVALID_INPUT: 'Invalid input value.',
+    MISSING_ELEMENT: 'Required element not found.',
+    STORAGE_ERROR: 'Cannot read data from storage.',
+    CALCULATION_ERROR: 'An error occurred during calculation.',
+    INPUT_VALIDATION: 'Only positive numbers are allowed.',
+    UI_INIT: 'Failed to initialize UI.',
+    RESULT_DISPLAY: 'Error occurred while displaying results.',
+    CALC_INIT: 'Failed to initialize calculator.',
   } as const;
+
+  /**
+   * i18n 메시지 키 상수 (UI 텍스트용)
+   * @constant
+   */
+  const MESSAGE_KEYS = {
+    CALC_TITLE: 'calcTitle',
+    CALC_HEIGHT: 'calcHeight',
+    CALC_WIDTH: 'calcWidth',
+    CALC_CONFIRM: 'calcConfirm',
+    CALC_CLOSE: 'calcClose',
+    CALC_RESULTS: 'calcResults',
+    CALC_STANDARD: 'calcStandard',
+  } as const;
+
+  /**
+   * i18n 메시지를 가져오는 헬퍼 함수
+   * @function getMessage
+   * @param key - 메시지 키
+   * @returns 번역된 메시지
+   */
+  const getMessage = (key: string): string => {
+    return chrome.i18n.getMessage(key) || key;
+  };
 
   // ==================== UTILITY FUNCTIONS ====================
 
@@ -90,7 +122,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
    */
   const $ = function (id: string): HTMLElement | null {
     try {
-      if (!id || typeof id !== 'string') {
+      if (!id) {
         console.error('Invalid ID provided to $ function:', id);
         return null;
       }
@@ -154,10 +186,10 @@ type CalculatorCallback = (result: CalculatorResult) => void;
       const errorDiv = doc.createElement('div');
       errorDiv.style.color = 'red';
       errorDiv.style.padding = '10px';
-      errorDiv.textContent = `오류: ${message}`;
+      errorDiv.textContent = message;
       resultElement.appendChild(errorDiv);
     }
-    alert(`오류: ${message}`);
+    alert(message);
   }
 
   // ==================== MAIN CALCULATOR OBJECT ====================
@@ -180,10 +212,67 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const container = doc.createElement('div');
         container.id = ELEMENT_IDS.CONTAINER;
 
-        // "h1" 요소를 생성하고, 이 요소에 "수동 계산"이라는 텍스트 노드를 추가합니다.
+        // "h1" 요소를 생성하고, 이 요소에 계산기 제목 텍스트 노드를 추가합니다.
         const header = doc.createElement('h1');
-        header.appendChild(doc.createTextNode('수동 계산'));
+        header.appendChild(
+          doc.createTextNode(getMessage(MESSAGE_KEYS.CALC_TITLE)),
+        );
         container.appendChild(header);
+
+        // 드래그 기능 추가 - addEventListener 사용으로 충돌 방지
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let initialLeft = 0;
+        let initialTop = 0;
+
+        const handleMouseMove = (e: MouseEvent) => {
+          if (!isDragging) return;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          container.style.setProperty(
+            'left',
+            `${initialLeft + dx}px`,
+            'important',
+          );
+          container.style.setProperty(
+            'top',
+            `${initialTop + dy}px`,
+            'important',
+          );
+          container.style.setProperty('right', 'auto', 'important');
+        };
+
+        const handleMouseUp = () => {
+          if (isDragging) {
+            isDragging = false;
+            header.style.cursor = 'move';
+            // 드래그가 끝나면 이벤트 리스너 제거 (capture phase와 일치해야 함)
+            document.removeEventListener('mousemove', handleMouseMove, true);
+            document.removeEventListener('mouseup', handleMouseUp, true);
+          }
+        };
+
+        const handleMouseDown = (e: MouseEvent) => {
+          e.preventDefault();
+          isDragging = true;
+          startX = e.clientX;
+          startY = e.clientY;
+          const rect = container.getBoundingClientRect();
+          initialLeft = rect.left;
+          initialTop = rect.top;
+          header.style.cursor = 'grabbing';
+
+          // 드래그를 시작할 때만 이벤트 리스너 추가
+          // capture: true로 stopPropagation 이전에 이벤트 캡처
+          document.addEventListener('mousemove', handleMouseMove, true);
+          document.addEventListener('mouseup', handleMouseUp, true);
+        };
+
+        header.addEventListener('mousedown', handleMouseDown);
+
+        // 텍스트 선택 방지
+        header.addEventListener('selectstart', (e) => e.preventDefault());
 
         // "div" 요소를 하나 더 생성하고, 이 요소에 "ul" 요소를 추가합니다.
         const inputContainer = doc.createElement('div');
@@ -195,7 +284,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         heightLabelSpan.className = CSS_CLASSES.PROPERTY;
         const heightLabel = doc.createElement('label');
         heightLabel.setAttribute('for', ELEMENT_IDS.INPUT_HEIGHT);
-        heightLabel.textContent = 'Height';
+        heightLabel.textContent = getMessage(MESSAGE_KEYS.CALC_HEIGHT);
         heightLabelSpan.appendChild(heightLabel);
         const heightInputSpan = doc.createElement('span');
         const heightInput = doc.createElement('input');
@@ -213,7 +302,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         widthLabelSpan.className = CSS_CLASSES.PROPERTY;
         const widthLabel = doc.createElement('label');
         widthLabel.setAttribute('for', ELEMENT_IDS.INPUT_WIDTH);
-        widthLabel.textContent = 'Width';
+        widthLabel.textContent = getMessage(MESSAGE_KEYS.CALC_WIDTH);
         widthLabelSpan.appendChild(widthLabel);
         const widthInputSpan = doc.createElement('span');
         const widthInput = doc.createElement('input');
@@ -232,11 +321,11 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const submitBtn = doc.createElement('button');
         submitBtn.id = ELEMENT_IDS.BTN_SUBMIT;
         submitBtn.className = CSS_CLASSES.BUTTON;
-        submitBtn.textContent = '확인';
+        submitBtn.textContent = getMessage(MESSAGE_KEYS.CALC_CONFIRM);
         const closeBtn = doc.createElement('button');
         closeBtn.id = ELEMENT_IDS.BTN_CLOSE;
         closeBtn.className = CSS_CLASSES.BUTTON;
-        closeBtn.textContent = '닫기';
+        closeBtn.textContent = getMessage(MESSAGE_KEYS.CALC_CLOSE);
         btnSpan.appendChild(submitBtn);
         btnSpan.appendChild(closeBtn);
         btnLi.appendChild(btnSpan);
@@ -272,7 +361,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         });
       } catch (error) {
         console.error('Error in initialize:', error);
-        displayError('UI 초기화에 실패했습니다.');
+        displayError(ERROR_MESSAGES.UI_INIT);
       }
     },
 
@@ -346,7 +435,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         // 입력값 검증
         if (!validateNumericInput(h) || !validateNumericInput(w)) {
           displayError(
-            ERROR_MESSAGES.INVALID_INPUT + ' 양수 숫자만 입력 가능합니다.',
+            `${ERROR_MESSAGES.INVALID_INPUT} ${ERROR_MESSAGES.INPUT_VALIDATION}`,
           );
           return;
         }
@@ -361,10 +450,12 @@ type CalculatorCallback = (result: CalculatorResult) => void;
               return;
             }
 
-            // 이전 내용을 모두 지우고, "h2" 요소를 추가하여 "Results"라는 텍스트 노드를 출력합니다.
+            // 이전 내용을 모두 지우고, "h2" 요소를 추가하여 결과 제목 텍스트 노드를 출력합니다.
             res.textContent = '';
             const header = doc.createElement('h2');
-            header.appendChild(doc.createTextNode('Results'));
+            header.appendChild(
+              doc.createTextNode(getMessage(MESSAGE_KEYS.CALC_RESULTS)),
+            );
             res.appendChild(header);
 
             // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
@@ -402,12 +493,11 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
             // 해상도와 모니터 크기 정보를 "span" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
             const span = doc.createElement('span');
-            span.textContent =
-              ' * 기준 : ' + cb.resolution + ' (' + cb.monitor + ' inch)';
+            span.textContent = ` * ${getMessage(MESSAGE_KEYS.CALC_STANDARD)} : ${cb.resolution} (${cb.monitor} inch)`;
             res.appendChild(span);
           } catch (error) {
             console.error('Error in submit callback:', error);
-            displayError('결과 표시 중 오류가 발생했습니다.');
+            displayError(ERROR_MESSAGES.RESULT_DISPLAY);
           }
         });
       } catch (error) {
@@ -554,6 +644,6 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     }
   } catch (error) {
     console.error('Error during initialization:', error);
-    displayError('계산기 초기화에 실패했습니다.');
+    displayError(ERROR_MESSAGES.CALC_INIT);
   }
 })();

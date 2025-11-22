@@ -58,13 +58,6 @@ describe('Settings Page', () => {
       expect(['solid', 'dashed', 'dotted']).toContain(LINE_TYPE_DOTTED);
       expect(DEFAULT_LINE_TYPE).toBe('dashed');
     });
-
-    test('tracking mode constant is defined', () => {
-      const TRACKING_MODE_ENABLED = 'true';
-
-      expect(TRACKING_MODE_ENABLED).toBe('true');
-      expect(typeof TRACKING_MODE_ENABLED).toBe('string');
-    });
   });
 
   describe('Settings validation', () => {

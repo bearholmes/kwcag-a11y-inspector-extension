@@ -1,16 +1,13 @@
-// Import CSS
-import './inspector.css';
 import { StorageManager } from '../../shared/storage-utils.ts';
 import { CONSTANTS } from './constants.ts';
 import {
   Inspector,
   InspectorConstructor,
   InspectorOptions,
+  Categories,
+  CategoriesTitle,
 } from './inspector-core.ts';
-import {
-  createShortcutManager,
-  setShortcutManager,
-} from './shortcut-manager.ts';
+import { createShortcutManager } from './shortcut-manager.ts';
 
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
@@ -26,6 +23,18 @@ import {
  */
 
 /**
+ * 전역 window 객체에 Inspector 인스턴스 저장을 위한 타입 확장
+ */
+declare global {
+  interface Window {
+    __kwcagInspector?: {
+      inspector: InstanceType<InspectorConstructor>;
+      shortcutManager: ReturnType<typeof createShortcutManager>;
+    };
+  }
+}
+
+/**
  * 스토리지에서 가져온 설정값 타입
  */
 interface StorageSettings {
@@ -38,24 +47,6 @@ interface StorageSettings {
   colortype: string;
   trackingmode?: string;
   bordersize?: number;
-}
-
-/**
- * CSS 속성 카테고리 타입
- */
-interface Categories {
-  pLength: string[];
-  pBox: string[];
-  pColorBg: string[];
-}
-
-/**
- * CSS 속성 카테고리 제목 타입
- */
-interface CategoriesTitle {
-  pLength: string;
-  pBox: string;
-  pColorBg: string;
 }
 
 /**
@@ -101,7 +92,7 @@ async function myApp(): Promise<AppConfig> {
   const [width, height] = resolutions.split('x');
   const diagonal = Math.sqrt(
     Math.pow(parseInt(width), 2) + Math.pow(parseInt(height), 2),
-  ).toFixed(CONSTANTS.MEASUREMENT.DECIMAL_PLACES);
+  );
   const std_px = CONSTANTS.MEASUREMENT.MM_PER_INCH / (diagonal / monitors);
 
   // "opt" 객체에 각 값을 저장합니다.
@@ -165,7 +156,23 @@ async function myApp(): Promise<AppConfig> {
  * Inspector Entry Point
  * 설정을 로드하고 Inspector 인스턴스를 생성하여 활성화/비활성화를 토글합니다.
  */
-myApp().then(({ opt, dkInspect_categories, dkInspect_categoriesTitle }) => {
+(async () => {
+  // DOM에서 Inspector가 이미 활성화되어 있는지 확인
+  const existingBlock = document.getElementById('dkInspect_block');
+  if (existingBlock) {
+    // 이미 활성화되어 있으면 제거 (비활성화)
+    const existingTracking = document.getElementById('dkInspect_tracking');
+    existingBlock.remove();
+    if (existingTracking) {
+      existingTracking.remove();
+    }
+    return;
+  }
+
+  // 비활성화 상태면 새로 생성 (활성화)
+  const { opt, dkInspect_categories, dkInspect_categoriesTitle } =
+    await myApp();
+
   // Inspector 인스턴스 생성
   const inspector = new (Inspector as unknown as InspectorConstructor)(
     opt,
@@ -175,13 +182,14 @@ myApp().then(({ opt, dkInspect_categories, dkInspect_categoriesTitle }) => {
 
   // 단축키 관리자 생성 및 초기화
   const shortcutManager = createShortcutManager(inspector);
-  setShortcutManager(shortcutManager);
   shortcutManager.initialize();
 
-  // Inspector 활성화/비활성화 토글
-  if (inspector.isEnabled()) {
-    inspector.disable();
-  } else {
-    inspector.enable();
-  }
-});
+  // 전역 window 객체에 저장 (단축키용)
+  window.__kwcagInspector = {
+    inspector,
+    shortcutManager,
+  };
+
+  // Inspector 활성화
+  inspector.enable();
+})();

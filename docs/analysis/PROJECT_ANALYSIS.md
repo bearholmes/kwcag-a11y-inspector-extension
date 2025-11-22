@@ -3,6 +3,7 @@
 ## 📋 프로젝트 개요
 
 ### 프로젝트 정보
+
 - **프로젝트명**: KWCAG 2.1 Accessibility Inspector
 - **타입**: Chrome Browser Extension (Manifest V3)
 - **버전**: 0.13.0
@@ -12,9 +13,11 @@
 - **배포**: [Chrome Web Store](https://chrome.google.com/webstore/detail/kwcag-a11y-inspector/ngcmkfaolkgkjbddhjnhgoekgaamjibo?hl=ko)
 
 ### 프로젝트 목적
+
 KWCAG (Korean Web Content Accessibility Guidelines) 2.1의 2.1.3 "조작 가능" 검사항목을 측정하기 위한 웹 접근성 진단 도구입니다.
 
 ### 주요 기능
+
 1. **요소 크기 측정**: 클릭 가능한 요소의 크기를 mm 및 픽셀 단위로 측정
 2. **색상 대비 검사**: 텍스트 색상 대비율 계산 (WCAG 1.3.3 준수)
 3. **수동 계산기**: 팝업을 통한 수동 치수 계산 기능
@@ -28,6 +31,7 @@ KWCAG (Korean Web Content Accessibility Guidelines) 2.1의 2.1.3 "조작 가능"
 ## 🏗️ 프로젝트 구조
 
 ### 디렉토리 구조
+
 ```
 kwcag-a11y-inspector-extension/
 ├── manifest.json           # Chrome 확장프로그램 매니페스트
@@ -72,9 +76,11 @@ kwcag-a11y-inspector-extension/
 ### 핵심 파일 설명
 
 #### 1. `src/service-worker.js` (204줄)
+
 **역할**: 확장프로그램의 백그라운드 로직 관리
 
 **주요 기능**:
+
 - 확장프로그램 설치 시 옵션 페이지 생성
 - 컨텍스트 메뉴(우클릭 메뉴) 관리
 - 확장프로그램 아이콘 클릭 이벤트 처리
@@ -84,6 +90,7 @@ kwcag-a11y-inspector-extension/
 - **사용자 친화적 피드백**: 명확한 에러 메시지 제공
 
 **주요 API**:
+
 - `chrome.runtime.onInstalled`
 - `chrome.contextMenus`
 - `chrome.action.onClicked`
@@ -92,15 +99,18 @@ kwcag-a11y-inspector-extension/
 - `chrome.runtime.onMessage`
 
 **코드 품질**:
+
 - ✅ 완전한 JSDoc 문서화 (@typedef, @param, @returns, @listens)
 - ✅ 모든 비동기 작업에 try-catch 블록 적용
 - ✅ 에러 로깅 및 사용자 알림 분리
 - ✅ 타입 정의를 통한 설정 값 검증
 
 #### 2. `src/dkinspect.js` (1,350줄) - **핵심 로직**
+
 **역할**: 요소 검사 및 측정 시스템의 메인 로직
 
 **주요 기능**:
+
 - 실시간 요소 호버 추적
 - CSS 속성 추출 및 표시
 - 물리적 치수 계산 (픽셀 → mm 변환)
@@ -110,6 +120,7 @@ kwcag-a11y-inspector-extension/
 - 프레임 지원 (제한적)
 
 **핵심 함수**:
+
 - `myApp()`: 메인 비동기 초기화 함수
 - `DkInspect`: 인스펙터 기능의 핵심 클래스
 - `UpdateColorBg()`: 색상 대비 계산
@@ -117,6 +128,7 @@ kwcag-a11y-inspector-extension/
 - 마우스 이벤트 핸들러 (mouseover, mousemove, mouseout)
 
 **코드 개선사항** (v0.13.0):
+
 - ✅ **상수 중앙 관리**: CONSTANTS 객체로 매직 넘버 제거
   - COLOR: 색상 관련 상수
   - MEASUREMENT: 측정 및 계산 상수
@@ -128,10 +140,13 @@ kwcag-a11y-inspector-extension/
 - ✅ **타입 안전성 향상**: @typedef를 통한 타입 정의
 
 **알고리즘**:
+
 1. **픽셀 → mm 변환**:
+
    ```javascript
    mm = (픽셀 × 모니터 인치 × 25.4) / sqrt(가로² + 세로²)
    ```
+
    - CONSTANTS.MEASUREMENT.MM_PER_INCH = 25.4 사용
 
 2. **색상 대비율 계산** (WCAG 2.0):
@@ -141,17 +156,21 @@ kwcag-a11y-inspector-extension/
    - AA/AAA 레벨 준수 여부 판단
 
 #### 3. `src/cals.js` (167줄)
+
 **역할**: 수동 치수 계산기 팝업
 
 **주요 기능**:
+
 - 픽셀 치수를 mm로 변환
 - 저장된 모니터/해상도 설정 사용
 - 자동 검사가 불가능한 경우 수동 입력 제공
 
 #### 4. `src/option.js` (138줄)
+
 **역할**: 옵션 페이지 로직
 
 **관리 설정**:
+
 - 모니터 크기 (11-40 인치)
 - 해상도 설정 (다수 프리셋)
 - 색상 대비 표시 토글
@@ -165,6 +184,7 @@ kwcag-a11y-inspector-extension/
 ## 🔧 기술 스택
 
 ### 런타임 기술
+
 - Chrome Extension API (Manifest V3)
 - Vanilla JavaScript (ES2020, async/await)
 - Chrome Storage Sync API
@@ -172,6 +192,7 @@ kwcag-a11y-inspector-extension/
 - CSS3
 
 ### 개발 도구
+
 ```json
 {
   "@babel/cli": "^7.21.0",
@@ -185,6 +206,7 @@ kwcag-a11y-inspector-extension/
 ```
 
 ### Babel 설정 (.babelrc)
+
 ```json
 {
   "presets": [
@@ -203,15 +225,18 @@ kwcag-a11y-inspector-extension/
 ```
 
 **최적화 특징**:
+
 - **Chrome 88 타겟**: ES2020 지원으로 불필요한 트랜스파일 제거
 - **modules: false**: ESM 유지로 트리 쉐이킹 가능
 - **sourceMaps: true**: 디버깅을 위한 소스맵 생성
 - **bugfixes: true**: Babel 버그 수정 적용
 
 ### 서드파티 라이브러리
+
 - **jscolor.min.js**: 색상 선택기 컴포넌트
 
 ### 빌드 프로세스
+
 ```bash
 npm run build         # src/ → js/ Babel 트랜스파일 (소스맵 포함)
 npm run build:prod    # 프로덕션 빌드 (최소화, 주석 제거)
@@ -226,6 +251,7 @@ npm run test:coverage # 테스트 커버리지 리포트
 ## 🔄 주요 워크플로우
 
 ### 워크플로우 1: 요소 검사
+
 ```
 사용자가 확장프로그램 아이콘 클릭
   ↓
@@ -252,6 +278,7 @@ ESC 키: 일시정지/재개
 ```
 
 ### 워크플로우 2: 수동 계산기
+
 ```
 사용자가 페이지에서 우클릭
   ↓
@@ -279,42 +306,50 @@ service-worker.js가 cals.js + cals.css 주입
 ### 완료된 개선사항 ✅
 
 #### 1. 국제화(i18n) 지원 구현
+
 - **구현**: Chrome i18n API를 통한 11개 언어 지원
 - **지원 언어**: 한국어, 영어, 중국어(간체/번체), 일본어, 독일어, 프랑스어, 스페인어, 이탈리아어, 러시아어, 포르투갈어
 - **메시지 수**: 언어당 약 50개 메시지 키
 - **효과**: 글로벌 사용자 지원 가능
 
 #### 2. 전체 JSDoc 문서화 완료
+
 - **구현**: 모든 함수와 타입에 JSDoc 주석 추가
 - **주석 종류**: @typedef, @param, @returns, @listens, @module
 - **효과**: 코드 가독성 및 유지보수성 대폭 향상
 
 #### 3. 포괄적 에러 핸들링
+
 - **구현**: 모든 Chrome API 호출에 try-catch 블록 적용
 - **에러 감지**: Chrome 내부 페이지, 스토어 페이지, 권한 제한 페이지
 - **사용자 피드백**: 명확한 한국어/다국어 에러 메시지
 - **효과**: 사용자 경험 향상 및 디버깅 용이
 
 #### 4. ES2020 타겟 빌드 최적화
+
 - **구현**: Babel 타겟을 Chrome 88 (ES2020)로 설정
 - **번들 크기 감소**: 불필요한 폴리필 제거
 - **로딩 시간**: ~9ms로 단축
 - **효과**: 성능 향상 및 번들 크기 최적화
 
 #### 5. 매직 넘버 제거 및 상수 중앙 관리
+
 - **구현**: CONSTANTS 객체로 모든 하드코딩된 값 관리
 - **카테고리**: COLOR, MEASUREMENT, WCAG_CONTRAST, TIMING, UI
 - **효과**: 코드 가독성 향상 및 유지보수 간소화
 
 #### 6. 소스맵 생성 지원
+
 - **구현**: Babel 설정에 sourceMaps: true 추가
 - **효과**: 프로덕션 환경에서 디버깅 용이
 
 #### 7. 버전 동기화 완료
+
 - **구현**: manifest.json, package.json 모두 0.13.0으로 통일
 - **효과**: 버전 관리 명확화
 
 #### 8. 문서화 강화
+
 - **구현**: README.md, PROJECT_ANALYSIS.md 전면 개선
 - **추가**: 기술 스택 분석, 보안 가이드라인, 성능 최적화 문서
 - **효과**: 신규 기여자 온보딩 개선
@@ -322,21 +357,25 @@ service-worker.js가 cals.js + cals.css 주입
 ### 남은 과제 📋
 
 #### 1. 단위 테스트 구현
+
 - **상태**: Jest 설정 완료, 테스트 코드 미작성
 - **우선순위**: 높음
 - **대상**: 계산 로직 (픽셀→mm, 색상 대비율)
 
 #### 2. CI/CD 파이프라인
+
 - **상태**: 미구현
 - **우선순위**: 중간
 - **내용**: GitHub Actions를 통한 자동 빌드 및 테스트
 
 #### 3. TypeScript 마이그레이션
+
 - **상태**: 검토 중
 - **우선순위**: 낮음
 - **효과**: 타입 안전성 강화 (현재 JSDoc으로 부분 대응)
 
 #### 4. 큰 함수 리팩토링
+
 - **상태**: 일부 함수 100줄 이상
 - **우선순위**: 낮음
 - **대상**: dkinspect.js의 일부 함수
@@ -346,6 +385,7 @@ service-worker.js가 cals.js + cals.css 주입
 ## 🎯 코드 품질 평가
 
 ### 강점 ✅
+
 - ✅ **완전한 JSDoc 문서화**: 모든 함수와 타입에 JSDoc 주석 적용
 - ✅ **포괄적 에러 핸들링**: try-catch 블록과 구조화된 에러 메시지
 - ✅ **상수 중앙 관리**: CONSTANTS 객체로 매직 넘버 제거
@@ -357,6 +397,7 @@ service-worker.js가 cals.js + cals.css 주입
 - ✅ **빌드 최적화**: Chrome 88 타겟으로 번들 크기 최소화
 
 ### 개선 완료 항목 (v0.13.0) 🎉
+
 - ✅ ~~매직 넘버 제거~~ → CONSTANTS 객체로 해결
 - ✅ ~~JSDoc 문서화 부족~~ → 전체 함수 JSDoc 완료
 - ✅ ~~에러 핸들링 부족~~ → 포괄적 에러 처리 구현
@@ -365,6 +406,7 @@ service-worker.js가 cals.js + cals.css 주입
 - ✅ ~~버전 불일치~~ → 0.13.0으로 통일
 
 ### 남은 개선 영역 ⚠️
+
 - ⚠️ **함수 길이**: 일부 함수가 100줄 초과 (리팩토링 권장)
 - ⚠️ **전역 상태 관리**: dkInspectPause 등 전역 변수 존재
 - ⚠️ **중복 코드**: 추적 모드와 일반 모드 간 일부 중복
@@ -372,6 +414,7 @@ service-worker.js가 cals.js + cals.css 주입
 - ⚠️ **테스트 커버리지**: 단위 테스트 미작성
 
 ### 코드 품질 점수 📊
+
 - **문서화**: ⭐⭐⭐⭐⭐ (5/5) - JSDoc 완료
 - **에러 핸들링**: ⭐⭐⭐⭐⭐ (5/5) - 포괄적 구현
 - **코드 구조**: ⭐⭐⭐⭐☆ (4/5) - 일부 함수 크기 개선 필요
@@ -387,11 +430,13 @@ service-worker.js가 cals.js + cals.css 주입
 ## 📚 참고 자료
 
 ### 크레딧
+
 - **기반**: CSSViewer 확장프로그램
 - **색상 대비 로직**: WebAIM Color Contrast Checker
 - **대각선 측정 방식**: Page Ruler 확장프로그램
 
 ### 관련 표준
+
 - [KWCAG 2.1](http://www.wa.or.kr/m1/sub1.asp) - 한국형 웹 콘텐츠 접근성 지침
 - [WCAG 2.0](https://www.w3.org/TR/WCAG20/) - 웹 콘텐츠 접근성 지침
 - [Chrome Extension Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/)
@@ -401,6 +446,7 @@ service-worker.js가 cals.js + cals.css 주입
 ## 🚀 시작하기 (개발자용)
 
 ### 개발 환경 설정
+
 ```bash
 # 의존성 설치
 npm install
@@ -413,12 +459,14 @@ npm run build
 ```
 
 ### Chrome에 로드
+
 1. Chrome에서 `chrome://extensions/` 접속
 2. "개발자 모드" 활성화
 3. "압축해제된 확장 프로그램을 로드합니다." 클릭
 4. 프로젝트 디렉토리 선택
 
 ### 개발 워크플로우
+
 1. `src/` 디렉토리의 소스 코드 수정
 2. `npm run build` 실행하여 트랜스파일
 3. Chrome에서 확장프로그램 새로고침
@@ -429,12 +477,14 @@ npm run build
 ## 📊 프로젝트 메트릭
 
 ### 코드 통계
+
 - **총 소스 파일**: 4개 (src/)
 - **총 라인 수**: ~1,731줄
 - **최대 파일**: dkinspect.js (1,350줄)
 - **평균 함수 길이**: 약 30줄
 
 ### 복잡도
+
 - **주요 로직 파일**: dkinspect.js
 - **의존성 수**: 3개 (dev)
 - **외부 라이브러리**: 1개 (jscolor)
@@ -444,6 +494,7 @@ npm run build
 ## 🔮 향후 개선 방향
 
 ### v0.13.0 완료 항목 ✅
+
 1. ✅ 버전 번호 동기화
 2. ✅ JSDoc 문서화 완성
 3. ✅ 에러 처리 강화
@@ -454,7 +505,9 @@ npm run build
 8. ✅ ES2020 타겟 빌드 최적화
 
 ### v0.14.0 계획 (단기)
+
 **우선순위: 높음**
+
 1. **단위 테스트 구현**
    - Jest 테스트 케이스 작성
    - 계산 로직 검증 (픽셀→mm, 색상 대비)
@@ -474,7 +527,9 @@ npm run build
    - CSV/JSON 내보내기
 
 ### v0.15.0 계획 (중기)
+
 **우선순위: 중간**
+
 1. **추가 WCAG 지침 지원**
    - WCAG 2.5.5 목표 크기 (24×24 CSS 픽셀)
    - WCAG 2.4.7 초점 표시
@@ -492,7 +547,9 @@ npm run build
    - 더 나은 UI/UX
 
 ### 장기 비전
+
 **우선순위: 낮음**
+
 1. **TypeScript 마이그레이션**
    - 타입 안전성 강화
    - 개발 생산성 향상
@@ -511,6 +568,7 @@ npm run build
    - 보고서 생성 (PDF)
 
 ### 검토 중인 기술
+
 - **WebAssembly**: 복잡한 계산 성능 향상
 - **Svelte**: 옵션 페이지 UI 개선
 - **GraphQL**: 데이터 동기화 (장기)

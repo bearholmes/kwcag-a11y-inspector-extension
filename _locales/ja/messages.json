@@ -203,30 +203,6 @@
     "message": "OFF（すべての要素）",
     "description": "リンクモードOFFラベル"
   },
-  "settingTrackingMode": {
-    "message": "分離型セレクタ（リンク）",
-    "description": "分離型セレクタ設定ラベル"
-  },
-  "settingTrackingModeOn": {
-    "message": "ON（背景色を含む）",
-    "description": "分離型セレクタONラベル"
-  },
-  "settingTrackingModeOff": {
-    "message": "OFF",
-    "description": "分離型セレクタOFFラベル"
-  },
-  "settingBgMode": {
-    "message": "分離型セレクタ背景",
-    "description": "分離型セレクタ背景設定ラベル"
-  },
-  "settingBgModeOn": {
-    "message": "ON（透明背景を含む）",
-    "description": "分離型セレクタ背景ONラベル"
-  },
-  "settingBgModeOff": {
-    "message": "OFF",
-    "description": "分離型セレクタ背景OFFラベル"
-  },
   "settingLineTypeSolid": {
     "message": "実線（solid）",
     "description": "実線ラベル"

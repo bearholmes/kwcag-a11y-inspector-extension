@@ -203,30 +203,6 @@
     "message": "OFF (모든 요소)",
     "description": "링크 모드 OFF 레이블"
   },
-  "settingTrackingMode": {
-    "message": "분리형 선택자(link)",
-    "description": "분리형 선택자 설정 레이블"
-  },
-  "settingTrackingModeOn": {
-    "message": "ON (배경색 포함)",
-    "description": "분리형 선택자 ON 레이블"
-  },
-  "settingTrackingModeOff": {
-    "message": "OFF",
-    "description": "분리형 선택자 OFF 레이블"
-  },
-  "settingBgMode": {
-    "message": "분리형 선택자 배경",
-    "description": "분리형 선택자 배경 설정 레이블"
-  },
-  "settingBgModeOn": {
-    "message": "ON (투명배경 포함)",
-    "description": "분리형 선택자 배경 ON 레이블"
-  },
-  "settingBgModeOff": {
-    "message": "OFF",
-    "description": "분리형 선택자 배경 OFF 레이블"
-  },
   "settingLineTypeSolid": {
     "message": "실선(solid)",
     "description": "실선 레이블"

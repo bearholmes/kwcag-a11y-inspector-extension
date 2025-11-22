@@ -34,9 +34,6 @@ const LINE_TYPE_DOTTED = 'dotted' as const;
 /** @constant - 기본 선 유형 */
 const DEFAULT_LINE_TYPE = LINE_TYPE_DASHED;
 
-/** @constant - 추적 모드 활성화 문자열 값 */
-const TRACKING_MODE_ENABLED = 'true' as const;
-
 // ============================================================================
 // Types
 // ============================================================================
@@ -71,7 +68,7 @@ let pickrInstance: Pickr | null = null;
 function safeStorageGet(key: string, callback: StorageCallback): void {
   try {
     // 입력 검증
-    if (typeof key !== 'string' || !key.trim()) {
+    if (!key.trim()) {
       throw new Error('Storage key must be a non-empty string');
     }
 
@@ -276,27 +273,6 @@ function loadLinkModeSettings(): void {
 }
 
 /**
- * Chrome Storage에서 배경 모드 설정을 로드합니다
- *
- * @returns void
- */
-function loadBackgroundModeSettings(): void {
-  try {
-    safeStorageGet('bgmode', function (result) {
-      const bgmode = result.bgmode as number | undefined;
-
-      if (bgmode === STATE_ENABLED) {
-        safeSetChecked('bgModeOn', true);
-      } else {
-        safeSetChecked('bgModeOff', true);
-      }
-    });
-  } catch (error) {
-    console.error('Error loading background mode settings:', error);
-  }
-}
-
-/**
  * Chrome Storage에서 선 유형 설정을 로드합니다
  *
  * @returns void
@@ -340,66 +316,13 @@ function loadColorTypeSettings(pickrInstance: Pickr | null): void {
 }
 
 /**
- * 배경 모드 옵션을 활성화합니다
- *
- * @returns void
- */
-function enableBackgroundModeOption(): void {
-  try {
-    const bgModeOn = $('bgModeOn') as HTMLInputElement | null;
-    const bgModeOff = $('bgModeOff') as HTMLInputElement | null;
-    const bgModeItem = $('bgModeItem');
-
-    if (bgModeOn) bgModeOn.disabled = false;
-    if (bgModeOff) bgModeOff.disabled = false;
-    if (bgModeItem) bgModeItem.style.opacity = '1';
-  } catch (error) {
-    console.error('Error enabling background mode option:', error);
-  }
-}
-
-/**
- * 배경 모드 옵션을 비활성화합니다
- *
- * @returns void
- */
-function disableBackgroundModeOption(): void {
-  try {
-    const bgModeOn = $('bgModeOn') as HTMLInputElement | null;
-    const bgModeOff = $('bgModeOff') as HTMLInputElement | null;
-    const bgModeItem = $('bgModeItem');
-
-    if (bgModeOn) {
-      bgModeOn.disabled = true;
-      bgModeOn.checked = false;
-    }
-    if (bgModeOff) {
-      bgModeOff.disabled = true;
-      bgModeOff.checked = true;
-    }
-    if (bgModeItem) bgModeItem.style.opacity = '0.5';
-  } catch (error) {
-    console.error('Error disabling background mode option:', error);
-  }
-}
-
-/**
  * 링크 모드 변경 시 호출되는 이벤트 핸들러
+ * (배경 모드 기능이 제거되어 현재 사용되지 않음)
  *
  * @returns void
  */
 function handleLinkModeChange(): void {
-  try {
-    const linkModeOn = $('linkModeOn') as HTMLInputElement | null;
-
-    if (linkModeOn && linkModeOn.checked) {
-      enableBackgroundModeOption();
-    } else {
-      disableBackgroundModeOption();
-    }
-  } catch (error) {
-    console.error('Error handling link mode change:', error);
-  }
+  // 배경 모드 기능이 제거되어 더 이상 처리할 내용이 없음
 }
 
 /**
@@ -454,7 +377,7 @@ function initializeColorPicker(): Pickr | null {
     });
 
     // 색상 저장 이벤트
-    pickr.on('save', (color) => {
+    pickr.on('save', (color: Pickr.HSVaColor | null) => {
       try {
         if (color) {
           const hexColor = color.toHEXA().toString().substring(1, 7);
@@ -486,7 +409,7 @@ function initializeColorPicker(): Pickr | null {
 /**
  * 저장된 설정 값을 모두 로드하는 함수
  * 설정 값 로드 함수
- * 모니터 크기, 해상도, CC 표시 여부, 링크 모드 여부, 배경 모드 여부,
+ * 모니터 크기, 해상도, CC 표시 여부, 링크 모드 여부,
  * 선 유형, 선 색상, 추적 모드 여부, 테두리 크기 값을 가져와서 설정함
  *
  * @param pickrInstance - Pickr 인스턴스
@@ -498,7 +421,6 @@ function loadEvent(pickrInstance: Pickr | null = null): void {
     loadResolutionSettings();
     loadCCShowSettings();
     loadLinkModeSettings();
-    loadBackgroundModeSettings();
     loadLineTypeSettings();
     loadColorTypeSettings(pickrInstance);
     loadBorderSizeSettings();
@@ -610,13 +532,7 @@ function showStatusMessage(
   duration: number = STATUS_MESSAGE_DURATION,
 ): void {
   try {
-    // 입력 검증
-    if (typeof message !== 'string') {
-      console.error('Message must be a string');
-      return;
-    }
-
-    if (typeof duration !== 'number' || duration < 0) {
+    if (duration < 0) {
       console.error('Duration must be a positive number');
       duration = STATUS_MESSAGE_DURATION;
     }
@@ -648,7 +564,7 @@ function showStatusMessage(
  * 해상도 등록 버튼 클릭 시 실행되는 함수
  * 해상도 등록 버튼 클릭 시 실행될 코드
  * 입력된 모니터 크기와 해상도 값을 가져옴
- * CC 표시, 링크 모드, 배경 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
+ * CC 표시, 링크 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
  * 입력된 값을 저장함
  * '저장완료!' 메시지를 출력함
  *
@@ -660,10 +576,9 @@ function resRegEvent(): void {
     const monitor = safeGetValue('moniStd');
     const resolution = safeGetValue('resStd');
 
-    // CC 표시, 링크 모드, 배경 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
+    // CC 표시, 링크 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
     const cc_sw = getCheckboxState('ccShowOn');
     const lm_sw = getCheckboxState('linkModeOn');
-    const bg_sw = getCheckboxBooleanState('bgModeOn');
     const linetype = getSelectedLineType();
 
     // Pickr에서 색상 가져오기
@@ -688,16 +603,12 @@ function resRegEvent(): void {
       return;
     }
 
-    // 링크 모드가 OFF일 때는 배경 모드도 OFF로 설정
-    const finalBgMode = lm_sw === STATE_ENABLED ? bg_sw : false;
-
     // 입력된 값을 저장함
     const settingsData: Record<string, unknown> = {
       monitors: monitor,
       resolutions: resolution,
       ccshow: cc_sw,
       linkmode: lm_sw,
-      bgmode: finalBgMode,
       linetype: linetype,
       colortype: colortype,
       trackingmode: trackingmode,
@@ -705,8 +616,10 @@ function resRegEvent(): void {
     };
 
     safeStorageSet(settingsData, function () {
-      // '저장완료!' 메시지를 출력함
-      showStatusMessage('resStatus', '저장완료!');
+      // 저장 완료 메시지를 다국어로 출력
+      const savedMessage =
+        chrome.i18n.getMessage('settingSaved') || '저장완료!';
+      showStatusMessage('resStatus', savedMessage);
     });
   } catch (error) {
     console.error('Error in resRegEvent:', error);
@@ -729,11 +642,11 @@ function safeAddEventListener(
 ): boolean {
   try {
     // 입력 검증
-    if (typeof elementId !== 'string' || !elementId.trim()) {
+    if (!elementId.trim()) {
       throw new Error('Element ID must be a non-empty string');
     }
 
-    if (typeof eventType !== 'string' || !eventType.trim()) {
+    if (!eventType.trim()) {
       throw new Error('Event type must be a non-empty string');
     }
 
@@ -756,6 +669,43 @@ function safeAddEventListener(
 }
 
 /**
+ * i18n 초기화 함수
+ * data-i18n 속성을 가진 모든 요소의 텍스트를 다국어로 변환
+ *
+ * @returns void
+ */
+function initializeI18n(): void {
+  try {
+    // data-i18n 속성을 가진 모든 요소를 찾아서 텍스트 변환
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach((element) => {
+      const key = element.getAttribute('data-i18n');
+      if (key) {
+        const message = chrome.i18n.getMessage(key);
+        if (message) {
+          element.textContent = message;
+        }
+      }
+    });
+
+    // document title 설정
+    document.title =
+      chrome.i18n.getMessage('optionPageTitle') || document.title;
+
+    // 버전 정보 자동 설정 (manifest.json에서 가져옴)
+    const version = chrome.runtime.getManifest().version;
+    const versionElement = document.querySelector(
+      '.info span[data-i18n="optionVersion"]',
+    );
+    if (versionElement && versionElement.parentElement) {
+      versionElement.parentElement.textContent = `${chrome.i18n.getMessage('optionVersion')} : ${version}`;
+    }
+  } catch (error) {
+    console.error('Error initializing i18n:', error);
+  }
+}
+
+/**
  * DOM 초기화 함수
  * DOMContentLoaded 이벤트가 발생하면 실행될 코드
  * id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
@@ -765,6 +715,9 @@ function safeAddEventListener(
  */
 function initializePage(): void {
   try {
+    // i18n 초기화 (가장 먼저 실행)
+    initializeI18n();
+
     // Pickr 색상 선택기 초기화 및 전역 변수에 저장
     pickrInstance = initializeColorPicker();
 

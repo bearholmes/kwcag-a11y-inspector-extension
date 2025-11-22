@@ -138,14 +138,3 @@ export function createShortcutManager(inspector: Inspector): ShortcutManager {
 
   return shortcutManager;
 }
-
-// shortcutManager는 나중에 inspector와 함께 초기화됩니다
-let shortcutManager: ShortcutManager | undefined;
-
-/**
- * 단축키 관리자 설정
- * @param manager - 생성된 단축키 관리자
- */
-export function setShortcutManager(manager: ShortcutManager): void {
-  shortcutManager = manager;
-}
