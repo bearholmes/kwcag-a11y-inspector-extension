@@ -81,8 +81,6 @@ export function createShortcutManager(inspector: Inspector): ShortcutManager {
      * @returns 성공 여부
      */
     pause(): boolean {
-      console.log('pause');
-
       const document = getCurrentDocument();
       const block = document.getElementById('dkInspect_block');
 
@@ -107,8 +105,6 @@ export function createShortcutManager(inspector: Inspector): ShortcutManager {
      * @returns 성공 여부
      */
     resume(): boolean {
-      console.log('resume');
-
       const document = getCurrentDocument();
       const block = document.getElementById('dkInspect_block');
 

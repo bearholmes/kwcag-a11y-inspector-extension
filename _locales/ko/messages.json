@@ -175,6 +175,10 @@
     "message": "명도대비 체크",
     "description": "명도대비 설정 레이블"
   },
+  "settingBoxCheck": {
+    "message": "Box 모델 체크",
+    "description": "Box model check setting label"
+  },
   "settingSelectorLine": {
     "message": "선택자 라인",
     "description": "선택자 라인 설정 레이블"
@@ -266,5 +270,57 @@
   "reportTranslationError": {
     "message": "번역 오류 제보",
     "description": "번역 오류 제보 링크"
+  },
+  "wcag258Label": {
+    "message": "WCAG 2.5.8 (AA)",
+    "description": "WCAG 2.5.8 목표 크기 최소 레이블"
+  },
+  "wcag255Label": {
+    "message": "WCAG 2.5.5 (AAA)",
+    "description": "WCAG 2.5.5 목표 크기 향상 레이블"
+  },
+  "kwcag213Label": {
+    "message": "KWCAG 2.1.3",
+    "description": "KWCAG 2.1.3 최소 크기 레이블"
+  },
+  "targetSizePass": {
+    "message": "적합",
+    "description": "목표 크기 요구사항 통과"
+  },
+  "targetSizeFail": {
+    "message": "부적합",
+    "description": "목표 크기 요구사항 실패"
+  },
+  "cssPixelSize": {
+    "message": "CSS 픽셀",
+    "description": "CSS 픽셀 단위"
+  },
+  "targetSizeMinimum": {
+    "message": "목표 크기 (최소)",
+    "description": "최소 목표 크기 레이블"
+  },
+  "targetSizeEnhanced": {
+    "message": "목표 크기 (향상)",
+    "description": "향상된 목표 크기 레이블"
+  },
+  "targetSizeInfo": {
+    "message": "목표 크기 검사",
+    "description": "목표 크기 검사 섹션 레이블"
+  },
+  "settingTargetSizeCheck": {
+    "message": "목표 크기 검사 (WCAG 2.2)",
+    "description": "목표 크기 검사 설정 레이블"
+  },
+  "contrastRatioLabel": {
+    "message": "명도 대비",
+    "description": "Contrast ratio label"
+  },
+  "wcag143AALabel": {
+    "message": "WCAG 1.4.3 (AA)",
+    "description": "WCAG 1.4.3 contrast Level AA label"
+  },
+  "wcag143AAALabel": {
+    "message": "WCAG 1.4.3 (AAA)",
+    "description": "WCAG 1.4.3 contrast Level AAA label"
   }
 }

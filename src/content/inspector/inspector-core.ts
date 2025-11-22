@@ -17,6 +17,7 @@ import {
  */
 export interface InspectorOptions {
   ccshow?: string;
+  boxshow?: string;
   stdpx: number;
   linkmode: string;
   bgmode: string | number;
@@ -269,7 +270,8 @@ export function Inspector(
         removeElement('dkInspectInsertMessage');
         return false;
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_error) {
       // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
     }
 
@@ -317,7 +319,8 @@ export function Inspector(
               );
             });
           }
-        } catch (error) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_error) {
           // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
         }
       }
@@ -374,7 +377,8 @@ export function Inspector(
               );
             });
           }
-        } catch (error) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (_error) {
           // Cross-origin iframe 접근은 보안 정책상 불가능하므로 조용히 무시
         }
       }

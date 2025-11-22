@@ -3,6 +3,7 @@
 ## 추상화란?
 
 ### 핵심 개념
+
 ```
 추상화 (Abstraction)
     ↓
@@ -14,6 +15,7 @@
 ```
 
 ### 추상화 레벨
+
 ```
 높은 추상화                        낮은 추상화
 (What을 표현)                      (How를 표현)
@@ -29,12 +31,12 @@ inspector.measureElement()        const w = el.offsetWidth +
 
 ### 파일별 추상화 레벨
 
-| 파일 | 현재 추상화 레벨 | 이상적 레벨 | 격차 |
-|------|-----------------|------------|------|
-| **service-worker.js** | 🟡 중간 | 🟢 중간 | ✅ 적절 |
-| **cals.js** | 🟡 중간-낮음 | 🟢 중간 | ⚠️ 약간 낮음 |
-| **option.js** | 🟡 중간-낮음 | 🟢 중간 | ⚠️ 약간 낮음 |
-| **dkinspect.js** | 🔴 낮음 | 🟢 중간-높음 | ❌ 매우 낮음 |
+| 파일                  | 현재 추상화 레벨 | 이상적 레벨  | 격차         |
+| --------------------- | ---------------- | ------------ | ------------ |
+| **service-worker.js** | 🟡 중간          | 🟢 중간      | ✅ 적절      |
+| **cals.js**           | 🟡 중간-낮음     | 🟢 중간      | ⚠️ 약간 낮음 |
+| **option.js**         | 🟡 중간-낮음     | 🟢 중간      | ⚠️ 약간 낮음 |
+| **dkinspect.js**      | 🔴 낮음          | 🟢 중간-높음 | ❌ 매우 낮음 |
 
 ---
 
@@ -43,6 +45,7 @@ inspector.measureElement()        const w = el.offsetWidth +
 ### 현재 상태: 🟡 **중간** (적절)
 
 **현재 코드**:
+
 ```javascript
 chrome.action.onClicked.addListener(async (tab) => {
   // Chrome 내부 페이지 체크
@@ -59,6 +62,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 ```
 
 **추상화 수준**: ✅ **적절**
+
 - Chrome API 호출과 검증 로직이 적절히 섞여 있음
 - 단순한 글루(glue) 코드로서 적합
 - 개선 불필요
@@ -70,6 +74,7 @@ chrome.action.onClicked.addListener(async (tab) => {
 ### 현재 상태: 🟡 **중간-낮음**
 
 **현재 코드**:
+
 ```javascript
 // 계산 로직이 UI 업데이트와 혼재
 setDiagonal: async function (h, w, callback) {
@@ -94,11 +99,13 @@ setDiagonal: async function (h, w, callback) {
 ```
 
 **문제점**:
+
 - ❌ 데이터 로딩 + 파싱 + 계산 + UI 업데이트가 한 함수에
 - ❌ 순수 함수가 아님 (부수 효과 존재)
 - ❌ 테스트 어려움
 
 **개선 방안**:
+
 ```javascript
 // ===== 추상화 개선 =====
 
@@ -111,8 +118,15 @@ setDiagonal: async function (h, w, callback) {
  * @param {number} resolutionHeight - 해상도 세로
  * @returns {number} 밀리미터 값
  */
-function pixelsToMillimeters(pixels, monitorInches, resolutionWidth, resolutionHeight) {
-  const diagonalPixels = Math.sqrt(resolutionWidth ** 2 + resolutionHeight ** 2);
+function pixelsToMillimeters(
+  pixels,
+  monitorInches,
+  resolutionWidth,
+  resolutionHeight,
+) {
+  const diagonalPixels = Math.sqrt(
+    resolutionWidth ** 2 + resolutionHeight ** 2,
+  );
   const mmPerPixel = (monitorInches * MM_PER_INCH) / diagonalPixels;
   return pixels * mmPerPixel;
 }
@@ -121,14 +135,14 @@ function pixelsToMillimeters(pixels, monitorInches, resolutionWidth, resolutionH
 async function loadMonitorSettings() {
   const [resData, monData] = await Promise.all([
     readData('resolutions'),
-    readData('monitors')
+    readData('monitors'),
   ]);
 
   const [width, height] = resData.resolutions.split('x').map(Number);
   return {
     inches: parseFloat(monData.monitors),
     width,
-    height
+    height,
   };
 }
 
@@ -137,8 +151,18 @@ async function calculateDimensions(widthPx, heightPx) {
   const settings = await loadMonitorSettings();
 
   return {
-    width: pixelsToMillimeters(widthPx, settings.inches, settings.width, settings.height),
-    height: pixelsToMillimeters(heightPx, settings.inches, settings.width, settings.height)
+    width: pixelsToMillimeters(
+      widthPx,
+      settings.inches,
+      settings.width,
+      settings.height,
+    ),
+    height: pixelsToMillimeters(
+      heightPx,
+      settings.inches,
+      settings.width,
+      settings.height,
+    ),
   };
 }
 ```
@@ -157,14 +181,22 @@ async function calculateDimensions(widthPx, heightPx) {
 ### 현재 상태: 🟡 **중간-낮음**
 
 **현재 코드 (개선 후)**:
+
 ```javascript
 // 이미 상당히 개선됨
-function safeStorageGet(keys) { /* ... */ }
-function safeStorageSet(data) { /* ... */ }
-function safeSetChecked(elementId, checked) { /* ... */ }
+function safeStorageGet(keys) {
+  /* ... */
+}
+function safeStorageSet(data) {
+  /* ... */
+}
+function safeSetChecked(elementId, checked) {
+  /* ... */
+}
 ```
 
 **추상화 수준**: ✅ **양호**
+
 - 헬퍼 함수로 반복 작업 추상화
 - 에러 처리 캡슐화
 - 추가 개선 불필요
@@ -180,6 +212,7 @@ function safeSetChecked(elementId, checked) { /* ... */ }
 #### 문제 1: 계산 로직의 낮은 추상화
 
 **현재** (낮은 추상화 - How):
+
 ```javascript
 // SetCSSDiagonal 함수 (라인 460-570, 110줄)
 function SetCSSDiagonal(element, computed) {
@@ -200,12 +233,13 @@ function SetCSSDiagonal(element, computed) {
 
   // 대각선 계산
   const std_diagonal = Math.sqrt(
-    Math.pow(std_width, 2) + Math.pow(std_height, 2)
+    Math.pow(std_width, 2) + Math.pow(std_height, 2),
   ).toFixed(2);
 
   // mm 변환
   const std_px = 25.4 / (std_diagonal / monitors);
-  const width_px = eWidth + ePaddingLeft + ePaddingRight + eBorderLeft + eBorderRight;
+  const width_px =
+    eWidth + ePaddingLeft + ePaddingRight + eBorderLeft + eBorderRight;
   const width_mm = (width_px * std_px).toFixed(1);
 
   // UI 업데이트
@@ -217,6 +251,7 @@ function SetCSSDiagonal(element, computed) {
 ```
 
 **문제점**:
+
 - ❌ 스토리지 접근 + 파싱 + 계산 + UI 업데이트가 모두 한 함수
 - ❌ 110줄의 거대한 함수
 - ❌ 순수하지 않음 (부수 효과 많음)
@@ -247,25 +282,29 @@ class ElementDimensions {
     return {
       width: new Dimension(widthPx, this._settings.mmPerPixel),
       height: new Dimension(heightPx, this._settings.mmPerPixel),
-      diagonal: this._calculateDiagonal(widthPx, heightPx)
+      diagonal: this._calculateDiagonal(widthPx, heightPx),
     };
   }
 
   // 레벨 2: 중간 추상화 (계산 로직)
   _calculateTotalWidth() {
-    return this._parseFloat(this._computed.width) +
-           this._parseFloat(this._computed.paddingLeft) +
-           this._parseFloat(this._computed.paddingRight) +
-           this._parseFloat(this._computed.borderLeftWidth) +
-           this._parseFloat(this._computed.borderRightWidth);
+    return (
+      this._parseFloat(this._computed.width) +
+      this._parseFloat(this._computed.paddingLeft) +
+      this._parseFloat(this._computed.paddingRight) +
+      this._parseFloat(this._computed.borderLeftWidth) +
+      this._parseFloat(this._computed.borderRightWidth)
+    );
   }
 
   _calculateTotalHeight() {
-    return this._parseFloat(this._computed.height) +
-           this._parseFloat(this._computed.paddingTop) +
-           this._parseFloat(this._computed.paddingBottom) +
-           this._parseFloat(this._computed.borderTopWidth) +
-           this._parseFloat(this._computed.borderBottomWidth);
+    return (
+      this._parseFloat(this._computed.height) +
+      this._parseFloat(this._computed.paddingTop) +
+      this._parseFloat(this._computed.paddingBottom) +
+      this._parseFloat(this._computed.borderTopWidth) +
+      this._parseFloat(this._computed.borderBottomWidth)
+    );
   }
 
   _calculateDiagonal(width, height) {
@@ -287,8 +326,12 @@ class Dimension {
     this._mmPerPixel = mmPerPixel;
   }
 
-  get pixels() { return this._pixels; }
-  get millimeters() { return this._pixels * this._mmPerPixel; }
+  get pixels() {
+    return this._pixels;
+  }
+  get millimeters() {
+    return this._pixels * this._mmPerPixel;
+  }
 
   toString() {
     return `${this.pixels.toFixed(0)}px (${this.millimeters.toFixed(1)}mm)`;
@@ -298,7 +341,7 @@ class Dimension {
 // 사용 (매우 높은 추상화)
 const dimensions = new ElementDimensions(element, monitorSettings);
 const result = dimensions.measure();
-console.log(result.diagonal.toString());  // "150px (39.6mm)"
+console.log(result.diagonal.toString()); // "150px (39.6mm)"
 ```
 
 **추상화 개선 효과**:
@@ -312,6 +355,7 @@ console.log(result.diagonal.toString());  // "150px (39.6mm)"
 #### 문제 2: 색상 대비 계산의 낮은 추상화
 
 **현재** (낮은 추상화):
+
 ```javascript
 function SetCSSColorContrast(element, computed) {
   // 색상 파싱
@@ -342,6 +386,7 @@ function SetCSSColorContrast(element, computed) {
 ```
 
 **개선 방안** (높은 추상화):
+
 ```javascript
 // ===== 추상화 개선 =====
 
@@ -364,7 +409,11 @@ class Color {
   static fromCSS(cssColor) {
     const match = cssColor.match(/\d+/g);
     if (!match) throw new Error('Invalid color');
-    return new Color(parseInt(match[0]), parseInt(match[1]), parseInt(match[2]));
+    return new Color(
+      parseInt(match[0]),
+      parseInt(match[1]),
+      parseInt(match[2]),
+    );
   }
 
   constructor(r, g, b) {
@@ -379,9 +428,11 @@ class Color {
       c = c / 255;
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     };
-    return 0.2126 * toLinear(this._r) +
-           0.7152 * toLinear(this._g) +
-           0.0722 * toLinear(this._b);
+    return (
+      0.2126 * toLinear(this._r) +
+      0.7152 * toLinear(this._g) +
+      0.0722 * toLinear(this._b)
+    );
   }
 
   contrastWith(other) {
@@ -397,15 +448,21 @@ class ContrastResult {
     this._ratio = ratio;
   }
 
-  get ratio() { return this._ratio; }
+  get ratio() {
+    return this._ratio;
+  }
   get level() {
     if (this._ratio >= 7.0) return 'AAA';
     if (this._ratio >= 4.5) return 'AA';
     return 'Fail';
   }
 
-  meetsAA() { return this._ratio >= 4.5; }
-  meetsAAA() { return this._ratio >= 7.0; }
+  meetsAA() {
+    return this._ratio >= 4.5;
+  }
+  meetsAAA() {
+    return this._ratio >= 7.0;
+  }
 
   toString() {
     return `${this._ratio.toFixed(2)}:1 (${this.level})`;
@@ -415,13 +472,14 @@ class ContrastResult {
 // 사용 (매우 높은 추상화)
 const checker = new ColorContrastChecker(element);
 const result = checker.check();
-console.log(result.meetsAA());  // true/false
-console.log(result.toString());  // "7.23:1 (AAA)"
+console.log(result.meetsAA()); // true/false
+console.log(result.toString()); // "7.23:1 (AAA)"
 ```
 
 #### 문제 3: 이벤트 핸들러의 낮은 추상화
 
 **현재** (낮은 추상화):
+
 ```javascript
 function dkInspectMouseOver(evt) {
   // 요소 가져오기
@@ -454,6 +512,7 @@ function dkInspectMouseOver(evt) {
 ```
 
 **개선 방안** (높은 추상화):
+
 ```javascript
 // ===== 추상화 개선 =====
 
@@ -468,7 +527,7 @@ class ElementInspector {
       dimensions: this._measureDimensions(),
       contrast: this._checkContrast(),
       boxModel: this._extractBoxModel(),
-      styles: this._extractStyles()
+      styles: this._extractStyles(),
     };
   }
 
@@ -551,6 +610,7 @@ function findTargetElement(element, settings) {
 ### 1. 단일 추상화 레벨 원칙 (Single Level of Abstraction)
 
 **나쁜 예** (여러 레벨 혼재):
+
 ```javascript
 function processElement(element) {
   // 레벨 4: 도메인 개념
@@ -568,18 +628,20 @@ function processElement(element) {
 ```
 
 **좋은 예** (동일 레벨):
+
 ```javascript
 function processElement(element) {
   // 모두 레벨 3-4: 도메인/애플리케이션 레벨
   const inspector = new ElementInspector(element);
   const result = inspector.measure();
-  ui.displayResult(result);  // UI도 추상화
+  ui.displayResult(result); // UI도 추상화
 }
 ```
 
 ### 2. 의존성 역전 원칙 (Dependency Inversion)
 
 **현재** (구체에 의존):
+
 ```javascript
 function SetCSSDiagonal(element, computed) {
   // Chrome Storage에 직접 의존 (❌)
@@ -590,15 +652,16 @@ function SetCSSDiagonal(element, computed) {
 ```
 
 **개선** (추상화에 의존):
+
 ```javascript
 class ElementDimensions {
   constructor(element, settingsProvider) {
     this._element = element;
-    this._settingsProvider = settingsProvider;  // 인터페이스에 의존
+    this._settingsProvider = settingsProvider; // 인터페이스에 의존
   }
 
   async measure() {
-    const settings = await this._settingsProvider.get();  // 구체적인 방법 모름
+    const settings = await this._settingsProvider.get(); // 구체적인 방법 모름
     // ...
   }
 }
@@ -611,6 +674,7 @@ const dimensions = new ElementDimensions(element, chromeSettings);
 ### 3. 관심사 분리 (Separation of Concerns)
 
 **현재** (관심사 혼재):
+
 ```javascript
 // 계산 + UI + 스토리지가 모두 한 함수에
 function SetCSSDiagonal(element, computed) {
@@ -626,6 +690,7 @@ function SetCSSDiagonal(element, computed) {
 ```
 
 **개선** (관심사 분리):
+
 ```javascript
 // 관심사 1: 계산 (순수 함수)
 function calculateMillimeters(pixels, settings) {
@@ -634,12 +699,16 @@ function calculateMillimeters(pixels, settings) {
 
 // 관심사 2: 스토리지
 class SettingsRepository {
-  async get() { /* ... */ }
+  async get() {
+    /* ... */
+  }
 }
 
 // 관심사 3: UI
 class ResultDisplay {
-  update(result) { /* ... */ }
+  update(result) {
+    /* ... */
+  }
 }
 
 // 조율자 (각 관심사를 조합)
@@ -662,7 +731,12 @@ class MeasurementController {
 
 ```javascript
 // src/domain/calculations.js
-export function pixelsToMillimeters(pixels, monitorInches, resWidth, resHeight) {
+export function pixelsToMillimeters(
+  pixels,
+  monitorInches,
+  resWidth,
+  resHeight,
+) {
   const diagonal = Math.sqrt(resWidth ** 2 + resHeight ** 2);
   const mmPerPixel = (monitorInches * 25.4) / diagonal;
   return pixels * mmPerPixel;
@@ -684,6 +758,7 @@ export function calculateContrastRatio(fgLuminance, bgLuminance) {
 ```
 
 **효과**:
+
 - ✅ 테스트 가능
 - ✅ 재사용 가능
 - ✅ 부수 효과 없음
@@ -704,8 +779,12 @@ export class Dimension {
     this._mm = pixels * mmPerPixel;
   }
 
-  get pixels() { return this._pixels; }
-  get millimeters() { return this._mm; }
+  get pixels() {
+    return this._pixels;
+  }
+  get millimeters() {
+    return this._mm;
+  }
 
   toString() {
     return `${this.pixels.toFixed(0)}px (${this.millimeters.toFixed(1)}mm)`;
@@ -719,6 +798,7 @@ export class Color {
 ```
 
 **효과**:
+
 - ✅ 유효성 검증 자동화
 - ✅ 타입 안전성
 - ✅ 비즈니스 규칙 캡슐화
@@ -752,6 +832,7 @@ export class ContrastService {
 ```
 
 **효과**:
+
 - ✅ 재사용성
 - ✅ 테스트 용이
 - ✅ 의존성 주입 가능
@@ -784,6 +865,7 @@ export class InspectorPresenter {
 ```
 
 **효과**:
+
 - ✅ UI와 로직 완전 분리
 - ✅ 단위 테스트 완벽
 - ⚠️ 하지만 복잡도 증가
@@ -794,12 +876,12 @@ export class InspectorPresenter {
 
 ## 비용-효과 분석
 
-| Phase | 시간 투자 | 추상화 개선 | 테스트 개선 | 복잡도 | ROI |
-|-------|----------|------------|------------|--------|-----|
-| **Phase 1: 계산 분리** | 4-6h | 🟢 높음 | 🟢 높음 | 🟢 낮음 | ⭐⭐⭐⭐⭐ |
-| **Phase 2: 값 객체** | 6-8h | 🟢 높음 | 🟢 높음 | 🟡 중간 | ⭐⭐⭐⭐ |
-| **Phase 3: 서비스** | 8-12h | 🟡 중간 | 🟡 중간 | 🟡 중간 | ⭐⭐⭐ |
-| **Phase 4: Presenter** | 16-24h | 🟡 중간 | 🟢 높음 | 🔴 높음 | ⭐⭐ |
+| Phase                  | 시간 투자 | 추상화 개선 | 테스트 개선 | 복잡도  | ROI        |
+| ---------------------- | --------- | ----------- | ----------- | ------- | ---------- |
+| **Phase 1: 계산 분리** | 4-6h      | 🟢 높음     | 🟢 높음     | 🟢 낮음 | ⭐⭐⭐⭐⭐ |
+| **Phase 2: 값 객체**   | 6-8h      | 🟢 높음     | 🟢 높음     | 🟡 중간 | ⭐⭐⭐⭐   |
+| **Phase 3: 서비스**    | 8-12h     | 🟡 중간     | 🟡 중간     | 🟡 중간 | ⭐⭐⭐     |
+| **Phase 4: Presenter** | 16-24h    | 🟡 중간     | 🟢 높음     | 🔴 높음 | ⭐⭐       |
 
 ---
 
@@ -808,13 +890,19 @@ export class InspectorPresenter {
 ### ✅ 즉시 적용 (Phase 1)
 
 **계산 로직을 순수 함수로 분리**
+
 ```javascript
 // 간단하고 효과적
-export function pixelsToMillimeters(px, inches, w, h) { /* ... */ }
-export function calculateContrast(fg, bg) { /* ... */ }
+export function pixelsToMillimeters(px, inches, w, h) {
+  /* ... */
+}
+export function calculateContrast(fg, bg) {
+  /* ... */
+}
 ```
 
 **이유**:
+
 - ✅ 투자 대비 효과 최고
 - ✅ 테스트 가능해짐
 - ✅ 기존 코드 변경 최소
@@ -828,6 +916,7 @@ export function calculateContrast(fg, bg) { /* ... */ }
 ### ⚖️ 선택적 적용 (Phase 2)
 
 **값 객체 도입**
+
 - 효과가 큰 부분 (Dimension, Color)만 우선 적용
 - 전체 전환은 효과 평가 후 결정
 
@@ -839,6 +928,7 @@ export function calculateContrast(fg, bg) { /* ... */ }
 ### ❌ 적용 안 함 (Phase 3-4)
 
 **서비스 계층, Presenter 패턴**
+
 - 현재 프로젝트 규모에는 과도
 - 복잡도 증가 > 얻는 이득
 - 필요 시 재검토
@@ -850,6 +940,7 @@ export function calculateContrast(fg, bg) { /* ... */ }
 ### 추상화 개선 판정: ✅ **Phase 1-2만 적용**
 
 **핵심 전략**:
+
 ```
 1. ✅ 계산 로직 → 순수 함수 분리 (필수)
 2. ⚖️ 값 객체 → 선택적 도입 (권장)
@@ -858,12 +949,14 @@ export function calculateContrast(fg, bg) { /* ... */ }
 
 **예상 투자**: 10-14시간
 **예상 효과**:
+
 - 테스트 가능성: 0% → 80%
 - 유지보수성: +40%
 - 코드 명확도: +50%
 - 복잡도 증가: +20% (수용 가능)
 
 **핵심 원칙**:
+
 > "Just enough abstraction"
 > 과도한 추상화는 오버엔지니어링
 > 필요한 만큼만 추상화하라

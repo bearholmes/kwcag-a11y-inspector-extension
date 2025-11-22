@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -21,16 +21,38 @@
             <div id="dkGnb">
               <h2 class="screen_out" data-i18n="optionMenu">옵션 메뉴</h2>
               <ul class="gnb_comm">
-                <li><a href="#idx01" class="link_gnb" data-i18n="menuIntro">소개</a></li>
-                <li><a href="#idx02" class="link_gnb" data-i18n="menuShortcuts">단축키 안내</a></li>
-                <li><a href="#idx03" class="link_gnb" data-i18n="menuSettings">환경설정</a></li>
-                <li><a href="#idx04" class="link_gnb" data-i18n="menuReferences">참고자료</a></li>
-                <li><a href="#idx05" class="link_gnb" data-i18n="menuSupport">Support</a></li>
+                <li>
+                  <a href="#idx01" class="link_gnb" data-i18n="menuIntro"
+                    >소개</a
+                  >
+                </li>
+                <li>
+                  <a href="#idx02" class="link_gnb" data-i18n="menuShortcuts"
+                    >단축키 안내</a
+                  >
+                </li>
+                <li>
+                  <a href="#idx03" class="link_gnb" data-i18n="menuSettings"
+                    >환경설정</a
+                  >
+                </li>
+                <li>
+                  <a href="#idx04" class="link_gnb" data-i18n="menuReferences"
+                    >참고자료</a
+                  >
+                </li>
+                <li>
+                  <a href="#idx05" class="link_gnb" data-i18n="menuSupport"
+                    >Support</a
+                  >
+                </li>
               </ul>
             </div>
           </div>
           <article id="mArticle">
-            <h2 id="dkBody" class="screen_out" data-i18n="optionContent">옵션 본문</h2>
+            <h2 id="dkBody" class="screen_out" data-i18n="optionContent">
+              옵션 본문
+            </h2>
             <div class="info_box">
               <h2 id="idx01" class="tit" data-i18n="menuIntro">소개</h2>
               <div>
@@ -61,15 +83,22 @@
               </div>
             </div>
             <div class="info_box">
-              <h2 id="idx02" class="tit" data-i18n="menuShortcuts">단축키 안내</h2>
+              <h2 id="idx02" class="tit" data-i18n="menuShortcuts">
+                단축키 안내
+              </h2>
               <div>
                 <ul class="txt_item">
                   <li>
-                    <span data-i18n="shortcutDesc">단축키를 이용하면 좀 더 편리하게 이용할 수 있습니다.</span>
+                    <span data-i18n="shortcutDesc"
+                      >단축키를 이용하면 좀 더 편리하게 이용할 수
+                      있습니다.</span
+                    >
                     <ul style="margin-left: 15px">
                       <li>
-                        <kbd>Esc</kbd> : <span data-i18n="shortcutEsc">일시정지 / 재개 (활성화된 상태에서
-                        가능)</span>
+                        <kbd>Esc</kbd> :
+                        <span data-i18n="shortcutEsc"
+                          >일시정지 / 재개 (활성화된 상태에서 가능)</span
+                        >
                       </li>
                     </ul>
                   </li>
@@ -80,7 +109,12 @@
               <h2 id="idx03" class="tit" data-i18n="menuSettings">환경설정</h2>
               <div class="box">
                 <div class="info_item">
-                  <label for="resStd" class="tit_lab" data-i18n="settingResolution">해상도 기준</label>
+                  <label
+                    for="resStd"
+                    class="tit_lab"
+                    data-i18n="settingResolution"
+                    >해상도 기준</label
+                  >
                   <div class="cont_item">
                     <div class="box_inptf">
                       <select id="resStd" class="inp_comm">
@@ -131,7 +165,12 @@
                   </div>
                 </div>
                 <div class="info_item">
-                  <label for="moniStd" class="tit_lab" data-i18n="settingMonitor">모니터 기준</label>
+                  <label
+                    for="moniStd"
+                    class="tit_lab"
+                    data-i18n="settingMonitor"
+                    >모니터 기준</label
+                  >
                   <div class="cont_item">
                     <div class="box_inptf">
                       <select id="moniStd" class="inp_comm">
@@ -158,7 +197,9 @@
                   </div>
                 </div>
                 <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingContrastCheck">명도대비 체크</span>
+                  <span class="tit_lab" data-i18n="settingContrastCheck"
+                    >명도대비 체크</span
+                  >
                   <div class="cont_item">
                     <div class="box_inptf" style="border: none">
                       <span class="inp_comm">
@@ -170,38 +211,75 @@
                           name="ccShow"
                           style="margin-left: 20px"
                         />
-                        <label for="ccShowOff" data-i18n="settingOff">OFF</label>
+                        <label for="ccShowOff" data-i18n="settingOff"
+                          >OFF</label
+                        >
                       </span>
                     </div>
                   </div>
                 </div>
                 <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingSelectorLine">선택자 라인</span>
+                  <span class="tit_lab" data-i18n="settingBoxCheck"
+                    >Box 모델 체크</span
+                  >
+                  <div class="cont_item">
+                    <div class="box_inptf" style="border: none">
+                      <span class="inp_comm">
+                        <input type="radio" id="boxShowOn" name="boxShow" />
+                        <label for="boxShowOn" data-i18n="settingOn">ON</label>
+                        <input
+                          type="radio"
+                          id="boxShowOff"
+                          name="boxShow"
+                          style="margin-left: 20px"
+                        />
+                        <label for="boxShowOff" data-i18n="settingOff"
+                          >OFF</label
+                        >
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="info_item">
+                  <span class="tit_lab" data-i18n="settingSelectorLine"
+                    >선택자 라인</span
+                  >
                   <div class="cont_item">
                     <div class="box_inptf" style="border: none">
                       <span class="inp_comm">
                         <input type="radio" id="linetype1" name="lineType" />
-                        <label for="linetype1" data-i18n="settingLineTypeSolid">실선(soild)</label>
+                        <label for="linetype1" data-i18n="settingLineTypeSolid"
+                          >실선(soild)</label
+                        >
                         <input
                           type="radio"
                           id="linetype2"
                           name="lineType"
                           style="margin-left: 20px"
                         />
-                        <label for="linetype2" data-i18n="settingLineTypeDashed">점선(dashed)</label>
+                        <label for="linetype2" data-i18n="settingLineTypeDashed"
+                          >점선(dashed)</label
+                        >
                         <input
                           type="radio"
                           id="linetype3"
                           name="lineType"
                           style="margin-left: 20px"
                         />
-                        <label for="linetype3" data-i18n="settingLineTypeDotted">점선(dotted)</label>
+                        <label for="linetype3" data-i18n="settingLineTypeDotted"
+                          >점선(dotted)</label
+                        >
                       </span>
                     </div>
                   </div>
                 </div>
                 <div class="info_item">
-                  <label for="colorType" class="tit_lab" data-i18n="settingSelectorColor">선택자 색상</label>
+                  <label
+                    for="colorType"
+                    class="tit_lab"
+                    data-i18n="settingSelectorColor"
+                    >선택자 색상</label
+                  >
                   <div class="cont_item">
                     <div class="box_inptf" style="border: none">
                       <div class="box_inptf">
@@ -216,7 +294,12 @@
                   </div>
                 </div>
                 <div class="info_item">
-                  <label for="bordersize" class="tit_lab" data-i18n="settingSelectorBorder">선택자 border</label>
+                  <label
+                    for="bordersize"
+                    class="tit_lab"
+                    data-i18n="settingSelectorBorder"
+                    >선택자 border</label
+                  >
                   <div class="cont_item">
                     <div class="box_inptf">
                       <span class="inp_comm">
@@ -233,7 +316,9 @@
                   </div>
                 </div>
                 <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingLinkMode">링크 모드</span>
+                  <span class="tit_lab" data-i18n="settingLinkMode"
+                    >링크 모드</span
+                  >
                   <div class="cont_item">
                     <div class="box_inptf" style="border: none">
                       <span class="inp_comm">
@@ -247,23 +332,35 @@
                           name="linkMode"
                           style="margin-left: 20px"
                         />
-                        <label for="linkModeOff" data-i18n="settingLinkModeOff">OFF (모든 요소)</label>
+                        <label for="linkModeOff" data-i18n="settingLinkModeOff"
+                          >OFF (모든 요소)</label
+                        >
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div class="alert-info" role="alert">
-                  <button id="resBtn" class="btn_g" data-i18n="settingSaveButton">설정</button>
+                  <button
+                    id="resBtn"
+                    class="btn_g"
+                    data-i18n="settingSaveButton"
+                  >
+                    설정
+                  </button>
                   <span id="resStatus" class="txt"></span>
                 </div>
               </div>
             </div>
             <div class="info_box">
-              <h2 id="idx04" class="tit" data-i18n="menuReferences">참고자료</h2>
+              <h2 id="idx04" class="tit" data-i18n="menuReferences">
+                참고자료
+              </h2>
               <ul>
                 <li>
-                  <span data-i18n="refBasedOn">CSSViewer를 기반으로 만들어졌습니다.</span>
+                  <span data-i18n="refBasedOn"
+                    >CSSViewer를 기반으로 만들어졌습니다.</span
+                  >
                   <a
                     href="https://chrome.google.com/webstore/detail/cssviewer/ggfgijbpiheegefliciemofobhmofgce?hl=ko"
                     target="_blank"
@@ -273,8 +370,10 @@
                   >
                 </li>
                 <li>
-                  <span data-i18n="refContrast">명도대비 체크 기능은 WebAIM의 Color Contrast Checker를
-                  참고하였습니다.</span>
+                  <span data-i18n="refContrast"
+                    >명도대비 체크 기능은 WebAIM의 Color Contrast Checker를
+                    참고하였습니다.</span
+                  >
                   <a
                     href="https://webaim.org/resources/contrastchecker"
                     target="_blank"
@@ -284,7 +383,10 @@
                   >
                 </li>
                 <li>
-                  <span data-i18n="refDiagonal">접근성 컴포넌트 대각선도구 툴의 진단 방식을 참고하였습니다.</span>
+                  <span data-i18n="refDiagonal"
+                    >접근성 컴포넌트 대각선도구 툴의 진단 방식을
+                    참고하였습니다.</span
+                  >
                   <a
                     href="https://chrome.google.com/webstore/detail/chogmnfcfckihakaealpjfjdkbjmkpok?hl=ko"
                     target="_blank"
@@ -294,8 +396,10 @@
                   >
                 </li>
                 <li>
-                  <span data-i18n="refPageRuler">가로/세로 길이가 auto의 요소를 계산하는 방법은 Page Ruler에서
-                  아이디어를 얻었습니다.</span>
+                  <span data-i18n="refPageRuler"
+                    >가로/세로 길이가 auto의 요소를 계산하는 방법은 Page
+                    Ruler에서 아이디어를 얻었습니다.</span
+                  >
                   <a
                     href="https://chrome.google.com/webstore/detail/page-ruler/jlpkojjdgbllmedoapgfodplfhcbnbpn?hl=ko"
                     target="_blank"
@@ -309,7 +413,9 @@
             <div class="info_box info_lst">
               <h2 id="idx05" class="tit" data-i18n="menuSupport">Support</h2>
               <ul>
-                <li data-i18n="supportDesc">문의사항이나 개선의견이 있으면 언제든지 연락주세요.</li>
+                <li data-i18n="supportDesc">
+                  문의사항이나 개선의견이 있으면 언제든지 연락주세요.
+                </li>
                 <li>
                   <a
                     href=" https://chrome.google.com/webstore/detail/dk-a11y-inspector/ngcmkfaolkgkjbddhjnhgoekgaamjibo/support?hl=ko"

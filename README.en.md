@@ -24,10 +24,12 @@ KWCAG A11y Inspector is a Chrome extension for web accessibility inspection. It 
 ### Key Features
 
 - ✅ **Element Size Measurement**: Display actual size of clickable elements in pixels (px) and millimeters (mm)
-- ✅ **Color Contrast Check**: Calculate luminance contrast ratio between text and background (WCAG 2.0 standard)
+- ✅ **WCAG 2.2 Target Size Check**: Real-time display of WCAG 2.5.8 (AA) and 2.5.5 (AAA) compliance
+- ✅ **Color Contrast Check**: Calculate luminance contrast ratio between text and background with AA/AAA level display (WCAG 2.0 standard)
 - ✅ **Real-time Inspection**: Instant measurement with mouse hover
 - ✅ **Manual Calculator**: Calculate dimensions through direct input
 - ✅ **Customization**: Adjust border color, style, and thickness
+- ✅ **Display Options**: Selectively show Box model, color contrast, etc.
 - ✅ **Various Monitor Support**: 11~40 inches, various resolution settings
 - ✅ **Multi-language Support**: 11 languages supported (Korean, English, Chinese, Japanese, German, French, Spanish, Italian, Russian, Portuguese)
 
@@ -37,11 +39,23 @@ KWCAG A11y Inspector is a Chrome extension for web accessibility inspection. It 
 
 ### KWCAG 2.1.3 - Operable
 
-- **Minimum Size**: 6mm × 6mm (approximately 45px × 45px @96DPI)
+- **Minimum Size**: 6mm diagonal length (approximately 45px × 45px @96DPI)
 - **Measurement Range**: box + padding + border
 - **Target Elements**: Interactive elements such as links, buttons, input fields
 
-### WCAG 1.3.3 - Color Contrast
+### WCAG 2.5.8 - Target Size (Minimum, AA Level)
+
+- **Minimum Size**: 24×24 CSS pixels
+- **Standard**: WCAG 2.2 Level AA
+- **Target**: All interactive elements
+
+### WCAG 2.5.5 - Target Size (Enhanced, AAA Level)
+
+- **Enhanced Size**: 44×44 CSS pixels
+- **Standard**: WCAG 2.2 Level AAA
+- **Target**: All interactive elements
+
+### WCAG 1.4.3 - Color Contrast
 
 - **AA Level**: 4.5:1 or higher (normal text)
 - **AAA Level**: 7:1 or higher (normal text)
@@ -431,6 +445,15 @@ Have issues or questions?
   - [x] Calculator module (calculator)
   - [x] Settings module (settings)
   - 12 files migrated in total
+- [x] **WCAG 2.2 Target Size Support** ✅
+  - [x] WCAG 2.5.8 (AA) 24×24 CSS pixel check
+  - [x] WCAG 2.5.5 (AAA) 44×44 CSS pixel check
+  - [x] KWCAG 2.1.3 diagonal length calculation improvement
+- [x] **Color Contrast Display Subdivision** ✅
+  - [x] Contrast ratio display
+  - [x] WCAG 1.4.3 AA (4.5:1) compliance
+  - [x] WCAG 1.4.3 AAA (7:1) compliance
+- [x] **Box Model Optional Display Option** ✅
 - [ ] Achieve 80% test coverage
 - [ ] Implement CI/CD pipeline (Phase 1)
 - [ ] Start E2E test implementation
@@ -440,7 +463,6 @@ Have issues or questions?
 - [ ] Fully automate CI/CD pipeline (Phase 2-3)
 - [ ] 100% E2E test coverage (core scenarios)
 - [ ] Achieve 80% test coverage
-- [ ] Support additional WCAG guidelines (2.5.5 target size)
 - [ ] Performance optimization and profiling
 
 ### v0.16.0 (Future)

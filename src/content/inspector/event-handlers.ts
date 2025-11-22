@@ -9,6 +9,7 @@ import {
   updateColorBackground,
   updateLength,
   updateBox,
+  updateTargetSize,
   hideCSSCategory,
 } from './css-handlers.ts';
 import { getCurrentDocument, removeElement } from './dom-utils.ts';
@@ -156,6 +157,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
         if (isInteractive) {
           // 현재 요소가 interactive면 현재 요소 타겟팅
+          // eslint-disable-next-line @typescript-eslint/no-this-alias
           targetElement = this;
         } else {
           // 가장 가까운 인터랙티브 조상 요소 찾기
@@ -191,6 +193,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         // trackingmode와 linkmode가 동기화되어야 하지만, 과거 설정 호환을 위해 둘 다 체크
         const isLinkModeOn = opt.trackingmode || String(opt.linkmode) === '1';
         let shouldShowOutline = true;
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         let targetElement: HTMLElement = this;
 
         if (isLinkModeOn) {
@@ -201,6 +204,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
           if (isInteractive) {
             // 현재 요소가 interactive면 현재 요소에 outline
+            // eslint-disable-next-line @typescript-eslint/no-this-alias
             targetElement = this;
           } else {
             // 가장 가까운 인터랙티브 조상 요소 찾기
@@ -260,7 +264,13 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
       const element = document.defaultView!.getComputedStyle(this, null);
       updateLength(element, opt, this);
-      updateBox(element);
+      updateTargetSize(this, opt);
+
+      if (String(opt.boxshow) === '1') {
+        updateBox(element);
+      } else {
+        hideCSSCategory('pBox');
+      }
 
       if (String(opt.ccshow) === '1') {
         updateColorBackground(element);
@@ -290,7 +300,13 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         null,
       );
       updateLength(element, opt, ancestorElement);
-      updateBox(element);
+      updateTargetSize(ancestorElement, opt);
+
+      if (String(opt.boxshow) === '1') {
+        updateBox(element);
+      } else {
+        hideCSSCategory('pBox');
+      }
 
       if (String(opt.ccshow) === '1') {
         updateColorBackground(element);

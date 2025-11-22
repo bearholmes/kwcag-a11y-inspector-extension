@@ -3,11 +3,12 @@
  * Inspector 모듈의 DOM 유틸리티 함수 테스트
  */
 
-import { describe, test, expect, beforeEach } from '@jest/globals';
+import { describe, test, expect, beforeEach, jest } from '@jest/globals';
 import {
   getCurrentDocument,
   insertMessage,
   removeElement,
+  getTargetSize,
 } from '../../src/content/inspector/dom-utils.ts';
 
 describe('Inspector DOM Utilities', () => {
@@ -171,6 +172,231 @@ describe('Inspector DOM Utilities', () => {
 
       removeElement('dkInspectInsertMessage');
       expect(doc.getElementById('dkInspectInsertMessage')).toBeNull();
+    });
+  });
+
+  describe('getTargetSize', () => {
+    /**
+     * Helper function to mock getBoundingClientRect for testing
+     * JSDOM doesn't calculate actual sizes, so we need to mock it
+     */
+    function mockElementSize(element, width, height) {
+      element.getBoundingClientRect = jest.fn(() => ({
+        width,
+        height,
+        top: 0,
+        left: 0,
+        bottom: height,
+        right: width,
+        x: 0,
+        y: 0,
+        toJSON: () => {},
+      }));
+    }
+
+    test('returns correct size for 24x24 element (WCAG 2.5.8 minimum)', () => {
+      const element = document.createElement('button');
+      element.style.width = '24px';
+      element.style.height = '24px';
+      document.body.appendChild(element);
+      mockElementSize(element, 24, 24);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(24);
+      expect(result.height).toBe(24);
+      expect(result.meetsWCAG258).toBe(true);
+      expect(result.meetsWCAG255).toBe(false);
+    });
+
+    test('returns correct size for 44x44 element (WCAG 2.5.5 AAA)', () => {
+      const element = document.createElement('button');
+      element.style.width = '44px';
+      element.style.height = '44px';
+      document.body.appendChild(element);
+      mockElementSize(element, 44, 44);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(44);
+      expect(result.height).toBe(44);
+      expect(result.meetsWCAG258).toBe(true);
+      expect(result.meetsWCAG255).toBe(true);
+    });
+
+    test('detects non-compliant element smaller than 24x24', () => {
+      const element = document.createElement('button');
+      element.style.width = '20px';
+      element.style.height = '20px';
+      document.body.appendChild(element);
+      mockElementSize(element, 20, 20);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(20);
+      expect(result.height).toBe(20);
+      expect(result.meetsWCAG258).toBe(false);
+      expect(result.meetsWCAG255).toBe(false);
+    });
+
+    test('detects element that meets AA but not AAA (30x30)', () => {
+      const element = document.createElement('a');
+      element.style.width = '30px';
+      element.style.height = '30px';
+      element.style.display = 'block';
+      document.body.appendChild(element);
+      mockElementSize(element, 30, 30);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(30);
+      expect(result.height).toBe(30);
+      expect(result.meetsWCAG258).toBe(true);
+      expect(result.meetsWCAG255).toBe(false);
+    });
+
+    test('handles element with padding correctly', () => {
+      const element = document.createElement('button');
+      // 16x16 content + 4px padding on all sides = 24x24 total
+      element.style.width = '16px';
+      element.style.height = '16px';
+      element.style.padding = '4px';
+      element.style.boxSizing = 'content-box';
+      document.body.appendChild(element);
+      mockElementSize(element, 24, 24);
+
+      const result = getTargetSize(element);
+
+      // getBoundingClientRect includes padding
+      expect(result.width).toBe(24);
+      expect(result.height).toBe(24);
+      expect(result.meetsWCAG258).toBe(true);
+    });
+
+    test('handles element with border correctly', () => {
+      const element = document.createElement('button');
+      // 22x22 + 1px border on all sides = 24x24 total
+      element.style.width = '22px';
+      element.style.height = '22px';
+      element.style.border = '1px solid black';
+      element.style.boxSizing = 'content-box';
+      document.body.appendChild(element);
+      mockElementSize(element, 24, 24);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(24);
+      expect(result.height).toBe(24);
+      expect(result.meetsWCAG258).toBe(true);
+    });
+
+    test('handles non-square elements (width != height)', () => {
+      const element = document.createElement('button');
+      element.style.width = '48px';
+      element.style.height = '20px';
+      document.body.appendChild(element);
+      mockElementSize(element, 48, 20);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(48);
+      expect(result.height).toBe(20);
+      // Both dimensions must meet the requirement
+      expect(result.meetsWCAG258).toBe(false);
+      expect(result.meetsWCAG255).toBe(false);
+    });
+
+    test('handles very large elements', () => {
+      const element = document.createElement('button');
+      element.style.width = '200px';
+      element.style.height = '100px';
+      document.body.appendChild(element);
+      mockElementSize(element, 200, 100);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(200);
+      expect(result.height).toBe(100);
+      expect(result.meetsWCAG258).toBe(true);
+      expect(result.meetsWCAG255).toBe(true);
+    });
+
+    test('handles edge case: exactly 23x23 (1px below minimum)', () => {
+      const element = document.createElement('button');
+      element.style.width = '23px';
+      element.style.height = '23px';
+      document.body.appendChild(element);
+      mockElementSize(element, 23, 23);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(23);
+      expect(result.height).toBe(23);
+      expect(result.meetsWCAG258).toBe(false);
+    });
+
+    test('handles edge case: exactly 25x25 (1px above minimum)', () => {
+      const element = document.createElement('button');
+      element.style.width = '25px';
+      element.style.height = '25px';
+      document.body.appendChild(element);
+      mockElementSize(element, 25, 25);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(25);
+      expect(result.height).toBe(25);
+      expect(result.meetsWCAG258).toBe(true);
+      expect(result.meetsWCAG255).toBe(false);
+    });
+
+    test('handles inline elements with display:inline-block', () => {
+      const element = document.createElement('span');
+      element.style.display = 'inline-block';
+      element.style.width = '30px';
+      element.style.height = '30px';
+      document.body.appendChild(element);
+      mockElementSize(element, 30, 30);
+
+      const result = getTargetSize(element);
+
+      expect(result.width).toBe(30);
+      expect(result.height).toBe(30);
+      expect(result.meetsWCAG258).toBe(true);
+    });
+
+    test('returns result for element with box-sizing: border-box', () => {
+      const element = document.createElement('button');
+      element.style.width = '24px';
+      element.style.height = '24px';
+      element.style.padding = '5px';
+      element.style.border = '2px solid black';
+      element.style.boxSizing = 'border-box';
+      document.body.appendChild(element);
+      mockElementSize(element, 24, 24);
+
+      const result = getTargetSize(element);
+
+      // border-box: total size is exactly 24x24
+      expect(result.width).toBe(24);
+      expect(result.height).toBe(24);
+      expect(result.meetsWCAG258).toBe(true);
+    });
+
+    test('handles element without explicit dimensions', () => {
+      const element = document.createElement('button');
+      element.textContent = 'Click me';
+      document.body.appendChild(element);
+      // Mock a realistic size for a button with text
+      mockElementSize(element, 80, 32);
+
+      const result = getTargetSize(element);
+
+      // Should still return dimensions based on content
+      expect(result.width).toBeGreaterThan(0);
+      expect(result.height).toBeGreaterThan(0);
+      expect(typeof result.meetsWCAG258).toBe('boolean');
+      expect(typeof result.meetsWCAG255).toBe('boolean');
     });
   });
 });

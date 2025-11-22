@@ -1,14 +1,14 @@
 {
   "name": "kwcag-a11y-inspector",
-  "version": "0.13.0",
+  "version": "0.16.0",
   "type": "module",
   "description": "KWCAG 2.1 Accessibility Inspector - Chrome Extension for measuring operable criteria",
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src/**/*.js",
-    "lint:fix": "eslint src/**/*.js --fix",
+    "lint": "eslint 'src/**/*.{js,ts}'",
+    "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
     "format": "prettier . --write",
     "clean": "rm -rf dist",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
@@ -41,6 +41,8 @@
     "@types/chrome": "^0.1.30",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
     "eslint": "^9.39.1",
     "eslint-plugin-jsdoc": "^61.2.1",
     "husky": "^9.1.7",
@@ -50,6 +52,7 @@
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0",
     "vite": "^7.2.2"
   },
   "dependencies": {

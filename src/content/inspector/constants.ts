@@ -39,6 +39,8 @@ export interface WCAGContrastConstants {
   readonly SRGB_EXPONENT: number;
   readonly CONTRAST_OFFSET: number;
   readonly MAX_RGB_VALUE: number;
+  readonly RATIO_AA_NORMAL: number; // WCAG 1.4.3 Level AA (normal text)
+  readonly RATIO_AAA_NORMAL: number; // WCAG 1.4.3 Level AAA (normal text)
 }
 
 /**
@@ -88,6 +90,16 @@ export interface ColorLengthConstants {
 }
 
 /**
+ * 접근성 기준 임계값
+ */
+export interface AccessibilityThresholds {
+  readonly KWCAG_213_MM: number;
+  readonly WCAG_258_CSS_PX: number;
+  readonly WCAG_255_CSS_PX: number;
+  readonly DPI_STANDARD: number;
+}
+
+/**
  * 모든 상수를 포함하는 인터페이스
  */
 export interface Constants {
@@ -101,6 +113,7 @@ export interface Constants {
   readonly STYLE_VALUES: StyleValueConstants;
   readonly NODE_TYPE: NodeTypeConstants;
   readonly COLOR_LENGTH: ColorLengthConstants;
+  readonly ACCESSIBILITY: AccessibilityThresholds;
 }
 
 export const CONSTANTS: Constants = {
@@ -134,6 +147,8 @@ export const CONSTANTS: Constants = {
     SRGB_EXPONENT: 2.4,
     CONTRAST_OFFSET: 0.05,
     MAX_RGB_VALUE: 255,
+    RATIO_AA_NORMAL: 4.5, // WCAG 1.4.3 Level AA
+    RATIO_AAA_NORMAL: 7.0, // WCAG 1.4.3 Level AAA
   },
 
   // 타이밍 상수 (밀리초)
@@ -176,6 +191,14 @@ export const CONSTANTS: Constants = {
   COLOR_LENGTH: {
     SHORT: 3,
     FULL: 6,
+  },
+
+  // 접근성 기준 임계값
+  ACCESSIBILITY: {
+    KWCAG_213_MM: 6.0,
+    WCAG_258_CSS_PX: 24,
+    WCAG_255_CSS_PX: 44,
+    DPI_STANDARD: 96,
   },
 } as const;
 

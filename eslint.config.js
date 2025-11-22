@@ -1,8 +1,10 @@
 import js from '@eslint/js';
 import jsdoc from 'eslint-plugin-jsdoc';
+import tseslint from 'typescript-eslint';
 
 export default [
   js.configs.recommended,
+  // JavaScript files
   {
     files: ['src/**/*.js'],
     plugins: {
@@ -35,6 +37,43 @@ export default [
       'no-var': 'error',
       'prefer-const': 'warn',
       'no-duplicate-imports': 'error',
+
+      // JSDoc 규칙
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-param-names': 'warn',
+      'jsdoc/check-tag-names': 'warn',
+      'jsdoc/require-param-description': 'warn',
+      'jsdoc/require-returns-description': 'warn',
+    },
+  },
+  // TypeScript files
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ['src/**/*.ts'],
+  })),
+  {
+    files: ['src/**/*.ts'],
+    plugins: {
+      jsdoc,
+    },
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+    },
+    rules: {
+      // TypeScript specific rules
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+
+      // 코드 품질
+      'no-var': 'error',
+      'prefer-const': 'warn',
 
       // JSDoc 규칙
       'jsdoc/check-alignment': 'warn',

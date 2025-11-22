@@ -65,7 +65,7 @@ export function validateNumericInput(value: unknown): boolean {
  * @returns 파싱된 해상도 또는 null
  */
 export function parseResolution(resolution: string): ParsedResolution | null {
-  if (!resolution) {
+  if (!resolution || typeof resolution !== 'string') {
     return null;
   }
 

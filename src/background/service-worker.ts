@@ -13,6 +13,7 @@ interface DefaultSettings {
   monitors: string;
   resolutions: string;
   ccshow: string;
+  boxshow: string;
   linkmode: string;
   bgmode: string;
   linetype: string;
@@ -53,7 +54,8 @@ chrome.runtime.onInstalled.addListener((details) => {
       const defaultSettings: DefaultSettings = {
         monitors: '17',
         resolutions: '1366x768',
-        ccshow: '1',
+        ccshow: '0',
+        boxshow: '1',
         linkmode: '0',
         bgmode: '1',
         linetype: 'dashed',

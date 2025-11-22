@@ -249,6 +249,27 @@ function loadCCShowSettings(): void {
 }
 
 /**
+ * Chrome Storage에서 Box 모델 표시 설정을 로드합니다
+ *
+ * @returns void
+ */
+function loadBoxShowSettings(): void {
+  try {
+    safeStorageGet('boxshow', function (result) {
+      const boxshow = result.boxshow as number | undefined;
+
+      if (boxshow === STATE_ENABLED) {
+        safeSetChecked('boxShowOn', true);
+      } else {
+        safeSetChecked('boxShowOff', true);
+      }
+    });
+  } catch (error) {
+    console.error('Error loading Box show settings:', error);
+  }
+}
+
+/**
  * Chrome Storage에서 링크 모드 설정을 로드합니다
  * 링크 모드에 따라 배경 옵션을 활성화/비활성화합니다
  *
@@ -420,6 +441,7 @@ function loadEvent(pickrInstance: Pickr | null = null): void {
     loadMonitorSettings();
     loadResolutionSettings();
     loadCCShowSettings();
+    loadBoxShowSettings();
     loadLinkModeSettings();
     loadLineTypeSettings();
     loadColorTypeSettings(pickrInstance);
@@ -446,29 +468,6 @@ function getCheckboxState(onElementId: string): number {
   } catch (error) {
     console.error(`Error getting checkbox state for "${onElementId}":`, error);
     return STATE_DISABLED;
-  }
-}
-
-/**
- * 체크박스 요소의 값을 가져와 불린 상태로 반환합니다
- *
- * @param onElementId - "On" 상태의 체크박스 요소 ID
- * @returns 체크되어 있으면 true, 아니면 false
- */
-function getCheckboxBooleanState(onElementId: string): boolean {
-  try {
-    const element = $(onElementId) as HTMLInputElement | null;
-    if (!element) {
-      console.warn(`Checkbox element "${onElementId}" not found`);
-      return false;
-    }
-    return element.checked;
-  } catch (error) {
-    console.error(
-      `Error getting checkbox boolean state for "${onElementId}":`,
-      error,
-    );
-    return false;
   }
 }
 
@@ -578,6 +577,7 @@ function resRegEvent(): void {
 
     // CC 표시, 링크 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
     const cc_sw = getCheckboxState('ccShowOn');
+    const box_sw = getCheckboxState('boxShowOn');
     const lm_sw = getCheckboxState('linkModeOn');
     const linetype = getSelectedLineType();
 
@@ -608,6 +608,7 @@ function resRegEvent(): void {
       monitors: monitor,
       resolutions: resolution,
       ccshow: cc_sw,
+      boxshow: box_sw,
       linkmode: lm_sw,
       linetype: linetype,
       colortype: colortype,

@@ -11,10 +11,7 @@ import {
   beforeEach,
   afterEach,
 } from '@jest/globals';
-import {
-  createShortcutManager,
-  setShortcutManager,
-} from '../../src/content/inspector/shortcut-manager.ts';
+import { createShortcutManager } from '../../src/content/inspector/shortcut-manager.ts';
 
 // Chrome API Mock
 global.chrome = {
@@ -243,16 +240,6 @@ describe('Shortcut Manager', () => {
       expect(consoleErrorSpy).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
-    });
-  });
-
-  describe('setShortcutManager', () => {
-    test('sets shortcut manager', () => {
-      const newManager = createShortcutManager(mockInspector);
-
-      expect(() => {
-        setShortcutManager(newManager);
-      }).not.toThrow();
     });
   });
 

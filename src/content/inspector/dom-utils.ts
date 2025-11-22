@@ -57,3 +57,46 @@ export function removeElement(elementId: string): void {
     }
   }
 }
+
+/**
+ * 목표 크기 측정 결과 타입
+ */
+export interface TargetSizeResult {
+  /** 너비 (CSS 픽셀) */
+  width: number;
+  /** 높이 (CSS 픽셀) */
+  height: number;
+  /** WCAG 2.5.8 (AA) 준수 여부 - 24×24 CSS px */
+  meetsWCAG258: boolean;
+  /** WCAG 2.5.5 (AAA) 준수 여부 - 44×44 CSS px */
+  meetsWCAG255: boolean;
+}
+
+/**
+ * 요소의 CSS 픽셀 크기를 측정하고 WCAG 목표 크기 기준 준수 여부를 확인하는 함수
+ * HiDPI, 페이지 줌과 무관하게 CSS 픽셀만 측정합니다.
+ *
+ * @param element - 측정할 HTML 요소
+ * @returns 목표 크기 측정 결과
+ *
+ * @example
+ * const button = document.querySelector('button');
+ * const result = getTargetSize(button);
+ * console.log(result.meetsWCAG258); // true or false
+ */
+export function getTargetSize(element: HTMLElement): TargetSizeResult {
+  const rect = element.getBoundingClientRect();
+  const width = rect.width;
+  const height = rect.height;
+
+  return {
+    width,
+    height,
+    meetsWCAG258:
+      width >= CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX &&
+      height >= CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX,
+    meetsWCAG255:
+      width >= CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX &&
+      height >= CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX,
+  };
+}

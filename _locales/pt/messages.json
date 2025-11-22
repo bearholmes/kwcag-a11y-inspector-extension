@@ -175,6 +175,10 @@
     "message": "Verificação de contraste",
     "description": "Contrast check setting label"
   },
+  "settingBoxCheck": {
+    "message": "Box Model Check",
+    "description": "Box model check setting label"
+  },
   "settingSelectorLine": {
     "message": "Linha do seletor",
     "description": "Selector line setting label"
@@ -266,5 +270,57 @@
   "reportTranslationError": {
     "message": "Relatar erro de tradução",
     "description": "Report translation error link"
+  },
+  "wcag258Label": {
+    "message": "WCAG 2.5.8 (AA)",
+    "description": "WCAG 2.5.8 Target Size Minimum label"
+  },
+  "wcag255Label": {
+    "message": "WCAG 2.5.5 (AAA)",
+    "description": "WCAG 2.5.5 Target Size Enhanced label"
+  },
+  "kwcag213Label": {
+    "message": "KWCAG 2.1.3",
+    "description": "KWCAG 2.1.3 minimum size label"
+  },
+  "targetSizePass": {
+    "message": "Pass",
+    "description": "Target size requirement passed"
+  },
+  "targetSizeFail": {
+    "message": "Fail",
+    "description": "Target size requirement failed"
+  },
+  "cssPixelSize": {
+    "message": "CSS pixels",
+    "description": "CSS pixel unit"
+  },
+  "targetSizeMinimum": {
+    "message": "Target Size (Minimum)",
+    "description": "Minimum target size label"
+  },
+  "targetSizeEnhanced": {
+    "message": "Target Size (Enhanced)",
+    "description": "Enhanced target size label"
+  },
+  "targetSizeInfo": {
+    "message": "Target Size Check",
+    "description": "Target size check section label"
+  },
+  "settingTargetSizeCheck": {
+    "message": "Target Size Check (WCAG 2.2)",
+    "description": "Target size check setting label"
+  },
+  "contrastRatioLabel": {
+    "message": "Contrast Ratio",
+    "description": "Contrast ratio label"
+  },
+  "wcag143AALabel": {
+    "message": "WCAG 1.4.3 (AA)",
+    "description": "WCAG 1.4.3 contrast Level AA label"
+  },
+  "wcag143AAALabel": {
+    "message": "WCAG 1.4.3 (AAA)",
+    "description": "WCAG 1.4.3 contrast Level AAA label"
   }
 }

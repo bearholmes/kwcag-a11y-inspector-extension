@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-KWCAG A11y Inspector is a Chrome Extension (Manifest V3) for web accessibility testing. It measures interactive element sizes per KWCAG 2.1.3 (6mm × 6mm minimum) and color contrast ratios per WCAG 1.3.3. The extension supports 11 languages and is undergoing TypeScript migration.
+KWCAG A11y Inspector is a Chrome Extension (Manifest V3) for web accessibility testing. It measures interactive element sizes per KWCAG 2.1.3 (6mm diagonal minimum), WCAG 2.5.8 (24×24 CSS pixels), WCAG 2.5.5 (44×44 CSS pixels), and color contrast ratios per WCAG 1.4.3. The extension supports 11 languages and has completed TypeScript migration.
 
 ## Development Commands
 
@@ -110,14 +110,15 @@ The codebase follows a modular architecture with clear separation of concerns:
 **Storage Pattern**
 
 - All Chrome Storage operations use `StorageManager` class (Promise-based)
-- Settings keys: `monitors`, `resolutions`, `ccshow`, `linkmode`, `bgmode`, `linetype`, `colortype`, `bordersize`, `trackingmode`
+- Settings keys: `monitors`, `resolutions`, `ccshow`, `boxshow`, `linkmode`, `bgmode`, `linetype`, `colortype`, `bordersize`, `trackingmode`
 - Settings automatically sync via Chrome Storage Sync API
 
 **Constants Management**
 
 - All magic numbers and strings centralized in `src/content/inspector/constants.ts`
-- Organized by category: `COLOR`, `MEASUREMENT`, `WCAG_CONTRAST`, `TIMING`, `UI`, `STYLE_VALUES`
+- Organized by category: `COLOR`, `MEASUREMENT`, `ACCESSIBILITY`, `WCAG_CONTRAST`, `TIMING`, `UI`, `STYLE_VALUES`
 - Exported as `CONSTANTS` object with TypeScript interfaces
+- WCAG compliance thresholds: WCAG_258_CSS_PX (24), WCAG_255_CSS_PX (44), KWCAG_213_MM (6.0), RATIO_AA_NORMAL (4.5), RATIO_AAA_NORMAL (7.0)
 
 ## Internationalization (i18n)
 
@@ -330,7 +331,8 @@ See "Development Commands" section above
 
 - Color contrast: `color-utils.ts` (`calculateContrastRatio` function)
 - Size measurements: `calculator-math.ts` (`calculateDimensions` function)
-- Constants: `constants.ts` (`WCAG_CONTRAST` section)
+- Target size compliance: `dom-utils.ts` (`getTargetSize` function)
+- Constants: `constants.ts` (`ACCESSIBILITY` and `WCAG_CONTRAST` sections)
 
 ## References
 

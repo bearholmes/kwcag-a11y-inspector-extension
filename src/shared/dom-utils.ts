@@ -33,7 +33,10 @@ export interface CreateElementOptions {
 /**
  * 요소 생성 헬퍼
  * @param tag - 태그명
- * @param options - 옵션
+ * @param options - 요소 생성 옵션
+ * @param options.className - 요소에 추가할 CSS 클래스명 (선택적)
+ * @param options.textContent - 요소의 텍스트 내용 (선택적)
+ * @param options.attrs - 요소에 설정할 속성들의 키-값 쌍 (선택적)
  * @returns 생성된 DOM 요소
  */
 export function createElement<K extends keyof HTMLElementTagNameMap>(

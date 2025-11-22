@@ -39,6 +39,7 @@ declare global {
  */
 interface StorageSettings {
   ccshow?: string;
+  boxshow?: string;
   resolutions: string;
   monitors: number;
   linkmode: string;
@@ -67,6 +68,7 @@ async function myApp(): Promise<AppConfig> {
   // StorageManager를 이용하여 여러 개의 데이터를 한 번에 읽어옵니다.
   const settings = (await StorageManager.getMultiple([
     'ccshow',
+    'boxshow',
     'resolutions',
     'monitors',
     'linkmode',
@@ -79,6 +81,7 @@ async function myApp(): Promise<AppConfig> {
 
   const {
     ccshow,
+    boxshow,
     resolutions,
     monitors,
     linkmode,
@@ -98,6 +101,7 @@ async function myApp(): Promise<AppConfig> {
   // "opt" 객체에 각 값을 저장합니다.
   const opt: InspectorOptions = {
     ccshow,
+    boxshow,
     stdpx: std_px,
     linkmode,
     bgmode,
@@ -109,10 +113,19 @@ async function myApp(): Promise<AppConfig> {
 
   // CSS Properties
   // 텍스트의 색상, 배경색, 명도(contrast)관련 문자열 배열
-  const dkInspect_pColorBg = ['color', 'background-color', 'contrast'];
+  const dkInspect_pColorBg = [
+    'color',
+    'background-color',
+    'contrast',
+    'contrastAA',
+    'contrastAAA',
+  ];
 
   // 길이 단위(px) 관련 문자열 배열
   const dkInspect_pLength = ['h', 'w', 'diagonal'];
+
+  // 목표 크기(Target Size) 관련 문자열 배열
+  const dkInspect_pTargetSize = ['wcag258', 'wcag255', 'kwcag213'];
 
   // 박스 모델(Box Model)과 관련된 CSS 속성을 나타내는 문자열 배열
   const dkInspect_pBox = [
@@ -134,6 +147,7 @@ async function myApp(): Promise<AppConfig> {
   // CSS Property 카테고리
   const dkInspect_categories: Categories = {
     pLength: dkInspect_pLength,
+    pTargetSize: dkInspect_pTargetSize,
     pBox: dkInspect_pBox,
     pColorBg: dkInspect_pColorBg,
   };
@@ -141,6 +155,7 @@ async function myApp(): Promise<AppConfig> {
   // CSS Property 카테고리 제목
   const dkInspect_categoriesTitle: CategoriesTitle = {
     pLength: 'Length',
+    pTargetSize: chrome.i18n.getMessage('targetSizeInfo'),
     pBox: 'Box',
     pColorBg: 'Color Contrast',
   };
