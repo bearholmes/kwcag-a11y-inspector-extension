@@ -486,7 +486,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
               const labelSpan = doc.createElement('span');
               labelSpan.className = CSS_CLASSES.PROPERTY;
-              labelSpan.textContent = ` ${item.label} : `;
+              labelSpan.textContent = `${item.label}:`;
 
               const valueSpan = doc.createElement('span');
               valueSpan.textContent = item.value;
