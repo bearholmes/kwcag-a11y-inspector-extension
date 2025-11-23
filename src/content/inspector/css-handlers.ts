@@ -84,10 +84,10 @@ function setCSSPropertyIf(
     (li.firstChild as HTMLElement).textContent = `${property}:`;
     (li.lastChild as HTMLElement).innerHTML =
       element.getPropertyValue(property);
-    li.style.display = 'block';
+    li.style.setProperty('display', 'flex', 'important');
     return 1;
   } else {
-    li.style.display = 'none';
+    li.style.setProperty('display', 'none', 'important');
     return 0;
   }
 }
@@ -113,7 +113,7 @@ function setCSSPropertyValue(
 
   (li.firstChild as HTMLElement).textContent = `${property}:`;
   (li.lastChild as HTMLElement).innerHTML = value;
-  li.style.display = 'block';
+  li.style.setProperty('display', 'flex', 'important');
 }
 
 /**
@@ -141,10 +141,10 @@ function setCSSPropertyValueIf(
   if (condition) {
     (li.firstChild as HTMLElement).textContent = `${property}:`;
     (li.lastChild as HTMLElement).innerHTML = value;
-    li.style.display = 'block';
+    li.style.setProperty('display', 'flex', 'important');
     return 1;
   } else {
-    li.style.display = 'none';
+    li.style.setProperty('display', 'none', 'important');
     return 0;
   }
 }
@@ -156,7 +156,7 @@ function setCSSPropertyValueIf(
 function hideCSSProperty(property: string): void {
   const document = getCurrentDocument();
   const li = document.getElementById(`dkInspect_${property}`);
-  if (li) li.style.display = 'none';
+  if (li) li.style.setProperty('display', 'none', 'important');
 }
 
 /**
