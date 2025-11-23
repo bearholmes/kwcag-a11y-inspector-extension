@@ -53,7 +53,7 @@ span.a11y-inspector__property,
   text-transform: none !important;
   text-align: center !important;
   display: block !important;
-  background-color: #4f46e5 !important;
+  background-color: #2563eb !important;
   padding: 8px 12px !important;
   max-width: 320px !important;
   overflow: hidden !important;
@@ -84,7 +84,7 @@ span.a11y-inspector__property,
 
 .a11y-inspector h2 {
   padding: 0 0 6px 0 !important;
-  color: #4f46e5 !important;
+  color: #2563eb !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   text-align: left !important;

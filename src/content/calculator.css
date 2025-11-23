@@ -4,11 +4,11 @@
 
 /* CSS Variables - Matching Settings Page */
 .a11y-calculator {
-  /* Colors - Indigo/Slate System */
-  --primary-color: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-light: #eef2ff;
-  --primary-focus: rgba(79, 70, 229, 0.1);
+  /* Colors - Blue System */
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --primary-focus: rgba(37, 99, 235, 0.1);
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --text-light: #ffffff;
