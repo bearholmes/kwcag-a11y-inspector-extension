@@ -4,11 +4,11 @@
 
 /* CSS Variables - Matching Settings Page */
 .a11y-calculator {
-  /* Colors - Blue System */
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #eff6ff;
-  --primary-focus: rgba(37, 99, 235, 0.1);
+  /* Colors - Navy/Dark Blue System */
+  --primary-color: #334e68;
+  --primary-hover: #243b53;
+  --primary-light: #f0f4f8;
+  --primary-focus: rgba(51, 78, 104, 0.1);
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --text-light: #ffffff;
@@ -157,9 +157,9 @@
   padding: 5px 0 !important;
   margin: 0 !important;
   display: flex !important;
+  justify-content: space-between !important;
   align-items: center !important;
-  gap: 4px !important;
-  border-bottom: 1px solid rgba(79, 70, 229, 0.1) !important;
+  border-bottom: 1px solid rgba(51, 78, 104, 0.1) !important;
 }
 
 .a11y-calculator__result li:last-child {

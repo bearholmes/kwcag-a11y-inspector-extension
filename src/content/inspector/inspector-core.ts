@@ -205,6 +205,7 @@ export function Inspector(
         for (const item of properties) {
           const li = document.createElement('li');
           li.id = `dkInspect_${item}`;
+          li.style.display = 'none'; // 초기 상태에서 숨김
 
           const spanName = document.createElement('span');
           spanName.className = 'a11y-inspector__property';

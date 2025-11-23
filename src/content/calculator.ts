@@ -476,11 +476,17 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
             // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
             const list = [
-              { label: 'height', value: `${cb.height} mm (${h}px)` },
-              { label: 'width', value: `${cb.width} mm (${w}px)` },
+              {
+                label: 'height',
+                value: `${cb.height.toFixed(1)}mm (${h.toFixed(1)}px)`,
+              },
+              {
+                label: 'width',
+                value: `${cb.width.toFixed(1)}mm (${w.toFixed(1)}px)`,
+              },
               {
                 label: 'diagonal',
-                value: `${cb.diagonal} mm (${cb.diagonal_px}px)`,
+                value: `${cb.diagonal.toFixed(1)}mm (${cb.diagonal_px.toFixed(1)}px)`,
               },
             ];
 
