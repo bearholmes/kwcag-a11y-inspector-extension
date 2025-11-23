@@ -146,7 +146,7 @@ feature/AmazingFeature`)
 
 ---
 
-## 🙏 크레딧
+## 🙏 Credits
 
 이 프로젝트는 다음 오픈소스 프로젝트 및 도구에서 영감을 받았습니다:
 
@@ -176,6 +176,10 @@ feature/AmazingFeature`)
 ---
 
 ## 📞 지원
+
+이 프로젝트는 개인적으로 시작했으며 함께 도전할 동료를 찾고 있습니다.
+
+- 2025년 11월부터 Claude Code와 Codex가 함께 작업하고 있습니다.
 
 버그를 발견하셨나요? [Issues](https://github.com/bearholmes/kwcag-a11y-inspector-extension/issues)에 다음 정보와 함께 제보해주세요:
 

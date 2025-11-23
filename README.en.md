@@ -174,6 +174,10 @@ This project was inspired by the following open source projects and tools:
 
 ## 📞 Support
 
+This project started as a solo effort and is open to collaborators.
+
+- Claude Code and Codex have been working together since November 2025.
+
 Found a bug? Report it to [Issues](https://github.com/bearholmes/kwcag-a11y-inspector-extension/issues) with the following information:
 
 - Environment information (Chrome version, OS)
