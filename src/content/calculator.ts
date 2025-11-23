@@ -528,17 +528,17 @@ type CalculatorCallback = (result: CalculatorResult) => void;
               {
                 label:
                   getMessage(MESSAGE_KEYS.WCAG_258_LABEL) || 'WCAG 2.5.8 (AA)',
-                value: `${wcag258Icon} ${wcag258Status.toUpperCase()} (${wcag258Comparison} ${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}px)`,
+                value: `${wcag258Icon} ${(wcag258Status || 'PASS').toUpperCase()} (${wcag258Comparison} ${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}px)`,
               },
               {
                 label:
                   getMessage(MESSAGE_KEYS.WCAG_255_LABEL) || 'WCAG 2.5.5 (AAA)',
-                value: `${wcag255Icon} ${wcag255Status.toUpperCase()} (${wcag255Comparison} ${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}px)`,
+                value: `${wcag255Icon} ${(wcag255Status || 'PASS').toUpperCase()} (${wcag255Comparison} ${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}px)`,
               },
               {
                 label:
                   getMessage(MESSAGE_KEYS.KWCAG_213_LABEL) || 'KWCAG 2.1.3',
-                value: `${kwcag213Icon} ${kwcag213Status.toUpperCase()} (${kwcag213Comparison} ${CALCULATION_CONSTANTS.KWCAG_213_MM.toFixed(1)}mm)`,
+                value: `${kwcag213Icon} ${(kwcag213Status || 'PASS').toUpperCase()} (${kwcag213Comparison} ${CALCULATION_CONSTANTS.KWCAG_213_MM.toFixed(1)}mm)`,
               },
             ];
 
