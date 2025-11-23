@@ -53,7 +53,7 @@ span.a11y-inspector__property,
   text-transform: none !important;
   text-align: center !important;
   display: block !important;
-  background-color: #0d9488 !important;
+  background-color: #4f46e5 !important;
   padding: 8px 12px !important;
   max-width: 320px !important;
   overflow: hidden !important;
@@ -84,7 +84,7 @@ span.a11y-inspector__property,
 
 .a11y-inspector h2 {
   padding: 0 0 6px 0 !important;
-  color: #0d9488 !important;
+  color: #4f46e5 !important;
   font-size: 12px !important;
   font-weight: 600 !important;
   text-align: left !important;
@@ -104,7 +104,7 @@ span.a11y-inspector__property,
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  border-bottom: 1px solid rgba(13, 148, 136, 0.1) !important;
+  border-bottom: 1px solid rgba(79, 70, 229, 0.1) !important;
 }
 
 .a11y-inspector li:last-child {

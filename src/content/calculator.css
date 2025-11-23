@@ -4,15 +4,15 @@
 
 /* CSS Variables - Matching Settings Page */
 .a11y-calculator {
-  /* Colors - Teal/Cyan System */
-  --primary-color: #0d9488;
-  --primary-hover: #0f766e;
-  --primary-light: #f0fdfa;
-  --primary-focus: rgba(13, 148, 136, 0.1);
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
+  /* Colors - Indigo/Slate System */
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+  --primary-focus: rgba(79, 70, 229, 0.1);
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
   --text-light: #ffffff;
-  --border-color: #e5e7eb;
+  --border-color: #cbd5e1;
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
@@ -159,7 +159,7 @@
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  border-bottom: 1px solid rgba(13, 148, 136, 0.1) !important;
+  border-bottom: 1px solid rgba(79, 70, 229, 0.1) !important;
 }
 
 .a11y-calculator__result li:last-child {
