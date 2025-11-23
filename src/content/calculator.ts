@@ -71,6 +71,9 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     MM_PER_INCH: 25.4,
     DECIMAL_PLACES_STANDARD: 2,
     DECIMAL_PLACES_RESULT: 1,
+    KWCAG_213_MM: 6.0,
+    WCAG_258_CSS_PX: 24,
+    WCAG_255_CSS_PX: 44,
   } as const;
 
   /**
@@ -102,6 +105,11 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     CALC_STANDARD: 'calcStandard',
     CALC_HEIGHT_PLACEHOLDER: 'calcHeightPlaceholder',
     CALC_WIDTH_PLACEHOLDER: 'calcWidthPlaceholder',
+    WCAG_258_LABEL: 'wcag258Label',
+    WCAG_255_LABEL: 'wcag255Label',
+    KWCAG_213_LABEL: 'kwcag213Label',
+    TARGET_SIZE_PASS: 'targetSizePass',
+    TARGET_SIZE_FAIL: 'targetSizeFail',
   } as const;
 
   /**
@@ -474,6 +482,35 @@ type CalculatorCallback = (result: CalculatorResult) => void;
             );
             res.appendChild(header);
 
+            // WCAG 적합여부 계산
+            const meetsWCAG258 =
+              h >= CALCULATION_CONSTANTS.WCAG_258_CSS_PX &&
+              w >= CALCULATION_CONSTANTS.WCAG_258_CSS_PX;
+            const meetsWCAG255 =
+              h >= CALCULATION_CONSTANTS.WCAG_255_CSS_PX &&
+              w >= CALCULATION_CONSTANTS.WCAG_255_CSS_PX;
+            const diagonalMm = parseFloat(cb.diagonal);
+            const meetsKWCAG213 =
+              diagonalMm >= CALCULATION_CONSTANTS.KWCAG_213_MM;
+
+            const wcag258Status = meetsWCAG258
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+            const wcag255Status = meetsWCAG255
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+            const kwcag213Status = meetsKWCAG213
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+
+            const wcag258Icon = meetsWCAG258 ? '✅' : '❌';
+            const wcag255Icon = meetsWCAG255 ? '✅' : '❌';
+            const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
+
+            const wcag258Comparison = meetsWCAG258 ? '≥' : '<';
+            const wcag255Comparison = meetsWCAG255 ? '≥' : '<';
+            const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
+
             // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
             const list = [
               {
@@ -487,6 +524,21 @@ type CalculatorCallback = (result: CalculatorResult) => void;
               {
                 label: 'diagonal',
                 value: `${cb.diagonal.toFixed(1)}mm (${cb.diagonal_px.toFixed(1)}px)`,
+              },
+              {
+                label:
+                  getMessage(MESSAGE_KEYS.WCAG_258_LABEL) || 'WCAG 2.5.8 (AA)',
+                value: `${wcag258Icon} ${wcag258Status.toUpperCase()} (${wcag258Comparison} ${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}px)`,
+              },
+              {
+                label:
+                  getMessage(MESSAGE_KEYS.WCAG_255_LABEL) || 'WCAG 2.5.5 (AAA)',
+                value: `${wcag255Icon} ${wcag255Status.toUpperCase()} (${wcag255Comparison} ${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}px)`,
+              },
+              {
+                label:
+                  getMessage(MESSAGE_KEYS.KWCAG_213_LABEL) || 'KWCAG 2.1.3',
+                value: `${kwcag213Icon} ${kwcag213Status.toUpperCase()} (${kwcag213Comparison} ${CALCULATION_CONSTANTS.KWCAG_213_MM.toFixed(1)}mm)`,
               },
             ];
 
