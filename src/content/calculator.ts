@@ -96,6 +96,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     CALC_CLOSE: 'calcClose',
     CALC_RESULTS: 'calcResults',
     CALC_STANDARD: 'calcStandard',
+    CALC_HEIGHT_PLACEHOLDER: 'calcHeightPlaceholder',
+    CALC_WIDTH_PLACEHOLDER: 'calcWidthPlaceholder',
   } as const;
 
   /**
@@ -293,6 +295,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const heightInput = doc.createElement('input');
         heightInput.type = 'text';
         heightInput.id = ELEMENT_IDS.INPUT_HEIGHT;
+        heightInput.placeholder =
+          getMessage(MESSAGE_KEYS.CALC_HEIGHT_PLACEHOLDER) || 'e.g. 1080';
         heightInputSpan.appendChild(heightInput);
         heightInputSpan.appendChild(doc.createTextNode(' px'));
         heightLi.appendChild(heightLabelSpan);
@@ -311,6 +315,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const widthInput = doc.createElement('input');
         widthInput.type = 'text';
         widthInput.id = ELEMENT_IDS.INPUT_WIDTH;
+        widthInput.placeholder =
+          getMessage(MESSAGE_KEYS.CALC_WIDTH_PLACEHOLDER) || 'e.g. 1920';
         widthInputSpan.appendChild(widthInput);
         widthInputSpan.appendChild(doc.createTextNode(' px'));
         widthLi.appendChild(widthLabelSpan);

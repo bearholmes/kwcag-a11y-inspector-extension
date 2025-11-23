@@ -55,6 +55,14 @@
     "message": "기준",
     "description": "기준 표시"
   },
+  "calcHeightPlaceholder": {
+    "message": "예: 1080",
+    "description": "높이 입력 필드 플레이스홀더"
+  },
+  "calcWidthPlaceholder": {
+    "message": "예: 1920",
+    "description": "너비 입력 필드 플레이스홀더"
+  },
   "errorInvalidInput": {
     "message": "유효하지 않은 입력값입니다.",
     "description": "잘못된 입력 에러"

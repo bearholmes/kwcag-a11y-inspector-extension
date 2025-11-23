@@ -55,6 +55,14 @@
     "message": "Standard",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "e.g. 1080",
+    "description": "Height input placeholder"
+  },
+  "calcWidthPlaceholder": {
+    "message": "e.g. 1920",
+    "description": "Width input placeholder"
+  },
   "errorInvalidInput": {
     "message": "Invalid input value.",
     "description": "Invalid input error"
