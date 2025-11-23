@@ -56,11 +56,11 @@
     "description": "Standard label"
   },
   "calcHeightPlaceholder": {
-    "message": "z.B. 1080",
+    "message": "z.B. 48",
     "description": "Platzhalter für Höheneingabefeld"
   },
   "calcWidthPlaceholder": {
-    "message": "z.B. 1920",
+    "message": "z.B. 48",
     "description": "Platzhalter für Breiteneingabefeld"
   },
   "errorInvalidInput": {

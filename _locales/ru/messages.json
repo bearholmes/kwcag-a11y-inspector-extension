@@ -56,11 +56,11 @@
     "description": "Standard label"
   },
   "calcHeightPlaceholder": {
-    "message": "напр. 1080",
+    "message": "напр. 48",
     "description": "Заполнитель для поля ввода высоты"
   },
   "calcWidthPlaceholder": {
-    "message": "напр. 1920",
+    "message": "напр. 48",
     "description": "Заполнитель для поля ввода ширины"
   },
   "errorInvalidInput": {

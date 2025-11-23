@@ -19,8 +19,12 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
 (function (): void {
   // ==================== EARLY EXIT CHECK ====================
-  // calculator가 이미 존재하면 중복 초기화 방지
-  if (document.querySelector('.a11y-calculator')) {
+  // calculator가 이미 존재하면 다시 표시
+  const existingCalculator = document.querySelector(
+    '.a11y-calculator',
+  ) as HTMLElement | null;
+  if (existingCalculator) {
+    existingCalculator.style.display = 'block';
     return;
   }
 
@@ -216,6 +220,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const container = doc.createElement('div');
         container.id = ELEMENT_IDS.CONTAINER;
         container.className = CSS_CLASSES.CONTAINER;
+        container.style.display = 'block';
 
         // "h1" 요소를 생성하고, 이 요소에 계산기 제목 텍스트 노드를 추가합니다.
         const header = doc.createElement('h1');
@@ -296,7 +301,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         heightInput.type = 'text';
         heightInput.id = ELEMENT_IDS.INPUT_HEIGHT;
         heightInput.placeholder =
-          getMessage(MESSAGE_KEYS.CALC_HEIGHT_PLACEHOLDER) || 'e.g. 1080';
+          getMessage(MESSAGE_KEYS.CALC_HEIGHT_PLACEHOLDER) || 'e.g. 48';
         heightInputSpan.appendChild(heightInput);
         heightInputSpan.appendChild(doc.createTextNode(' px'));
         heightLi.appendChild(heightLabelSpan);
@@ -316,7 +321,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         widthInput.type = 'text';
         widthInput.id = ELEMENT_IDS.INPUT_WIDTH;
         widthInput.placeholder =
-          getMessage(MESSAGE_KEYS.CALC_WIDTH_PLACEHOLDER) || 'e.g. 1920';
+          getMessage(MESSAGE_KEYS.CALC_WIDTH_PLACEHOLDER) || 'e.g. 48';
         widthInputSpan.appendChild(widthInput);
         widthInputSpan.appendChild(doc.createTextNode(' px'));
         widthLi.appendChild(widthLabelSpan);
@@ -395,13 +400,14 @@ type CalculatorCallback = (result: CalculatorResult) => void;
           return;
         }
 
-        // "body" 요소에서 "container" 요소를 제거합니다.
-        const body = window.document.getElementsByTagName('BODY')[0];
-        if (!body) {
-          throw new Error('Body element not found');
-        }
+        // DOM 제거 대신 숨기기 (재사용 가능하도록)
+        container.style.display = 'none';
 
-        body.removeChild(container);
+        // 결과 영역 초기화
+        const resultElement = $(ELEMENT_IDS.RESULT);
+        if (resultElement) {
+          resultElement.textContent = '';
+        }
       } catch (error) {
         console.error('Error in close:', error);
         // 닫기 실패는 심각한 문제가 아니므로 사용자에게 알리지 않음

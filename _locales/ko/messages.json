@@ -56,11 +56,11 @@
     "description": "기준 표시"
   },
   "calcHeightPlaceholder": {
-    "message": "예: 1080",
+    "message": "예: 48",
     "description": "높이 입력 필드 플레이스홀더"
   },
   "calcWidthPlaceholder": {
-    "message": "예: 1920",
+    "message": "예: 48",
     "description": "너비 입력 필드 플레이스홀더"
   },
   "errorInvalidInput": {

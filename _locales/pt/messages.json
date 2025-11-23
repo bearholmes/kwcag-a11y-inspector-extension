@@ -56,11 +56,11 @@
     "description": "Standard label"
   },
   "calcHeightPlaceholder": {
-    "message": "ex. 1080",
+    "message": "ex. 48",
     "description": "Espaço reservado para o campo de entrada de altura"
   },
   "calcWidthPlaceholder": {
-    "message": "ex. 1920",
+    "message": "ex. 48",
     "description": "Espaço reservado para o campo de entrada de largura"
   },
   "errorInvalidInput": {

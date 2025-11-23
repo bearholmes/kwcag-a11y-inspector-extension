@@ -56,11 +56,11 @@
     "description": "标准显示"
   },
   "calcHeightPlaceholder": {
-    "message": "例如：1080",
+    "message": "例如：48",
     "description": "高度输入字段占位符"
   },
   "calcWidthPlaceholder": {
-    "message": "例如：1920",
+    "message": "例如：48",
     "description": "宽度输入字段占位符"
   },
   "errorInvalidInput": {

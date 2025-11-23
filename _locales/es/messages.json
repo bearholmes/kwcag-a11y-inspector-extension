@@ -56,11 +56,11 @@
     "description": "Standard label"
   },
   "calcHeightPlaceholder": {
-    "message": "p.ej. 1080",
+    "message": "p.ej. 48",
     "description": "Marcador de posición del campo de entrada de altura"
   },
   "calcWidthPlaceholder": {
-    "message": "p.ej. 1920",
+    "message": "p.ej. 48",
     "description": "Marcador de posición del campo de entrada de ancho"
   },
   "errorInvalidInput": {

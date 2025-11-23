@@ -60,6 +60,10 @@
 
 .a11y-calculator__result {
   margin: 0 !important;
+  padding: 0 !important;
+}
+
+.a11y-calculator__result:not(:empty) {
   padding: 10px 12px !important;
   background-color: var(--primary-light) !important;
 }

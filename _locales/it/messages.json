@@ -56,11 +56,11 @@
     "description": "Standard label"
   },
   "calcHeightPlaceholder": {
-    "message": "es. 1080",
+    "message": "es. 48",
     "description": "Segnaposto del campo di input altezza"
   },
   "calcWidthPlaceholder": {
-    "message": "es. 1920",
+    "message": "es. 48",
     "description": "Segnaposto del campo di input larghezza"
   },
   "errorInvalidInput": {
