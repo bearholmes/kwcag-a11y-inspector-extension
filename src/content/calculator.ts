@@ -494,14 +494,14 @@ type CalculatorCallback = (result: CalculatorResult) => void;
               diagonalMm >= CALCULATION_CONSTANTS.KWCAG_213_MM;
 
             const wcag258Status = meetsWCAG258
-              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
-              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
             const wcag255Status = meetsWCAG255
-              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
-              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
             const kwcag213Status = meetsKWCAG213
-              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS)
-              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL);
+              ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+              : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
 
             const wcag258Icon = meetsWCAG258 ? '✅' : '❌';
             const wcag255Icon = meetsWCAG255 ? '✅' : '❌';
