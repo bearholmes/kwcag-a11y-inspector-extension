@@ -96,7 +96,7 @@
     "description": "Resume message"
   },
   "optionPageTitle": {
-    "message": "kwcag a11y inspector - Параметры",
+    "message": "KWCAG A11y Inspector - Параметры",
     "description": "Options page title"
   },
   "optionVersion": {
@@ -136,7 +136,7 @@
     "description": "Introduction description 1"
   },
   "introDesc2": {
-    "message": "Предоставляет вспомогательную функциональность, полезную при измерении тестовых элементов 1.3.3 Цветовой контраст",
+    "message": "Проверка размера цели WCAG 2.2: Отображение в реальном времени соответствия WCAG 2.5.8 (AA) и 2.5.5 (AAA)",
     "description": "Introduction description 2"
   },
   "introDesc3": {

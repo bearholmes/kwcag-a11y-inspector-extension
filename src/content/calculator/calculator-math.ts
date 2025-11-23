@@ -1,6 +1,6 @@
 /**
  * Calculator Math Module
- * 순수한 계산 로직만 포함 (테스트 가능)
+ * 계산에 필요한 로직
  * @module calculator/calculator-math
  */
 

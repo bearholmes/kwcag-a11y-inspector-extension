@@ -1,10 +1,17 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This document keeps AI agents and contributors aligned with the current structure, onboarding expectations, and workflows for this repository. Use it as the first stop for architecture, commands, and best practices before making changes.
 
 ## Project Overview
 
-KWCAG A11y Inspector is a Chrome Extension (Manifest V3) for web accessibility testing. It measures interactive element sizes per KWCAG 2.1.3 (6mm diagonal minimum), WCAG 2.5.8 (24×24 CSS pixels), WCAG 2.5.5 (44×44 CSS pixels), and color contrast ratios per WCAG 1.4.3. The extension supports 11 languages and has completed TypeScript migration.
+KWCAG A11y Inspector is a Chrome Extension (Manifest V3) for web accessibility testing. It measures:
+
+- Interactive element sizes per KWCAG 2.1.3 (6mm diagonal minimum)
+- WCAG 2.5.8 (24×24 CSS pixels)
+- WCAG 2.5.5 (44×44 CSS pixels)
+- Color contrast ratios per WCAG 1.4.3
+
+The extension supports 11 languages and has completed TypeScript migration.
 
 ## Development Commands
 
@@ -46,21 +53,19 @@ After building, load the extension in Chrome:
 
 ### Module Structure
 
-The codebase follows a modular architecture with clear separation of concerns:
-
 **Background (Service Worker)**
 
-- `src/background/service-worker.ts`: Handles extension lifecycle, context menus, and script injection
+- `src/background/service-worker.ts`: Extension lifecycle, context menus, script injection
 - Uses `StorageManager` for settings persistence
 - Creates context menu for manual calculator popup
 - Injects content scripts into active tabs
 
 **Content Scripts**
 
-- **Inspector Module** (`src/content/inspector/`): Main accessibility inspection functionality
+- **Inspector Module** (`src/content/inspector/`): Main accessibility inspection
   - `index.ts`: Entry point, initializes Inspector and ShortcutManager
   - `inspector-core.ts`: Core Inspector class, manages tracking overlay
-  - `event-handlers.ts`: Mouse/keyboard event handling, element detection logic
+  - `event-handlers.ts`: Mouse/keyboard event handling, element detection
   - `css-handlers.ts`: CSS property reading and processing
   - `constants.ts`: Centralized constants (colors, measurements, WCAG values)
   - `color-utils.ts`: Color conversion and contrast calculation (WCAG 2.0)
@@ -73,13 +78,13 @@ The codebase follows a modular architecture with clear separation of concerns:
 
 **Options Page**
 
-- `src/options/settings.ts`: Settings UI with Pickr color picker integration
+- `src/options/settings.ts`: Settings UI with Pickr color picker
 - `src/options/settings.html`: Settings page layout
-- Manages monitor size, resolution, display preferences, and link mode
+- Manages monitor size, resolution, display preferences, link mode
 
 **Shared Utilities**
 
-- `src/shared/storage-utils.ts`: Promise-based Chrome Storage API wrapper (`StorageManager` class)
+- `src/shared/storage-utils.ts`: Promise-based Chrome Storage API wrapper
 - `src/shared/dom-utils.ts`: Common DOM utilities
 
 ### Key Architectural Patterns
@@ -117,8 +122,12 @@ The codebase follows a modular architecture with clear separation of concerns:
 
 - All magic numbers and strings centralized in `src/content/inspector/constants.ts`
 - Organized by category: `COLOR`, `MEASUREMENT`, `ACCESSIBILITY`, `WCAG_CONTRAST`, `TIMING`, `UI`, `STYLE_VALUES`
-- Exported as `CONSTANTS` object with TypeScript interfaces
-- WCAG compliance thresholds: WCAG_258_CSS_PX (24), WCAG_255_CSS_PX (44), KWCAG_213_MM (6.0), RATIO_AA_NORMAL (4.5), RATIO_AAA_NORMAL (7.0)
+- WCAG compliance thresholds:
+  - `WCAG_258_CSS_PX`: 24 (WCAG 2.5.8)
+  - `WCAG_255_CSS_PX`: 44 (WCAG 2.5.5)
+  - `KWCAG_213_MM`: 6.0 (KWCAG 2.1.3)
+  - `RATIO_AA_NORMAL`: 4.5 (WCAG AA)
+  - `RATIO_AAA_NORMAL`: 7.0 (WCAG AAA)
 
 ## Internationalization (i18n)
 
@@ -159,9 +168,9 @@ console.error(chrome.i18n.getMessage('errorInvalidInput'));
 
 11 languages: English (en), Korean (ko), German (de), Spanish (es), French (fr), Italian (it), Japanese (ja), Portuguese (pt), Russian (ru), Chinese Simplified (zh_CN), Chinese Traditional (zh_TW)
 
-## TypeScript Migration Status
+## TypeScript Migration
 
-### Completed (100%)
+### Status: Completed (100%)
 
 - All core modules migrated to TypeScript
 - `strict` mode enabled in `tsconfig.json`
@@ -228,11 +237,9 @@ console.error(chrome.i18n.getMessage('errorInvalidInput'));
 
 ### Branch Naming
 
-```
-claude/{feature-description}-{sessionId}
-```
+Use `agent/{feature-description}-{sessionId}` to make branch purpose and ownership explicit.
 
-Example: `claude/calculator-multilingual-support-016csrChRgV7cauVfyCbaYzL`
+Example: `agent/calculator-multilingual-support-016csrChRgV7cauVfyCbaYzL`
 
 ### Commit Messages
 
@@ -259,7 +266,7 @@ i18n: Internationalization changes
 
 ## Testing
 
-### Test Configuration
+### Configuration
 
 - Framework: Jest with jsdom environment
 - TypeScript support via ts-jest
@@ -274,10 +281,6 @@ i18n: Internationalization changes
   - `color-utils.ts`: 96%+
   - `calculator-math.ts`: 100%
   - `dom-utils.ts`: 95%+
-
-### Running Tests
-
-See "Development Commands" section above
 
 ## Build System (Vite)
 

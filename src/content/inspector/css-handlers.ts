@@ -7,7 +7,35 @@
 import { CONSTANTS } from './constants.ts';
 import { RGBToHex, RGBToHexStr, getL } from './color-utils.ts';
 import { getCurrentDocument, getTargetSize } from './dom-utils.ts';
+import { getLocalizedMessage } from '../../shared/i18n-utils.ts';
 import { InspectorOptions } from './inspector-core.ts';
+
+const localizedContrastRatioLabel = getLocalizedMessage(
+  'contrastRatioLabel',
+  'Contrast Ratio',
+);
+const localizedWcag143AALabel = getLocalizedMessage(
+  'wcag143AALabel',
+  'WCAG 1.4.3 (AA)',
+);
+const localizedWcag143AAALabel = getLocalizedMessage(
+  'wcag143AAALabel',
+  'WCAG 1.4.3 (AAA)',
+);
+const localizedTargetSizePass = getLocalizedMessage('targetSizePass', 'Pass');
+const localizedTargetSizeFail = getLocalizedMessage('targetSizeFail', 'Fail');
+const localizedWcag258Label = getLocalizedMessage(
+  'wcag258Label',
+  'WCAG 2.5.8 (AA)',
+);
+const localizedWcag255Label = getLocalizedMessage(
+  'wcag255Label',
+  'WCAG 2.5.5 (AAA)',
+);
+const localizedKwcag213Label = getLocalizedMessage(
+  'kwcag213Label',
+  'KWCAG 2.1.3',
+);
 
 /**
  * 문자열에서 'px'를 제거하고 반올림한 값을 문자열로 반환
@@ -265,7 +293,7 @@ function setCSSColorContrast(
 
     if (condition) {
       // Display contrast ratio
-      const contrastLabel = chrome.i18n.getMessage('contrastRatioLabel');
+      const contrastLabel = localizedContrastRatioLabel;
       (contrastLi.firstChild as HTMLElement).textContent = contrastLabel;
       (contrastLi.lastChild as HTMLElement).innerHTML = ` : ${
         Math.round(ratio * 100) / 100
@@ -273,25 +301,25 @@ function setCSSColorContrast(
       contrastLi.style.display = 'block';
 
       // Display AA compliance (4.5:1)
-      const wcag143AALabel = chrome.i18n.getMessage('wcag143AALabel');
       const meetsAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AA_NORMAL;
       const aaStatus = meetsAA
-        ? chrome.i18n.getMessage('targetSizePass')
-        : chrome.i18n.getMessage('targetSizeFail');
+        ? localizedTargetSizePass
+        : localizedTargetSizeFail;
       const aaIcon = meetsAA ? '✅' : '❌';
-      (contrastAALi.firstChild as HTMLElement).textContent = wcag143AALabel;
+      (contrastAALi.firstChild as HTMLElement).textContent =
+        localizedWcag143AALabel;
       (contrastAALi.lastChild as HTMLElement).innerHTML =
         ` : ${aaIcon} ${aaStatus.toUpperCase()}`;
       contrastAALi.style.display = 'block';
 
       // Display AAA compliance (7:1)
-      const wcag143AAALabel = chrome.i18n.getMessage('wcag143AAALabel');
       const meetsAAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AAA_NORMAL;
       const aaaStatus = meetsAAA
-        ? chrome.i18n.getMessage('targetSizePass')
-        : chrome.i18n.getMessage('targetSizeFail');
+        ? localizedTargetSizePass
+        : localizedTargetSizeFail;
       const aaaIcon = meetsAAA ? '✅' : '❌';
-      (contrastAAALi.firstChild as HTMLElement).textContent = wcag143AAALabel;
+      (contrastAAALi.firstChild as HTMLElement).textContent =
+        localizedWcag143AAALabel;
       (contrastAAALi.lastChild as HTMLElement).innerHTML =
         ` : ${aaaIcon} ${aaaStatus.toUpperCase()}`;
       contrastAAALi.style.display = 'block';
@@ -381,42 +409,46 @@ export function updateTargetSize(
     const targetSize = getTargetSize(domElement);
 
     // WCAG 2.5.8 (AA) - 24x24 CSS pixels
-    const wcag258Label = chrome.i18n.getMessage('wcag258Label');
+    const wcag258Label = localizedWcag258Label;
     const wcag258Status = targetSize.meetsWCAG258
-      ? chrome.i18n.getMessage('targetSizePass')
-      : chrome.i18n.getMessage('targetSizeFail');
+      ? localizedTargetSizePass
+      : localizedTargetSizeFail;
     const wcag258Icon = targetSize.meetsWCAG258 ? '✅' : '❌';
+    const wcag258Threshold = CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX;
+    const wcag258Comparison = targetSize.meetsWCAG258 ? '≥' : '<';
     (wcag258Li.firstChild as HTMLElement).textContent = wcag258Label;
     (wcag258Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag258Icon} ${wcag258Status.toUpperCase()}`;
+      ` : ${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
     wcag258Li.style.display = 'block';
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
-    const wcag255Label = chrome.i18n.getMessage('wcag255Label');
+    const wcag255Label = localizedWcag255Label;
     const wcag255Status = targetSize.meetsWCAG255
-      ? chrome.i18n.getMessage('targetSizePass')
-      : chrome.i18n.getMessage('targetSizeFail');
+      ? localizedTargetSizePass
+      : localizedTargetSizeFail;
     const wcag255Icon = targetSize.meetsWCAG255 ? '✅' : '❌';
+    const wcag255Threshold = CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX;
+    const wcag255Comparison = targetSize.meetsWCAG255 ? '≥' : '<';
     (wcag255Li.firstChild as HTMLElement).textContent = wcag255Label;
     (wcag255Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag255Icon} ${wcag255Status.toUpperCase()}`;
+      ` : ${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
     wcag255Li.style.display = 'block';
 
     // KWCAG 2.1.3 - 6mm diagonal length
-    const kwcag213Label = chrome.i18n.getMessage('kwcag213Label');
+    const kwcag213Label = localizedKwcag213Label;
     const widthMm = targetSize.width * opt.stdpx;
     const heightMm = targetSize.height * opt.stdpx;
     const diagonalMm = Math.sqrt(widthMm * widthMm + heightMm * heightMm);
     const meetsKWCAG213 = diagonalMm >= CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
     const kwcag213Status = meetsKWCAG213
-      ? chrome.i18n.getMessage('targetSizePass')
-      : chrome.i18n.getMessage('targetSizeFail');
+      ? localizedTargetSizePass
+      : localizedTargetSizeFail;
     const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
+    const kwcag213Threshold = CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
+    const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
     (kwcag213Li.firstChild as HTMLElement).textContent = kwcag213Label;
     (kwcag213Li.lastChild as HTMLElement).innerHTML =
-      ` : ${kwcag213Icon} ${kwcag213Status.toUpperCase()} (${diagonalMm.toFixed(
-        1,
-      )}mm)`;
+      ` : ${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
     kwcag213Li.style.display = 'block';
   } catch (error) {
     console.error('Target size 계산 오류:', error);

@@ -1,15 +1,16 @@
 @charset "utf-8";
 
-#dkInspect_block,
-#dkInspect_center,
-#dkInspect_footer,
-.dkInspect_category,
-span.dkInspect_property,
-#dkInspect_block h1,
-#dkInspect_block h2,
-#dkInspect_block ul,
-#dkInspect_block li,
-#dkInspect_block span {
+/* A11y Inspector Block - BEM Methodology */
+.a11y-inspector,
+.a11y-inspector__content,
+.a11y-inspector__footer,
+.a11y-inspector__category,
+span.a11y-inspector__property,
+.a11y-inspector h1,
+.a11y-inspector h2,
+.a11y-inspector ul,
+.a11y-inspector li,
+.a11y-inspector span {
   font-family: 'Lucida sans', helvetica, sans-serif !important;
   font-size: 12px !important;
   z-index: 9999 !important;
@@ -26,9 +27,8 @@ span.dkInspect_property,
   pointer-events: none !important;
 }
 
-#dkInspect_block {
+.a11y-inspector {
   display: none;
-  /*font-size: 10px !important;*/
   color: #555 !important;
   position: absolute !important;
   border: 1px solid #888 !important;
@@ -36,7 +36,7 @@ span.dkInspect_property,
   pointer-events: none !important;
 }
 
-#dkInspect_block h1 {
+.a11y-inspector h1 {
   color: #fff !important;
   float: inherit !important;
   font-size: 13px !important;
@@ -45,18 +45,17 @@ span.dkInspect_property,
   display: block !important;
   background-color: #374a58 !important;
   padding: 20px 10px 5px !important;
-  /* margin: 5% auto !important; */
   max-width: 320px !important;
   overflow: hidden !important;
 }
 
-#dkInspect_center {
+.a11y-inspector__content {
   padding: 10px 12px 5px 12px !important;
   overflow: hidden !important;
   clear: both !important;
 }
 
-#dkInspect_footer {
+.a11y-inspector__footer {
   padding-top: 5px;
   color: #555 !important;
   text-align: center !important;
@@ -65,11 +64,11 @@ span.dkInspect_property,
   display: block !important;
 }
 
-.dkInspect_category {
+.a11y-inspector__category {
   padding: 0 5px !important;
 }
 
-#dkInspect_block h2 {
+.a11y-inspector h2 {
   padding-top: 6px !important;
   color: #374a58 !important;
   font-size: 13px !important;
@@ -77,17 +76,16 @@ span.dkInspect_property,
   letter-spacing: -0.5px !important;
 }
 
-#dkInspect_block ul {
+.a11y-inspector ul {
   padding: 5px 5px 10px 5px !important;
-  /*list-style:none !important;*/
   width: 282px !important;
 }
 
-#dkInspect_block li {
+.a11y-inspector li {
   padding-left: 10px !important;
 }
 
-#dkInspect_block span.dkInspect_property {
+.a11y-inspector span.a11y-inspector__property {
   color: #333 !important;
   float: left !important;
   width: 110px !important;
@@ -95,12 +93,12 @@ span.dkInspect_property,
   overflow: hidden !important;
 }
 
-#dkInspect_tracking {
+/* A11y Inspector Tracking Overlay - Separate Block */
+.a11y-inspector-tracking {
   position: absolute !important;
   z-index: 2000005 !important;
   outline-width: 2px !important;
   outline-offset: -1px !important;
-  /*cursor: crosshair !important;*/
   cursor: none !important;
   pointer-events: none !important;
 }

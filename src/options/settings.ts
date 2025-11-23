@@ -270,8 +270,7 @@ function loadBoxShowSettings(): void {
 }
 
 /**
- * Chrome Storage에서 링크 모드 설정을 로드합니다
- * 링크 모드에 따라 배경 옵션을 활성화/비활성화합니다
+ * Chrome Storage에서 링크 모드 설정을 로드하고 라디오 버튼 상태를 맞춥니다
  *
  * @returns void
  */
@@ -282,10 +281,8 @@ function loadLinkModeSettings(): void {
 
       if (linkmode === STATE_ENABLED) {
         safeSetChecked('linkModeOn', true);
-        enableBackgroundModeOption();
       } else {
         safeSetChecked('linkModeOff', true);
-        disableBackgroundModeOption();
       }
     });
   } catch (error) {
@@ -334,16 +331,6 @@ function loadColorTypeSettings(pickrInstance: Pickr | null): void {
   } catch (error) {
     console.error('Error loading color type settings:', error);
   }
-}
-
-/**
- * 링크 모드 변경 시 호출되는 이벤트 핸들러
- * (배경 모드 기능이 제거되어 현재 사용되지 않음)
- *
- * @returns void
- */
-function handleLinkModeChange(): void {
-  // 배경 모드 기능이 제거되어 더 이상 처리할 내용이 없음
 }
 
 /**
@@ -413,17 +400,41 @@ function initializeColorPicker(): Pickr | null {
       }
     });
 
-    // 색상 변경 이벤트 - 실시간 미리보기 (현재 비활성화)
-    // pickr.on('change', (color) => {
-    //   if (color) {
-    //     // 필요시 실시간 미리보기 기능 추가
-    //   }
-    // });
-
     return pickr;
   } catch (error) {
     console.error('Error initializing color picker:', error);
     return null;
+  }
+}
+
+/**
+ * 컬러 프리셋 버튼 클릭 이벤트 핸들러를 초기화합니다
+ *
+ * @param pickrInstance - Pickr 인스턴스
+ * @returns void
+ */
+function initializeColorPresets(pickrInstance: Pickr | null): void {
+  try {
+    const presetButtons = document.querySelectorAll('.color-preset');
+
+    presetButtons.forEach((button) => {
+      button.addEventListener('click', function (this: HTMLElement) {
+        const colorValue = this.getAttribute('data-color');
+        if (colorValue && pickrInstance) {
+          // Pickr에 색상 설정
+          pickrInstance.setColor(`#${colorValue}`);
+
+          // 즉시 저장
+          safeStorageSet({ colortype: colorValue }, function () {
+            const savedMessage =
+              chrome.i18n.getMessage('settingSaved') || '저장완료!';
+            showStatusMessage('resStatus', savedMessage);
+          });
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error initializing color presets:', error);
   }
 }
 
@@ -560,75 +571,6 @@ function showStatusMessage(
 }
 
 /**
- * 해상도 등록 버튼 클릭 시 실행되는 함수
- * 해상도 등록 버튼 클릭 시 실행될 코드
- * 입력된 모니터 크기와 해상도 값을 가져옴
- * CC 표시, 링크 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
- * 입력된 값을 저장함
- * '저장완료!' 메시지를 출력함
- *
- * @returns void
- */
-function resRegEvent(): void {
-  try {
-    // 입력된 모니터 크기와 해상도 값을 가져옴
-    const monitor = safeGetValue('moniStd');
-    const resolution = safeGetValue('resStd');
-
-    // CC 표시, 링크 모드, 선 유형, 선 색상, 추적 모드, 테두리 크기 값을 가져옴
-    const cc_sw = getCheckboxState('ccShowOn');
-    const box_sw = getCheckboxState('boxShowOn');
-    const lm_sw = getCheckboxState('linkModeOn');
-    const linetype = getSelectedLineType();
-
-    // Pickr에서 색상 가져오기
-    let colortype = 'ff0000'; // 기본값
-    if (pickrInstance) {
-      const color = pickrInstance.getColor();
-      if (color) {
-        colortype = color.toHEXA().toString().substring(1, 7);
-      }
-    }
-
-    const bordersize = safeGetValue('bordersize');
-
-    // 링크 모드에 따라 trackingmode 자동 설정
-    // 링크 모드 ON = 분리형 선택자 활성화
-    const trackingmode = lm_sw === STATE_ENABLED;
-
-    // 입력 검증
-    if (!monitor || !resolution) {
-      console.warn('Monitor or resolution value is empty');
-      showStatusMessage('resStatus', '모니터와 해상도를 선택해주세요.');
-      return;
-    }
-
-    // 입력된 값을 저장함
-    const settingsData: Record<string, unknown> = {
-      monitors: monitor,
-      resolutions: resolution,
-      ccshow: cc_sw,
-      boxshow: box_sw,
-      linkmode: lm_sw,
-      linetype: linetype,
-      colortype: colortype,
-      trackingmode: trackingmode,
-      bordersize: bordersize,
-    };
-
-    safeStorageSet(settingsData, function () {
-      // 저장 완료 메시지를 다국어로 출력
-      const savedMessage =
-        chrome.i18n.getMessage('settingSaved') || '저장완료!';
-      showStatusMessage('resStatus', savedMessage);
-    });
-  } catch (error) {
-    console.error('Error in resRegEvent:', error);
-    showStatusMessage('resStatus', '저장 중 오류가 발생했습니다.');
-  }
-}
-
-/**
  * 이벤트 리스너를 안전하게 등록하는 함수
  *
  * @param elementId - 이벤트를 등록할 요소의 ID
@@ -695,11 +637,9 @@ function initializeI18n(): void {
 
     // 버전 정보 자동 설정 (manifest.json에서 가져옴)
     const version = chrome.runtime.getManifest().version;
-    const versionElement = document.querySelector(
-      '.info span[data-i18n="optionVersion"]',
-    );
-    if (versionElement && versionElement.parentElement) {
-      versionElement.parentElement.textContent = `${chrome.i18n.getMessage('optionVersion')} : ${version}`;
+    const versionElement = document.querySelector('.header-version');
+    if (versionElement) {
+      versionElement.textContent = `${chrome.i18n.getMessage('optionVersion')} : ${version}`;
     }
   } catch (error) {
     console.error('Error initializing i18n:', error);
@@ -707,9 +647,96 @@ function initializeI18n(): void {
 }
 
 /**
+ * 즉시 저장 핸들러 - 설정 변경 시 자동으로 저장
+ *
+ * @returns void
+ */
+function handleAutoSave(): void {
+  try {
+    // 입력된 모니터 크기와 해상도 값을 가져옴
+    const monitor = safeGetValue('moniStd');
+    const resolution = safeGetValue('resStd');
+
+    // CC 표시, Box 모델, 링크 모드, 선 유형 값을 가져옴
+    const cc_sw = getCheckboxState('ccShowOn');
+    const box_sw = getCheckboxState('boxShowOn');
+    const lm_sw = getCheckboxState('linkModeOn');
+    const linetype = getSelectedLineType();
+
+    // Pickr에서 색상 가져오기
+    let colortype = 'ff0000'; // 기본값
+    if (pickrInstance) {
+      const color = pickrInstance.getColor();
+      if (color) {
+        colortype = color.toHEXA().toString().substring(1, 7);
+      }
+    }
+
+    const bordersize = safeGetValue('bordersize');
+
+    // 링크 모드에 따라 trackingmode 자동 설정
+    const trackingmode = lm_sw === STATE_ENABLED;
+
+    // 입력 검증
+    if (!monitor || !resolution) {
+      console.warn('Monitor or resolution value is empty');
+      return;
+    }
+
+    // 저장
+    const settingsData: Record<string, unknown> = {
+      monitors: monitor,
+      resolutions: resolution,
+      ccshow: cc_sw,
+      boxshow: box_sw,
+      linkmode: lm_sw,
+      linetype: linetype,
+      colortype: colortype,
+      trackingmode: trackingmode,
+      bordersize: bordersize,
+    };
+
+    safeStorageSet(settingsData, function () {
+      const savedMessage = chrome.i18n.getMessage('settingSaved') || '저장됨';
+      showStatusMessage('resStatus', `✓ ${savedMessage}`, 2000);
+    });
+  } catch (error) {
+    console.error('Error in handleAutoSave:', error);
+  }
+}
+
+/**
+ * 즉시 저장 이벤트 리스너 초기화
+ *
+ * @returns void
+ */
+function initializeAutoSave(): void {
+  try {
+    // Select 요소들
+    safeAddEventListener('moniStd', 'change', handleAutoSave);
+    safeAddEventListener('resStd', 'change', handleAutoSave);
+
+    // Radio 요소들
+    safeAddEventListener('ccShowOn', 'change', handleAutoSave);
+    safeAddEventListener('ccShowOff', 'change', handleAutoSave);
+    safeAddEventListener('boxShowOn', 'change', handleAutoSave);
+    safeAddEventListener('boxShowOff', 'change', handleAutoSave);
+    safeAddEventListener('linetype1', 'change', handleAutoSave);
+    safeAddEventListener('linetype2', 'change', handleAutoSave);
+    safeAddEventListener('linetype3', 'change', handleAutoSave);
+    safeAddEventListener('linkModeOn', 'change', handleAutoSave);
+    safeAddEventListener('linkModeOff', 'change', handleAutoSave);
+
+    // Number input
+    safeAddEventListener('bordersize', 'change', handleAutoSave);
+  } catch (error) {
+    console.error('Error initializing auto-save:', error);
+  }
+}
+
+/**
  * DOM 초기화 함수
  * DOMContentLoaded 이벤트가 발생하면 실행될 코드
- * id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
  * Pickr 색상 선택기를 초기화하고 설정을 로드함
  *
  * @returns void
@@ -722,12 +749,11 @@ function initializePage(): void {
     // Pickr 색상 선택기 초기화 및 전역 변수에 저장
     pickrInstance = initializeColorPicker();
 
-    // id가 'resBtn'인 요소에 클릭 이벤트 리스너를 추가함
-    safeAddEventListener('resBtn', 'click', resRegEvent);
+    // 컬러 프리셋 버튼 초기화
+    initializeColorPresets(pickrInstance);
 
-    // 링크 모드 변경 이벤트 리스너 추가
-    safeAddEventListener('linkModeOn', 'change', handleLinkModeChange);
-    safeAddEventListener('linkModeOff', 'change', handleLinkModeChange);
+    // 즉시 저장 이벤트 리스너 초기화
+    initializeAutoSave();
 
     // loadEvent 함수를 실행함 (Pickr 인스턴스 전달)
     loadEvent(pickrInstance);

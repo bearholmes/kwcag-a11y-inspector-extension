@@ -20,7 +20,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 (function (): void {
   // ==================== EARLY EXIT CHECK ====================
   // calculator가 이미 존재하면 중복 초기화 방지
-  if (document.getElementById('dkInspect_cals')) {
+  if (document.querySelector('.a11y-calculator')) {
     return;
   }
 
@@ -44,8 +44,10 @@ type CalculatorCallback = (result: CalculatorResult) => void;
    * @constant
    */
   const CSS_CLASSES = {
-    PROPERTY: 'dkInspect_property',
-    BUTTON: 'btn',
+    CONTAINER: 'a11y-calculator',
+    RESULT: 'a11y-calculator__result',
+    PROPERTY: 'a11y-calculator__property',
+    BUTTON: 'a11y-calculator__button',
   } as const;
 
   /**
@@ -208,9 +210,10 @@ type CalculatorCallback = (result: CalculatorResult) => void;
      */
     initialize: function (): void {
       try {
-        // "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals"로 설정합니다.
+        // "div" 요소를 생성하고, ID와 클래스를 설정합니다.
         const container = doc.createElement('div');
         container.id = ELEMENT_IDS.CONTAINER;
+        container.className = CSS_CLASSES.CONTAINER;
 
         // "h1" 요소를 생성하고, 이 요소에 계산기 제목 텍스트 노드를 추가합니다.
         const header = doc.createElement('h1');
@@ -335,9 +338,10 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         inputContainer.appendChild(ul);
         container.appendChild(inputContainer);
 
-        // 결과를 출력할 "div" 요소를 생성하고, 이 요소의 ID를 "dkInspect_cals_result"로 설정합니다.
+        // 결과를 출력할 "div" 요소를 생성하고, ID와 클래스를 설정합니다.
         const result = doc.createElement('div');
         result.id = ELEMENT_IDS.RESULT;
+        result.className = CSS_CLASSES.RESULT;
         container.appendChild(result);
 
         // 새로 생성한 "div" 요소를 "body" 요소에 추가합니다.

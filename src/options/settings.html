@@ -1,449 +1,437 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title data-i18n="optionPageTitle">kwcag a11y inspector - Option</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="optionPageTitle">KWCAG A11y Inspector - Option</title>
     <link rel="stylesheet" href="../settings.css" />
   </head>
   <body>
-    <div id="dkWrap" class="path_admin">
-      <header id="dkHead">
-        <div class="inner_head">
-          <h1 class="tit">kwcag a11y inspector</h1>
-          <div class="info"><span data-i18n="optionVersion">버전</span></div>
+    <div class="container">
+      <header class="header">
+        <div class="header-content">
+          <h1 class="header-title" data-i18n="extName">KWCAG 접근성 검사기</h1>
+          <div class="header-version">
+            <span data-i18n="optionVersion">버전</span>
+          </div>
         </div>
       </header>
-      <!-- // dkHead -->
-      <hr class="hide" />
-      <main id="dkContent">
-        <div id="cMain">
-          <div id="mFeature" class="">
-            <div id="dkGnb">
-              <h2 class="screen_out" data-i18n="optionMenu">옵션 메뉴</h2>
-              <ul class="gnb_comm">
-                <li>
-                  <a href="#idx01" class="link_gnb" data-i18n="menuIntro"
-                    >소개</a
-                  >
-                </li>
-                <li>
-                  <a href="#idx02" class="link_gnb" data-i18n="menuShortcuts"
-                    >단축키 안내</a
-                  >
-                </li>
-                <li>
-                  <a href="#idx03" class="link_gnb" data-i18n="menuSettings"
-                    >환경설정</a
-                  >
-                </li>
-                <li>
-                  <a href="#idx04" class="link_gnb" data-i18n="menuReferences"
-                    >참고자료</a
-                  >
-                </li>
-                <li>
-                  <a href="#idx05" class="link_gnb" data-i18n="menuSupport"
-                    >Support</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-          <article id="mArticle">
-            <h2 id="dkBody" class="screen_out" data-i18n="optionContent">
-              옵션 본문
-            </h2>
-            <div class="info_box">
-              <h2 id="idx01" class="tit" data-i18n="menuIntro">소개</h2>
-              <div>
-                <ul class="txt_item">
-                  <li data-i18n="introDesc1">
+
+      <main class="main">
+        <div class="content">
+          <article class="article">
+            <h2 class="screen_out" data-i18n="optionContent">옵션 본문</h2>
+
+            <!-- Getting Started Card -->
+            <section class="card">
+              <h2 class="card__title" data-i18n="menuIntro">사용 안내</h2>
+              <div class="card__content">
+                <ul class="feature-list">
+                  <li class="feature-list__item" data-i18n="introDesc1">
                     KWCAG 2.1의 2.1.3 조작 가능 검사항목을 측정하기 위한 기능
                     제공
                   </li>
-                  <li data-i18n="introDesc2">
+                  <li class="feature-list__item" data-i18n="introDesc2">
                     1.3.3 텍스트 콘텐츠의 명도 대비 검사항목을 측정시 도움될 수
                     있는 보조 기능 제공
                   </li>
-                  <li data-i18n="introDesc3">기준 : box + padding + border</li>
-                </ul>
-              </div>
-              <div style="margin-top: 20px">
-                <strong data-i18n="introTip">tip</strong>
-                <ul class="txt_item">
-                  <li data-i18n="introWarning1">
-                    * 주의사항 : 아쉽게도 크롬의 특성상 iframe, frame 내부
-                    문서는 확인할 수 없습니다.
-                  </li>
-                  <li data-i18n="introWarning2">
-                    * 우클릭하면 노출되는 컨텍스트 메뉴에서 수동계산 팝업을 열
-                    수 있습니다.
+                  <li class="feature-list__item" data-i18n="introDesc3">
+                    기준 : box + padding + border
                   </li>
                 </ul>
-              </div>
-            </div>
-            <div class="info_box">
-              <h2 id="idx02" class="tit" data-i18n="menuShortcuts">
-                단축키 안내
-              </h2>
-              <div>
-                <ul class="txt_item">
-                  <li>
-                    <span data-i18n="shortcutDesc"
-                      >단축키를 이용하면 좀 더 편리하게 이용할 수
-                      있습니다.</span
+
+                <div class="shortcuts">
+                  <h3 class="shortcuts__title" data-i18n="menuShortcuts">
+                    단축키 안내
+                  </h3>
+                  <div class="shortcuts__item">
+                    <kbd class="shortcuts__kbd">Esc</kbd>
+                    <span class="shortcuts__desc" data-i18n="shortcutEsc"
+                      >일시정지 / 재개</span
                     >
-                    <ul style="margin-left: 15px">
-                      <li>
-                        <kbd>Esc</kbd> :
-                        <span data-i18n="shortcutEsc"
-                          >일시정지 / 재개 (활성화된 상태에서 가능)</span
-                        >
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+                  </div>
+                </div>
+
+                <div class="tips">
+                  <strong class="tips__title" data-i18n="introTip">tip</strong>
+                  <ul class="tips__list">
+                    <li class="tips__item" data-i18n="introWarning1">
+                      아쉽게도 크롬의 특성상 iframe, frame 내부 문서는 확인할 수
+                      없습니다.
+                    </li>
+                    <li class="tips__item" data-i18n="introWarning2">
+                      우클릭하면 노출되는 컨텍스트 메뉴에서 수동계산 팝업을 열
+                      수 있습니다.
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </div>
-            <div class="info_box">
-              <h2 id="idx03" class="tit" data-i18n="menuSettings">환경설정</h2>
-              <div class="box">
-                <div class="info_item">
+            </section>
+
+            <!-- Settings Card -->
+            <section class="card">
+              <h2 class="card__title" data-i18n="menuSettings">환경설정</h2>
+              <div class="card__content">
+                <div class="form-group">
                   <label
                     for="resStd"
-                    class="tit_lab"
+                    class="form-group__label"
                     data-i18n="settingResolution"
                     >해상도 기준</label
                   >
-                  <div class="cont_item">
-                    <div class="box_inptf">
-                      <select id="resStd" class="inp_comm">
-                        <option value="1280x960" id="1280x960">
-                          1280x960 UVGA
-                        </option>
-                        <option value="1280x1024" id="1280x1024">
-                          1280x1024 SXGA
-                        </option>
-                        <option value="1366x768" id="1366x768">
-                          1366x768 HD
-                        </option>
-                        <option value="1440x1050" id="1440x1050">
-                          1440x1050 SXGA+
-                        </option>
-                        <option value="1440x900" id="1440x900">
-                          1440x900 WXGA+
-                        </option>
-                        <option value="1600x900" id="1600x900">
-                          1600x900 HD+
-                        </option>
-                        <option value="1600x1200" id="1600x1200">
-                          1600x1200 UXGA
-                        </option>
-                        <option value="1680x1050" id="1680x1050">
-                          1680x1050 WSXGA+
-                        </option>
-                        <option value="1920x1080" id="1920x1080">
-                          1920x1080 FHD
-                        </option>
-                        <option value="1920x1200" id="1920x1200">
-                          1920x1200 WUXGA
-                        </option>
-                        <option value="2560x1440" id="2560x1440">
-                          2560x1440 WQHD
-                        </option>
-                        <option value="2560x1600" id="2560x1600">
-                          2560x1600 WQXGA
-                        </option>
-                        <option value="3200x1800" id="3200x1800">
-                          3200x1800 QHD+
-                        </option>
-                        <option value="3840x2160" id="3840x2160">
-                          3840x2160 UHD
-                        </option>
-                      </select>
-                    </div>
+                  <div class="form-group__control">
+                    <select id="resStd" class="select">
+                      <option value="1280x960" id="1280x960">
+                        1280x960 UVGA
+                      </option>
+                      <option value="1280x1024" id="1280x1024">
+                        1280x1024 SXGA
+                      </option>
+                      <option value="1366x768" id="1366x768">
+                        1366x768 HD
+                      </option>
+                      <option value="1440x1050" id="1440x1050">
+                        1440x1050 SXGA+
+                      </option>
+                      <option value="1440x900" id="1440x900">
+                        1440x900 WXGA+
+                      </option>
+                      <option value="1600x900" id="1600x900">
+                        1600x900 HD+
+                      </option>
+                      <option value="1600x1200" id="1600x1200">
+                        1600x1200 UXGA
+                      </option>
+                      <option value="1680x1050" id="1680x1050">
+                        1680x1050 WSXGA+
+                      </option>
+                      <option value="1920x1080" id="1920x1080">
+                        1920x1080 FHD
+                      </option>
+                      <option value="1920x1200" id="1920x1200">
+                        1920x1200 WUXGA
+                      </option>
+                      <option value="2560x1440" id="2560x1440">
+                        2560x1440 WQHD
+                      </option>
+                      <option value="2560x1600" id="2560x1600">
+                        2560x1600 WQXGA
+                      </option>
+                      <option value="3200x1800" id="3200x1800">
+                        3200x1800 QHD+
+                      </option>
+                      <option value="3840x2160" id="3840x2160">
+                        3840x2160 UHD
+                      </option>
+                    </select>
                   </div>
                 </div>
-                <div class="info_item">
+
+                <div class="form-group">
                   <label
                     for="moniStd"
-                    class="tit_lab"
+                    class="form-group__label"
                     data-i18n="settingMonitor"
                     >모니터 기준</label
                   >
-                  <div class="cont_item">
-                    <div class="box_inptf">
-                      <select id="moniStd" class="inp_comm">
-                        <option value="11" id="11">11 inch</option>
-                        <option value="12" id="12">12 inch</option>
-                        <option value="13" id="13">13 inch</option>
-                        <option value="14" id="14">14 inch</option>
-                        <option value="15" id="15">15 inch</option>
-                        <option value="17" id="17">17 inch</option>
-                        <option value="19" id="19">19 inch</option>
-                        <option value="20" id="20">20 inch</option>
-                        <option value="21" id="21">21 inch</option>
-                        <option value="22" id="22">22 inch</option>
-                        <option value="23" id="23">23 inch</option>
-                        <option value="24" id="24">24 inch</option>
-                        <option value="27" id="27">27 inch</option>
-                        <option value="30" id="30">30 inch</option>
-                        <option value="32" id="32">32 inch</option>
-                        <option value="36" id="36">36 inch</option>
-                        <option value="38" id="38">38 inch</option>
-                        <option value="40" id="40">40 inch</option>
-                      </select>
-                    </div>
+                  <div class="form-group__control">
+                    <select id="moniStd" class="select">
+                      <option value="11" id="11">11 inch</option>
+                      <option value="12" id="12">12 inch</option>
+                      <option value="13" id="13">13 inch</option>
+                      <option value="14" id="14">14 inch</option>
+                      <option value="15" id="15">15 inch</option>
+                      <option value="17" id="17">17 inch</option>
+                      <option value="19" id="19">19 inch</option>
+                      <option value="20" id="20">20 inch</option>
+                      <option value="21" id="21">21 inch</option>
+                      <option value="22" id="22">22 inch</option>
+                      <option value="23" id="23">23 inch</option>
+                      <option value="24" id="24">24 inch</option>
+                      <option value="27" id="27">27 inch</option>
+                      <option value="30" id="30">30 inch</option>
+                      <option value="32" id="32">32 inch</option>
+                      <option value="36" id="36">36 inch</option>
+                      <option value="38" id="38">38 inch</option>
+                      <option value="40" id="40">40 inch</option>
+                    </select>
                   </div>
                 </div>
-                <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingContrastCheck"
+
+                <div class="form-group">
+                  <span
+                    class="form-group__label"
+                    data-i18n="settingContrastCheck"
                     >명도대비 체크</span
                   >
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <span class="inp_comm">
-                        <input type="radio" id="ccShowOn" name="ccShow" />
-                        <label for="ccShowOn" data-i18n="settingOn">ON</label>
-                        <input
-                          type="radio"
-                          id="ccShowOff"
-                          name="ccShow"
-                          style="margin-left: 20px"
-                        />
-                        <label for="ccShowOff" data-i18n="settingOff"
-                          >OFF</label
-                        >
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingBoxCheck"
-                    >Box 모델 체크</span
-                  >
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <span class="inp_comm">
-                        <input type="radio" id="boxShowOn" name="boxShow" />
-                        <label for="boxShowOn" data-i18n="settingOn">ON</label>
-                        <input
-                          type="radio"
-                          id="boxShowOff"
-                          name="boxShow"
-                          style="margin-left: 20px"
-                        />
-                        <label for="boxShowOff" data-i18n="settingOff"
-                          >OFF</label
-                        >
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingSelectorLine"
-                    >선택자 라인</span
-                  >
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <span class="inp_comm">
-                        <input type="radio" id="linetype1" name="lineType" />
-                        <label for="linetype1" data-i18n="settingLineTypeSolid"
-                          >실선(soild)</label
-                        >
-                        <input
-                          type="radio"
-                          id="linetype2"
-                          name="lineType"
-                          style="margin-left: 20px"
-                        />
-                        <label for="linetype2" data-i18n="settingLineTypeDashed"
-                          >점선(dashed)</label
-                        >
-                        <input
-                          type="radio"
-                          id="linetype3"
-                          name="lineType"
-                          style="margin-left: 20px"
-                        />
-                        <label for="linetype3" data-i18n="settingLineTypeDotted"
-                          >점선(dotted)</label
-                        >
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <label
-                    for="colorType"
-                    class="tit_lab"
-                    data-i18n="settingSelectorColor"
-                    >선택자 색상</label
-                  >
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <div class="box_inptf">
-                        <input
-                          type="text"
-                          id="colorType"
-                          class="inp_comm jscolor"
-                          value="ff0000"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <label
-                    for="bordersize"
-                    class="tit_lab"
-                    data-i18n="settingSelectorBorder"
-                    >선택자 border</label
-                  >
-                  <div class="cont_item">
-                    <div class="box_inptf">
-                      <span class="inp_comm">
-                        <input
-                          type="number"
-                          id="bordersize"
-                          name="bordersize"
-                          class="inp_comm"
-                          max="10"
-                          min="1"
-                        />
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="info_item">
-                  <span class="tit_lab" data-i18n="settingLinkMode"
-                    >링크 모드</span
-                  >
-                  <div class="cont_item">
-                    <div class="box_inptf" style="border: none">
-                      <span class="inp_comm">
-                        <input type="radio" id="linkModeOn" name="linkMode" />
-                        <label for="linkModeOn" data-i18n="settingLinkModeOn"
-                          >ON (a, button, input요소로 한정)</label
-                        >
-                        <input
-                          type="radio"
-                          id="linkModeOff"
-                          name="linkMode"
-                          style="margin-left: 20px"
-                        />
-                        <label for="linkModeOff" data-i18n="settingLinkModeOff"
-                          >OFF (모든 요소)</label
-                        >
-                      </span>
+                  <div class="form-group__control">
+                    <div class="radio-group">
+                      <input
+                        type="radio"
+                        id="ccShowOn"
+                        name="ccShow"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="ccShowOn"
+                        class="radio-group__label"
+                        data-i18n="settingOn"
+                        >ON</label
+                      >
+                      <input
+                        type="radio"
+                        id="ccShowOff"
+                        name="ccShow"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="ccShowOff"
+                        class="radio-group__label"
+                        data-i18n="settingOff"
+                        >OFF</label
+                      >
                     </div>
                   </div>
                 </div>
 
-                <div class="alert-info" role="alert">
-                  <button
-                    id="resBtn"
-                    class="btn_g"
-                    data-i18n="settingSaveButton"
+                <div class="form-group">
+                  <span class="form-group__label" data-i18n="settingBoxCheck"
+                    >Box 모델 체크</span
                   >
-                    설정
-                  </button>
-                  <span id="resStatus" class="txt"></span>
+                  <div class="form-group__control">
+                    <div class="radio-group">
+                      <input
+                        type="radio"
+                        id="boxShowOn"
+                        name="boxShow"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="boxShowOn"
+                        class="radio-group__label"
+                        data-i18n="settingOn"
+                        >ON</label
+                      >
+                      <input
+                        type="radio"
+                        id="boxShowOff"
+                        name="boxShow"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="boxShowOff"
+                        class="radio-group__label"
+                        data-i18n="settingOff"
+                        >OFF</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <span
+                    class="form-group__label"
+                    data-i18n="settingSelectorLine"
+                    >선택자 라인</span
+                  >
+                  <div class="form-group__control">
+                    <div class="radio-group">
+                      <input
+                        type="radio"
+                        id="linetype1"
+                        name="lineType"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="linetype1"
+                        class="radio-group__label"
+                        data-i18n="settingLineTypeSolid"
+                        >실선(soild)</label
+                      >
+                      <input
+                        type="radio"
+                        id="linetype2"
+                        name="lineType"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="linetype2"
+                        class="radio-group__label"
+                        data-i18n="settingLineTypeDashed"
+                        >점선(dashed)</label
+                      >
+                      <input
+                        type="radio"
+                        id="linetype3"
+                        name="lineType"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="linetype3"
+                        class="radio-group__label"
+                        data-i18n="settingLineTypeDotted"
+                        >점선(dotted)</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label
+                    for="colorType"
+                    class="form-group__label"
+                    data-i18n="settingSelectorColor"
+                    >선택자 색상</label
+                  >
+                  <div class="form-group__control">
+                    <div class="color-picker">
+                      <input
+                        type="text"
+                        id="colorType"
+                        class="color-picker__input"
+                        value="ff0000"
+                      />
+                      <div class="color-picker__presets">
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="ff0000"
+                          style="background-color: #ff0000"
+                          aria-label="Red"
+                        ></button>
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="00ff00"
+                          style="background-color: #00ff00"
+                          aria-label="Green"
+                        ></button>
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="0000ff"
+                          style="background-color: #0000ff"
+                          aria-label="Blue"
+                        ></button>
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="ff00ff"
+                          style="background-color: #ff00ff"
+                          aria-label="Magenta"
+                        ></button>
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="00ffff"
+                          style="background-color: #00ffff"
+                          aria-label="Cyan"
+                        ></button>
+                        <button
+                          type="button"
+                          class="color-preset"
+                          data-color="ffff00"
+                          style="background-color: #ffff00"
+                          aria-label="Yellow"
+                        ></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label
+                    for="bordersize"
+                    class="form-group__label"
+                    data-i18n="settingSelectorBorder"
+                    >선택자 border</label
+                  >
+                  <div class="form-group__control">
+                    <input
+                      type="number"
+                      id="bordersize"
+                      name="bordersize"
+                      class="input-number"
+                      max="10"
+                      min="1"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <span class="form-group__label" data-i18n="settingLinkMode"
+                    >링크 모드</span
+                  >
+                  <div class="form-group__control">
+                    <div class="radio-group">
+                      <input
+                        type="radio"
+                        id="linkModeOn"
+                        name="linkMode"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="linkModeOn"
+                        class="radio-group__label"
+                        data-i18n="settingLinkModeOn"
+                        >ON (a, button, input요소로 한정)</label
+                      >
+                      <input
+                        type="radio"
+                        id="linkModeOff"
+                        name="linkMode"
+                        class="radio-group__input"
+                      />
+                      <label
+                        for="linkModeOff"
+                        class="radio-group__label"
+                        data-i18n="settingLinkModeOff"
+                        >OFF (모든 요소)</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-status-container">
+                  <span id="resStatus" class="form-status"></span>
                 </div>
               </div>
-            </div>
-            <div class="info_box">
-              <h2 id="idx04" class="tit" data-i18n="menuReferences">
-                참고자료
-              </h2>
-              <ul>
-                <li>
-                  <span data-i18n="refBasedOn"
-                    >CSSViewer를 기반으로 만들어졌습니다.</span
-                  >
-                  <a
-                    href="https://chrome.google.com/webstore/detail/cssviewer/ggfgijbpiheegefliciemofobhmofgce?hl=ko"
-                    target="_blank"
-                    class="link_comm"
-                    data-i18n="refMoreLink"
-                    >more</a
-                  >
-                </li>
-                <li>
-                  <span data-i18n="refContrast"
-                    >명도대비 체크 기능은 WebAIM의 Color Contrast Checker를
-                    참고하였습니다.</span
-                  >
-                  <a
-                    href="https://webaim.org/resources/contrastchecker"
-                    target="_blank"
-                    class="link_comm"
-                    data-i18n="refMoreLink"
-                    >more</a
-                  >
-                </li>
-                <li>
-                  <span data-i18n="refDiagonal"
-                    >접근성 컴포넌트 대각선도구 툴의 진단 방식을
-                    참고하였습니다.</span
-                  >
-                  <a
-                    href="https://chrome.google.com/webstore/detail/chogmnfcfckihakaealpjfjdkbjmkpok?hl=ko"
-                    target="_blank"
-                    class="link_comm"
-                    data-i18n="refMoreLink"
-                    >more</a
-                  >
-                </li>
-                <li>
-                  <span data-i18n="refPageRuler"
-                    >가로/세로 길이가 auto의 요소를 계산하는 방법은 Page
-                    Ruler에서 아이디어를 얻었습니다.</span
-                  >
-                  <a
-                    href="https://chrome.google.com/webstore/detail/page-ruler/jlpkojjdgbllmedoapgfodplfhcbnbpn?hl=ko"
-                    target="_blank"
-                    class="link_comm"
-                    data-i18n="refMoreLink"
-                    >more</a
-                  >
-                </li>
-              </ul>
-            </div>
-            <div class="info_box info_lst">
-              <h2 id="idx05" class="tit" data-i18n="menuSupport">Support</h2>
-              <ul>
-                <li data-i18n="supportDesc">
+            </section>
+
+            <!-- Support Card -->
+            <section class="card">
+              <h2 class="card__title" data-i18n="menuSupport">Support</h2>
+              <div class="card__content">
+                <p class="support-desc" data-i18n="supportDesc">
                   문의사항이나 개선의견이 있으면 언제든지 연락주세요.
-                </li>
-                <li>
-                  <a
-                    href=" https://chrome.google.com/webstore/detail/dk-a11y-inspector/ngcmkfaolkgkjbddhjnhgoekgaamjibo/support?hl=ko"
-                    target="_blank"
-                    class="link_comm"
-                    data-i18n="supportLink"
-                    >문의하기</a
-                  >
-                </li>
-              </ul>
-            </div>
+                </p>
+                <a
+                  href="https://chrome.google.com/webstore/detail/dk-a11y-inspector/ngcmkfaolkgkjbddhjnhgoekgaamjibo/support?hl=ko"
+                  target="_blank"
+                  class="support-link"
+                  data-i18n="supportLink"
+                  >문의하기</a
+                >
+              </div>
+            </section>
           </article>
-          <!--// mArticle -->
         </div>
-        <!-- // cMain -->
       </main>
-      <!-- // dkContent -->
-      <hr class="hide" />
-      <footer id="dkFoot" class="footer_comm">
-        <small class="txt_copyright"
-          ><a href="https://github.com/bearholmes" class="link_daum"
-            >&copy; bearholmes.</a
-          ></small
-        >
+
+      <footer class="footer">
+        <div class="footer__content">
+          <small class="footer__copyright">
+            <a
+              href="https://github.com/bearholmes"
+              class="footer__link"
+              target="_blank"
+              rel="noopener noreferrer"
+              >&copy; bearholmes</a
+            >
+          </small>
+        </div>
       </footer>
-      <!-- // dkFoot -->
     </div>
-    <!-- // dkWrap -->
     <script type="module" src="settings.js"></script>
   </body>
 </html>

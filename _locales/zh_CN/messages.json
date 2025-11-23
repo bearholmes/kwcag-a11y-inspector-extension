@@ -96,7 +96,7 @@
     "description": "恢复消息"
   },
   "optionPageTitle": {
-    "message": "kwcag a11y inspector - 选项",
+    "message": "KWCAG A11y Inspector - 选项",
     "description": "选项页面标题"
   },
   "optionVersion": {
@@ -136,7 +136,7 @@
     "description": "简介说明 1"
   },
   "introDesc2": {
-    "message": "提供有助于测量1.3.3文本内容明度对比检查项目的辅助功能",
+    "message": "WCAG 2.2 目标尺寸检查：实时显示 WCAG 2.5.8 (AA) 和 2.5.5 (AAA) 合规状态",
     "description": "简介说明 2"
   },
   "introDesc3": {

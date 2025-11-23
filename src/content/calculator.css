@@ -1,5 +1,7 @@
 @charset "utf-8";
-#dkInspect_cals {
+
+/* A11y Calculator Block - BEM Methodology */
+.a11y-calculator {
   font-family: 'Lucida sans', helvetica, sans-serif !important;
   font-size: 12px !important;
   padding: 0 !important;
@@ -18,7 +20,8 @@
   background-color: #fff !important;
   border: 2px solid #374a58 !important;
 }
-#dkInspect_cals h1 {
+
+.a11y-calculator h1 {
   color: #fff !important;
   float: inherit !important;
   font-size: 14px !important;
@@ -32,10 +35,12 @@
   cursor: move !important;
   user-select: none !important;
 }
-#dkInspect_cals_result {
+
+.a11y-calculator__result {
   margin: 30px 10px 5px 10px !important;
 }
-#dkInspect_cals h2 {
+
+.a11y-calculator h2 {
   padding-top: 6px !important;
   color: #374a58 !important;
   font-size: 13px !important;
@@ -43,22 +48,26 @@
   text-align: left !important;
   letter-spacing: -0.5px !important;
 }
-#dkInspect_cals ul {
+
+.a11y-calculator ul {
   padding: 5px 5px 10px 5px !important;
   list-style: none !important;
   margin: 0 !important;
 }
-#dkInspect_cals li {
+
+.a11y-calculator li {
   padding-left: 10px !important;
   margin: 0 !important;
 }
-#dkInspect_cals li input[type='text'] {
+
+.a11y-calculator li input[type='text'] {
   width: 150px !important;
   line-height: 1.5 !important;
   margin: 5px 0 !important;
   border: 1px solid #374a58 !important;
 }
-#dkInspect_cals span.dkInspect_property {
+
+.a11y-calculator span.a11y-calculator__property {
   color: #333 !important;
   float: left !important;
   width: 100px !important;
@@ -66,7 +75,7 @@
   overflow: hidden !important;
 }
 
-#dkInspect_cals button.btn {
+.a11y-calculator__button {
   background-color: #374a58 !important;
   border: 1px solid #ddd !important;
   color: #fff !important;
@@ -78,5 +87,5 @@
   cursor: pointer !important;
   font-size: 12px !important;
   height: 24px !important;
-  line-height: 24px !important;
+  line-height: 12px !important;
 }

@@ -8,6 +8,7 @@ import {
   CategoriesTitle,
 } from './inspector-core.ts';
 import { createShortcutManager } from './shortcut-manager.ts';
+import { getLocalizedMessage } from '../../shared/i18n-utils.ts';
 
 /*!
  * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
@@ -155,7 +156,7 @@ async function myApp(): Promise<AppConfig> {
   // CSS Property 카테고리 제목
   const dkInspect_categoriesTitle: CategoriesTitle = {
     pLength: 'Length',
-    pTargetSize: chrome.i18n.getMessage('targetSizeInfo'),
+    pTargetSize: getLocalizedMessage('targetSizeInfo', 'Target Size Check'),
     pBox: 'Box',
     pColorBg: 'Color Contrast',
   };
@@ -173,10 +174,10 @@ async function myApp(): Promise<AppConfig> {
  */
 (async () => {
   // DOM에서 Inspector가 이미 활성화되어 있는지 확인
-  const existingBlock = document.getElementById('dkInspect_block');
+  const existingBlock = document.querySelector('.a11y-inspector');
   if (existingBlock) {
     // 이미 활성화되어 있으면 제거 (비활성화)
-    const existingTracking = document.getElementById('dkInspect_tracking');
+    const existingTracking = document.querySelector('.a11y-inspector-tracking');
     existingBlock.remove();
     if (existingTracking) {
       existingTracking.remove();

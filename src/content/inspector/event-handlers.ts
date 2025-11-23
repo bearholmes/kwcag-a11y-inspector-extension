@@ -130,8 +130,12 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    */
   function handleMouseOver(this: HTMLElement, e: MouseEvent): void {
     const document = getCurrentDocument();
-    const block = document.getElementById('dkInspect_block');
-    const trackingEl = document.getElementById('dkInspect_tracking');
+    const block = document.querySelector(
+      '.a11y-inspector',
+    ) as HTMLElement | null;
+    const trackingEl = document.querySelector(
+      '.a11y-inspector-tracking',
+    ) as HTMLElement | null;
 
     if (!block) {
       return;
@@ -167,7 +171,9 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
         // targetElement가 있을 때만 tracking div 표시
         if (
           targetElement &&
-          (e.target as HTMLElement).id !== 'dkInspect_tracking'
+          !(e.target as HTMLElement).classList.contains(
+            'a11y-inspector-tracking',
+          )
         ) {
           trackingEl!.style.width = `${parseInt(String(getWidth(targetElement)))}px`;
           trackingEl!.style.height = `${parseInt(String(getHeight(targetElement)))}px`;
@@ -321,7 +327,7 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
     };
 
     if (opt.trackingmode) {
-      if (this.id !== 'dkInspect_tracking') {
+      if (!this.classList.contains('a11y-inspector-tracking')) {
         const tagName = this.tagName.toLowerCase();
         const interactiveAncestor = findInteractiveAncestor(this);
 
@@ -364,7 +370,9 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    */
   function handleMouseOut(this: HTMLElement, e: MouseEvent): void {
     const document = getCurrentDocument();
-    const block = document.getElementById('dkInspect_block');
+    const block = document.querySelector(
+      '.a11y-inspector',
+    ) as HTMLElement | null;
 
     // lastHoveredElement가 없으면 아무것도 할 필요 없음
     if (!lastHoveredElement) {
@@ -389,8 +397,10 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
 
     if (shouldClear) {
       if (opt.trackingmode) {
-        const trackingEl = document.getElementById('dkInspect_tracking');
-        if (this.id === 'dkInspect_tracking') {
+        const trackingEl = document.querySelector(
+          '.a11y-inspector-tracking',
+        ) as HTMLElement | null;
+        if (this.classList.contains('a11y-inspector-tracking')) {
           trackingEl!.style.display = 'block';
         } else {
           if (trackingEl) trackingEl.style.display = 'none';
@@ -420,7 +430,9 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    */
   function handleMouseMove(this: HTMLElement, e: MouseEvent): void {
     const document = getCurrentDocument();
-    const block = document.getElementById('dkInspect_block');
+    const block = document.querySelector(
+      '.a11y-inspector',
+    ) as HTMLElement | null;
 
     if (!block || block.style.display === 'none') {
       return;

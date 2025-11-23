@@ -96,7 +96,7 @@
     "description": "Resume message"
   },
   "optionPageTitle": {
-    "message": "kwcag a11y inspector - Optionen",
+    "message": "KWCAG A11y Inspector - Optionen",
     "description": "Options page title"
   },
   "optionVersion": {
@@ -136,7 +136,7 @@
     "description": "Introduction description 1"
   },
   "introDesc2": {
-    "message": "Bietet Hilfsfunktionen zur Messung der 1.3.3 Kontrasttest-Items",
+    "message": "WCAG 2.2 Zielgrößenprüfung: Echtzeit-Anzeige der WCAG 2.5.8 (AA) und 2.5.5 (AAA) Konformität",
     "description": "Introduction description 2"
   },
   "introDesc3": {

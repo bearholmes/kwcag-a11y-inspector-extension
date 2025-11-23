@@ -67,9 +67,9 @@ describe('Shortcut Manager', () => {
 
   describe('pause', () => {
     test('pauses inspector when block exists', () => {
-      // dkInspect_block 생성
+      // a11y-inspector 생성
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       const result = shortcutManager.pause();
@@ -88,7 +88,7 @@ describe('Shortcut Manager', () => {
 
     test('shows pause message', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       shortcutManager.pause();
@@ -107,7 +107,7 @@ describe('Shortcut Manager', () => {
 
     test('does not change state if already paused', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       shortcutManager.pause();
@@ -125,7 +125,7 @@ describe('Shortcut Manager', () => {
   describe('resume', () => {
     test('resumes inspector when block exists', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       // 먼저 pause
@@ -148,7 +148,7 @@ describe('Shortcut Manager', () => {
 
     test('shows resume message', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       // 먼저 pause
@@ -167,7 +167,7 @@ describe('Shortcut Manager', () => {
 
     test('can resume from not paused state', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       expect(shortcutManager.isPaused()).toBe(false);
@@ -181,7 +181,7 @@ describe('Shortcut Manager', () => {
   describe('isPaused', () => {
     test('returns current pause state', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       expect(shortcutManager.isPaused()).toBe(false);
@@ -246,7 +246,7 @@ describe('Shortcut Manager', () => {
   describe('Integration tests', () => {
     test('full pause and resume cycle', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       // 초기 상태
@@ -268,7 +268,7 @@ describe('Shortcut Manager', () => {
 
     test('multiple pause/resume cycles', () => {
       const block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
       document.body.appendChild(block);
 
       for (let i = 0; i < 3; i++) {

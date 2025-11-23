@@ -66,7 +66,7 @@ export function createTracking(opt: InspectorOptions): Tracking {
       let trackingEl: HTMLElement | undefined;
       if (document) {
         trackingEl = document.createElement('div');
-        trackingEl.id = 'dkInspect_tracking';
+        trackingEl.className = 'a11y-inspector-tracking';
         this.setColor(trackingEl, opt.colortype);
         trackingEl.style.setProperty(
           'outline-style',
@@ -177,7 +177,7 @@ export function Inspector(
 
     if (document) {
       block = document.createElement('div');
-      block.id = 'dkInspect_block';
+      block.className = 'a11y-inspector';
 
       // CSS 선택자 제목 추가
       const header = document.createElement('h1');
@@ -186,13 +186,13 @@ export function Inspector(
 
       // 속성 컨테이너 생성
       const center = document.createElement('div');
-      center.id = 'dkInspect_center';
+      center.className = 'a11y-inspector__content';
 
       // 모든 카테고리와 속성 추가
       for (const cat in this.categories) {
         const div = document.createElement('div');
         div.id = `dkInspect_${cat}`;
-        div.className = 'dkInspect_category';
+        div.className = 'a11y-inspector__category';
 
         // 카테고리 제목
         const h2 = document.createElement('h2');
@@ -207,7 +207,7 @@ export function Inspector(
           li.id = `dkInspect_${item}`;
 
           const spanName = document.createElement('span');
-          spanName.className = 'dkInspect_property';
+          spanName.className = 'a11y-inspector__property';
 
           const spanValue = document.createElement('span');
 
@@ -392,7 +392,7 @@ export function Inspector(
  */
 Inspector.prototype.isEnabled = function (this: InspectorInterface): boolean {
   const document = getCurrentDocument();
-  return !!document.getElementById('dkInspect_block');
+  return !!document.querySelector('.a11y-inspector');
 };
 
 /**
@@ -401,7 +401,7 @@ Inspector.prototype.isEnabled = function (this: InspectorInterface): boolean {
  */
 Inspector.prototype.enable = function (this: InspectorInterface): boolean {
   const document = getCurrentDocument();
-  let block = document.getElementById('dkInspect_block');
+  let block = document.querySelector('.a11y-inspector') as HTMLElement | null;
 
   if (!block) {
     // BODY 요소가 없으면 생성
@@ -434,8 +434,8 @@ Inspector.prototype.enable = function (this: InspectorInterface): boolean {
  */
 Inspector.prototype.disable = function (this: InspectorInterface): boolean {
   const document = getCurrentDocument();
-  const block = document.getElementById('dkInspect_block');
-  const trackingEl = document.getElementById('dkInspect_tracking');
+  const block = document.querySelector('.a11y-inspector');
+  const trackingEl = document.querySelector('.a11y-inspector-tracking');
 
   if (block) {
     const bodyEl = document.getElementsByTagName('BODY')[0];

@@ -82,7 +82,7 @@ export function createShortcutManager(inspector: Inspector): ShortcutManager {
      */
     pause(): boolean {
       const document = getCurrentDocument();
-      const block = document.getElementById('dkInspect_block');
+      const block = document.querySelector('.a11y-inspector');
 
       if (block) {
         inspector.removeEventListeners();
@@ -106,7 +106,7 @@ export function createShortcutManager(inspector: Inspector): ShortcutManager {
      */
     resume(): boolean {
       const document = getCurrentDocument();
-      const block = document.getElementById('dkInspect_block');
+      const block = document.querySelector('.a11y-inspector');
 
       if (block) {
         inspector.addEventListeners();
