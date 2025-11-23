@@ -81,9 +81,9 @@ function setCSSPropertyIf(
   }
 
   if (condition) {
-    (li.lastChild as HTMLElement).innerHTML = ` : ${element.getPropertyValue(
-      property,
-    )}`;
+    (li.firstChild as HTMLElement).textContent = `${property}:`;
+    (li.lastChild as HTMLElement).innerHTML =
+      element.getPropertyValue(property);
     li.style.display = 'block';
     return 1;
   } else {
@@ -111,7 +111,8 @@ function setCSSPropertyValue(
     return;
   }
 
-  (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
+  (li.firstChild as HTMLElement).textContent = `${property}:`;
+  (li.lastChild as HTMLElement).innerHTML = value;
   li.style.display = 'block';
 }
 
@@ -138,7 +139,8 @@ function setCSSPropertyValueIf(
   }
 
   if (condition) {
-    (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
+    (li.firstChild as HTMLElement).textContent = `${property}:`;
+    (li.lastChild as HTMLElement).innerHTML = value;
     li.style.display = 'block';
     return 1;
   } else {
@@ -238,9 +240,12 @@ function setCSSDiagonal(
 
     // 표시 업데이트
     const precision = CONSTANTS.MEASUREMENT.SIZE_PRECISION;
-    heightLi.lastChild!.textContent = ` : ${heightMm.toFixed(precision)}mm (${heightPx.toFixed(precision)}px)`;
-    widthLi.lastChild!.textContent = ` : ${widthMm.toFixed(precision)}mm (${widthPx.toFixed(precision)}px)`;
-    diagonalLi.lastChild!.textContent = ` : ${diagonalMm.toFixed(precision)}mm (${diagonalPx.toFixed(precision)}px)`;
+    (heightLi.firstChild as HTMLElement).textContent = 'height:';
+    heightLi.lastChild!.textContent = `${heightMm.toFixed(precision)}mm (${heightPx.toFixed(precision)}px)`;
+    (widthLi.firstChild as HTMLElement).textContent = 'width:';
+    widthLi.lastChild!.textContent = `${widthMm.toFixed(precision)}mm (${widthPx.toFixed(precision)}px)`;
+    (diagonalLi.firstChild as HTMLElement).textContent = 'diagonal:';
+    diagonalLi.lastChild!.textContent = `${diagonalMm.toFixed(precision)}mm (${diagonalPx.toFixed(precision)}px)`;
     heightLi.style.display = 'block';
     widthLi.style.display = 'block';
     diagonalLi.style.display = 'block';
@@ -294,8 +299,8 @@ function setCSSColorContrast(
     if (condition) {
       // Display contrast ratio
       const contrastLabel = localizedContrastRatioLabel;
-      (contrastLi.firstChild as HTMLElement).textContent = contrastLabel;
-      (contrastLi.lastChild as HTMLElement).innerHTML = ` : ${
+      (contrastLi.firstChild as HTMLElement).textContent = `${contrastLabel}:`;
+      (contrastLi.lastChild as HTMLElement).innerHTML = `${
         Math.round(ratio * 100) / 100
       }:1`;
       contrastLi.style.display = 'block';
@@ -307,9 +312,9 @@ function setCSSColorContrast(
         : localizedTargetSizeFail;
       const aaIcon = meetsAA ? '✅' : '❌';
       (contrastAALi.firstChild as HTMLElement).textContent =
-        localizedWcag143AALabel;
+        `${localizedWcag143AALabel}:`;
       (contrastAALi.lastChild as HTMLElement).innerHTML =
-        ` : ${aaIcon} ${aaStatus.toUpperCase()}`;
+        `${aaIcon} ${aaStatus.toUpperCase()}`;
       contrastAALi.style.display = 'block';
 
       // Display AAA compliance (7:1)
@@ -319,9 +324,9 @@ function setCSSColorContrast(
         : localizedTargetSizeFail;
       const aaaIcon = meetsAAA ? '✅' : '❌';
       (contrastAAALi.firstChild as HTMLElement).textContent =
-        localizedWcag143AAALabel;
+        `${localizedWcag143AAALabel}:`;
       (contrastAAALi.lastChild as HTMLElement).innerHTML =
-        ` : ${aaaIcon} ${aaaStatus.toUpperCase()}`;
+        `${aaaIcon} ${aaaStatus.toUpperCase()}`;
       contrastAAALi.style.display = 'block';
 
       return 1;
@@ -416,9 +421,9 @@ export function updateTargetSize(
     const wcag258Icon = targetSize.meetsWCAG258 ? '✅' : '❌';
     const wcag258Threshold = CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX;
     const wcag258Comparison = targetSize.meetsWCAG258 ? '≥' : '<';
-    (wcag258Li.firstChild as HTMLElement).textContent = wcag258Label;
+    (wcag258Li.firstChild as HTMLElement).textContent = `${wcag258Label}:`;
     (wcag258Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
+      `${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
     wcag258Li.style.display = 'block';
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
@@ -429,9 +434,9 @@ export function updateTargetSize(
     const wcag255Icon = targetSize.meetsWCAG255 ? '✅' : '❌';
     const wcag255Threshold = CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX;
     const wcag255Comparison = targetSize.meetsWCAG255 ? '≥' : '<';
-    (wcag255Li.firstChild as HTMLElement).textContent = wcag255Label;
+    (wcag255Li.firstChild as HTMLElement).textContent = `${wcag255Label}:`;
     (wcag255Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
+      `${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
     wcag255Li.style.display = 'block';
 
     // KWCAG 2.1.3 - 6mm diagonal length
@@ -446,9 +451,9 @@ export function updateTargetSize(
     const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
     const kwcag213Threshold = CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
     const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
-    (kwcag213Li.firstChild as HTMLElement).textContent = kwcag213Label;
+    (kwcag213Li.firstChild as HTMLElement).textContent = `${kwcag213Label}:`;
     (kwcag213Li.lastChild as HTMLElement).innerHTML =
-      ` : ${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
+      `${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
     kwcag213Li.style.display = 'block';
   } catch (error) {
     console.error('Target size 계산 오류:', error);

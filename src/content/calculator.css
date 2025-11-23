@@ -157,8 +157,8 @@
   padding: 5px 0 !important;
   margin: 0 !important;
   display: flex !important;
-  justify-content: space-between !important;
   align-items: center !important;
+  gap: 4px !important;
   border-bottom: 1px solid rgba(79, 70, 229, 0.1) !important;
 }
 
