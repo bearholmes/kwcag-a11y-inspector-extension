@@ -246,13 +246,13 @@ function setCSSDiagonal(
     widthLi.lastChild!.textContent = `${widthMm.toFixed(precision)}mm (${widthPx.toFixed(precision)}px)`;
     (diagonalLi.firstChild as HTMLElement).textContent = 'diagonal:';
     diagonalLi.lastChild!.textContent = `${diagonalMm.toFixed(precision)}mm (${diagonalPx.toFixed(precision)}px)`;
-    heightLi.style.display = 'block';
-    widthLi.style.display = 'block';
-    diagonalLi.style.display = 'block';
+    heightLi.classList.remove('a11y-inspector__hidden');
+    widthLi.classList.remove('a11y-inspector__hidden');
+    diagonalLi.classList.remove('a11y-inspector__hidden');
 
     return 1;
   } else {
-    diagonalLi.style.display = 'none';
+    diagonalLi.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -286,9 +286,9 @@ function setCSSColorContrast(
     const L2 = getL(backgroundColor);
 
     if (L1 === false || L2 === false) {
-      contrastLi.style.display = 'none';
-      contrastAALi.style.display = 'none';
-      contrastAAALi.style.display = 'none';
+      contrastLi.classList.add('a11y-inspector__hidden');
+      contrastAALi.classList.add('a11y-inspector__hidden');
+      contrastAAALi.classList.add('a11y-inspector__hidden');
       return 0;
     }
 
@@ -303,7 +303,7 @@ function setCSSColorContrast(
       (contrastLi.lastChild as HTMLElement).innerHTML = `${
         Math.round(ratio * 100) / 100
       }:1`;
-      contrastLi.style.display = 'block';
+      contrastLi.classList.remove('a11y-inspector__hidden');
 
       // Display AA compliance (4.5:1)
       const meetsAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AA_NORMAL;
@@ -315,7 +315,7 @@ function setCSSColorContrast(
         `${localizedWcag143AALabel}:`;
       (contrastAALi.lastChild as HTMLElement).innerHTML =
         `${aaIcon} ${aaStatus.toUpperCase()}`;
-      contrastAALi.style.display = 'block';
+      contrastAALi.classList.remove('a11y-inspector__hidden');
 
       // Display AAA compliance (7:1)
       const meetsAAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AAA_NORMAL;
@@ -327,20 +327,20 @@ function setCSSColorContrast(
         `${localizedWcag143AAALabel}:`;
       (contrastAAALi.lastChild as HTMLElement).innerHTML =
         `${aaaIcon} ${aaaStatus.toUpperCase()}`;
-      contrastAAALi.style.display = 'block';
+      contrastAAALi.classList.remove('a11y-inspector__hidden');
 
       return 1;
     } else {
-      contrastLi.style.display = 'none';
-      contrastAALi.style.display = 'none';
-      contrastAAALi.style.display = 'none';
+      contrastLi.classList.add('a11y-inspector__hidden');
+      contrastAALi.classList.add('a11y-inspector__hidden');
+      contrastAAALi.classList.add('a11y-inspector__hidden');
       return 0;
     }
   } catch (error) {
     console.error('색상 대비 계산 오류:', error);
-    contrastLi.style.display = 'none';
-    contrastAALi.style.display = 'none';
-    contrastAAALi.style.display = 'none';
+    contrastLi.classList.add('a11y-inspector__hidden');
+    contrastAALi.classList.add('a11y-inspector__hidden');
+    contrastAAALi.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -424,7 +424,7 @@ export function updateTargetSize(
     (wcag258Li.firstChild as HTMLElement).textContent = `${wcag258Label}:`;
     (wcag258Li.lastChild as HTMLElement).innerHTML =
       `${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
-    wcag258Li.style.display = 'block';
+    wcag258Li.classList.remove('a11y-inspector__hidden');
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
     const wcag255Label = localizedWcag255Label;
@@ -437,7 +437,7 @@ export function updateTargetSize(
     (wcag255Li.firstChild as HTMLElement).textContent = `${wcag255Label}:`;
     (wcag255Li.lastChild as HTMLElement).innerHTML =
       `${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
-    wcag255Li.style.display = 'block';
+    wcag255Li.classList.remove('a11y-inspector__hidden');
 
     // KWCAG 2.1.3 - 6mm diagonal length
     const kwcag213Label = localizedKwcag213Label;
@@ -454,12 +454,12 @@ export function updateTargetSize(
     (kwcag213Li.firstChild as HTMLElement).textContent = `${kwcag213Label}:`;
     (kwcag213Li.lastChild as HTMLElement).innerHTML =
       `${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
-    kwcag213Li.style.display = 'block';
+    kwcag213Li.classList.remove('a11y-inspector__hidden');
   } catch (error) {
     console.error('Target size 계산 오류:', error);
-    wcag258Li.style.display = 'none';
-    wcag255Li.style.display = 'none';
-    kwcag213Li.style.display = 'none';
+    wcag258Li.classList.add('a11y-inspector__hidden');
+    wcag255Li.classList.add('a11y-inspector__hidden');
+    kwcag213Li.classList.add('a11y-inspector__hidden');
   }
 }
 
