@@ -55,6 +55,14 @@
     "message": "Padrão",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "ex. 1080",
+    "description": "Espaço reservado para o campo de entrada de altura"
+  },
+  "calcWidthPlaceholder": {
+    "message": "ex. 1920",
+    "description": "Espaço reservado para o campo de entrada de largura"
+  },
   "errorInvalidInput": {
     "message": "Valor de entrada inválido.",
     "description": "Invalid input error"

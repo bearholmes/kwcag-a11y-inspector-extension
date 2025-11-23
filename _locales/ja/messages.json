@@ -55,6 +55,14 @@
     "message": "基準",
     "description": "基準表示"
   },
+  "calcHeightPlaceholder": {
+    "message": "例：1080",
+    "description": "高さ入力フィールドのプレースホルダー"
+  },
+  "calcWidthPlaceholder": {
+    "message": "例：1920",
+    "description": "幅入力フィールドのプレースホルダー"
+  },
   "errorInvalidInput": {
     "message": "無効な入力値です。",
     "description": "無効な入力エラー"
