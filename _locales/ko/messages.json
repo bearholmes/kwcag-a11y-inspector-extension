@@ -312,7 +312,7 @@
     "description": "향상된 목표 크기 레이블"
   },
   "targetSizeInfo": {
-    "message": "목표 크기 검사",
+    "message": "크기 검사",
     "description": "목표 크기 검사 섹션 레이블"
   },
   "settingTargetSizeCheck": {

@@ -104,7 +104,6 @@ span.a11y-inspector__property,
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  border-bottom: 1px solid rgba(51, 78, 104, 0.1) !important;
 }
 
 .a11y-inspector li:last-child {
@@ -123,6 +122,7 @@ span.a11y-inspector__property,
   overflow: hidden !important;
   font-weight: 600 !important;
   font-size: 11px !important;
+  margin-right: 7px !important;
 }
 
 .a11y-inspector span:not(.a11y-inspector__property) {
