@@ -111,7 +111,7 @@ span.a11y-inspector__property,
   border-bottom: none !important;
 }
 
-.a11y-inspector__hidden {
+.a11y-inspector li.a11y-inspector__hidden {
   display: none !important;
 }
 

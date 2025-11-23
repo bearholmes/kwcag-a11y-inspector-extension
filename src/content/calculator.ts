@@ -205,7 +205,6 @@ type CalculatorCallback = (result: CalculatorResult) => void;
       errorDiv.textContent = message;
       resultElement.appendChild(errorDiv);
     }
-    alert(message);
   }
 
   // ==================== MAIN CALCULATOR OBJECT ====================
