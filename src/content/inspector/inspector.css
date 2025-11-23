@@ -111,6 +111,10 @@ span.a11y-inspector__property,
   border-bottom: none !important;
 }
 
+.a11y-inspector__hidden {
+  display: none !important;
+}
+
 .a11y-inspector span.a11y-inspector__property {
   color: #1f2937 !important;
   float: none !important;
