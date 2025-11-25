@@ -37,6 +37,22 @@ const localizedKwcag213Label = getLocalizedMessage(
   'KWCAG 2.1.3',
 );
 
+const inspectorElementCache = new Map<string, HTMLElement | null>();
+
+function getInspectorElement(id: string): HTMLElement | null {
+  const cachedElement = inspectorElementCache.get(id);
+
+  if (cachedElement && cachedElement.isConnected) {
+    return cachedElement;
+  }
+
+  const document = getCurrentDocument();
+  const element = document.getElementById(id);
+
+  inspectorElementCache.set(id, element);
+  return element;
+}
+
 /**
  * 문자열에서 'px'를 제거하고 반올림한 값을 문자열로 반환
  * @param value - 픽셀 값 문자열 (예: "10.5px")
@@ -72,8 +88,8 @@ function setCSSPropertyIf(
   property: string,
   condition: boolean,
 ): number {
-  const document = getCurrentDocument();
-  const li = document.getElementById(`dkInspect_${property}`);
+  const li = getInspectorElement(`dkInspect_${property}`);
+  const valueNode = li?.lastChild;
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
@@ -81,9 +97,12 @@ function setCSSPropertyIf(
   }
 
   if (condition) {
-    (li.lastChild as HTMLElement).innerHTML = ` : ${element.getPropertyValue(
-      property,
-    )}`;
+    if (!valueNode) {
+      console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
+      return 0;
+    }
+
+    valueNode.textContent = ` : ${element.getPropertyValue(property)}`;
     li.style.display = 'block';
     return 1;
   } else {
@@ -103,15 +122,20 @@ function setCSSPropertyValue(
   property: string,
   value: string,
 ): void {
-  const document = getCurrentDocument();
-  const li = document.getElementById(`dkInspect_${property}`);
+  const li = getInspectorElement(`dkInspect_${property}`);
+  const valueNode = li?.lastChild;
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
     return;
   }
 
-  (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
+  if (!valueNode) {
+    console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
+    return;
+  }
+
+  valueNode.textContent = ` : ${value}`;
   li.style.display = 'block';
 }
 
@@ -129,8 +153,8 @@ function setCSSPropertyValueIf(
   value: string,
   condition: boolean,
 ): number {
-  const document = getCurrentDocument();
-  const li = document.getElementById(`dkInspect_${property}`);
+  const li = getInspectorElement(`dkInspect_${property}`);
+  const valueNode = li?.lastChild;
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
@@ -138,7 +162,12 @@ function setCSSPropertyValueIf(
   }
 
   if (condition) {
-    (li.lastChild as HTMLElement).innerHTML = ` : ${value}`;
+    if (!valueNode) {
+      console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
+      return 0;
+    }
+
+    valueNode.textContent = ` : ${value}`;
     li.style.display = 'block';
     return 1;
   } else {
@@ -152,8 +181,7 @@ function setCSSPropertyValueIf(
  * @param property - CSS 속성명
  */
 function hideCSSProperty(property: string): void {
-  const document = getCurrentDocument();
-  const li = document.getElementById(`dkInspect_${property}`);
+  const li = getInspectorElement(`dkInspect_${property}`);
   if (li) li.style.display = 'none';
 }
 
@@ -162,8 +190,7 @@ function hideCSSProperty(property: string): void {
  * @param category - 카테고리명
  */
 export function hideCSSCategory(category: string): void {
-  const document = getCurrentDocument();
-  const div = document.getElementById(`dkInspect_${category}`);
+  const div = getInspectorElement(`dkInspect_${category}`);
   if (div) div.style.display = 'none';
 }
 
@@ -183,10 +210,9 @@ function setCSSDiagonal(
   hasWidth: boolean,
   hasHeight: boolean,
 ): number {
-  const document = getCurrentDocument();
-  const heightLi = document.getElementById('dkInspect_h');
-  const widthLi = document.getElementById('dkInspect_w');
-  const diagonalLi = document.getElementById('dkInspect_diagonal');
+  const heightLi = getInspectorElement('dkInspect_h');
+  const widthLi = getInspectorElement('dkInspect_w');
+  const diagonalLi = getInspectorElement('dkInspect_diagonal');
 
   if (!heightLi || !widthLi || !diagonalLi) {
     console.warn('대각선 표시 요소를 찾을 수 없습니다');
@@ -262,10 +288,9 @@ function setCSSColorContrast(
   element: CSSStyleDeclaration,
   condition: boolean,
 ): number {
-  const document = getCurrentDocument();
-  const contrastLi = document.getElementById('dkInspect_contrast');
-  const contrastAALi = document.getElementById('dkInspect_contrastAA');
-  const contrastAAALi = document.getElementById('dkInspect_contrastAAA');
+  const contrastLi = getInspectorElement('dkInspect_contrast');
+  const contrastAALi = getInspectorElement('dkInspect_contrastAA');
+  const contrastAAALi = getInspectorElement('dkInspect_contrastAAA');
 
   if (!contrastLi || !contrastAALi || !contrastAAALi) {
     console.warn('대비 표시 요소를 찾을 수 없습니다');
@@ -294,10 +319,12 @@ function setCSSColorContrast(
     if (condition) {
       // Display contrast ratio
       const contrastLabel = localizedContrastRatioLabel;
+      const ratioValue = Math.round(ratio * 100) / 100;
+
       (contrastLi.firstChild as HTMLElement).textContent = contrastLabel;
-      (contrastLi.lastChild as HTMLElement).innerHTML = ` : ${
-        Math.round(ratio * 100) / 100
-      }:1`;
+      if (contrastLi.lastChild) {
+        contrastLi.lastChild.textContent = ` : ${ratioValue}:1`;
+      }
       contrastLi.style.display = 'block';
 
       // Display AA compliance (4.5:1)
@@ -308,8 +335,9 @@ function setCSSColorContrast(
       const aaIcon = meetsAA ? '✅' : '❌';
       (contrastAALi.firstChild as HTMLElement).textContent =
         localizedWcag143AALabel;
-      (contrastAALi.lastChild as HTMLElement).innerHTML =
-        ` : ${aaIcon} ${aaStatus.toUpperCase()}`;
+      if (contrastAALi.lastChild) {
+        contrastAALi.lastChild.textContent = ` : ${aaIcon} ${aaStatus.toUpperCase()}`;
+      }
       contrastAALi.style.display = 'block';
 
       // Display AAA compliance (7:1)
@@ -320,8 +348,9 @@ function setCSSColorContrast(
       const aaaIcon = meetsAAA ? '✅' : '❌';
       (contrastAAALi.firstChild as HTMLElement).textContent =
         localizedWcag143AAALabel;
-      (contrastAAALi.lastChild as HTMLElement).innerHTML =
-        ` : ${aaaIcon} ${aaaStatus.toUpperCase()}`;
+      if (contrastAAALi.lastChild) {
+        contrastAAALi.lastChild.textContent = ` : ${aaaIcon} ${aaaStatus.toUpperCase()}`;
+      }
       contrastAAALi.style.display = 'block';
 
       return 1;
@@ -345,6 +374,9 @@ function setCSSColorContrast(
  * @param element - CSS 스타일 객체
  */
 export function updateColorBackground(element: CSSStyleDeclaration): void {
+  const backgroundColor = getCSSProperty(element, 'background-color');
+  const isTransparent = backgroundColor === CONSTANTS.STYLE_VALUES.TRANSPARENT;
+
   setCSSPropertyValue(
     element,
     'color',
@@ -354,16 +386,11 @@ export function updateColorBackground(element: CSSStyleDeclaration): void {
   setCSSPropertyValueIf(
     element,
     'background-color',
-    RGBToHex(getCSSProperty(element, 'background-color')),
-    getCSSProperty(element, 'background-color') !==
-      CONSTANTS.STYLE_VALUES.TRANSPARENT,
+    RGBToHex(backgroundColor),
+    !isTransparent,
   );
 
-  setCSSColorContrast(
-    element,
-    getCSSProperty(element, 'background-color') !==
-      CONSTANTS.STYLE_VALUES.TRANSPARENT,
-  );
+  setCSSColorContrast(element, !isTransparent);
 }
 
 /**
@@ -395,10 +422,9 @@ export function updateTargetSize(
   domElement: HTMLElement,
   opt: InspectorOptions,
 ): void {
-  const document = getCurrentDocument();
-  const wcag258Li = document.getElementById('dkInspect_wcag258');
-  const wcag255Li = document.getElementById('dkInspect_wcag255');
-  const kwcag213Li = document.getElementById('dkInspect_kwcag213');
+  const wcag258Li = getInspectorElement('dkInspect_wcag258');
+  const wcag255Li = getInspectorElement('dkInspect_wcag255');
+  const kwcag213Li = getInspectorElement('dkInspect_kwcag213');
 
   if (!wcag258Li || !wcag255Li || !kwcag213Li) {
     console.warn('Target size 표시 요소를 찾을 수 없습니다');
@@ -417,8 +443,9 @@ export function updateTargetSize(
     const wcag258Threshold = CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX;
     const wcag258Comparison = targetSize.meetsWCAG258 ? '≥' : '<';
     (wcag258Li.firstChild as HTMLElement).textContent = wcag258Label;
-    (wcag258Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
+    if (wcag258Li.lastChild) {
+      wcag258Li.lastChild.textContent = ` : ${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
+    }
     wcag258Li.style.display = 'block';
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
@@ -430,8 +457,9 @@ export function updateTargetSize(
     const wcag255Threshold = CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX;
     const wcag255Comparison = targetSize.meetsWCAG255 ? '≥' : '<';
     (wcag255Li.firstChild as HTMLElement).textContent = wcag255Label;
-    (wcag255Li.lastChild as HTMLElement).innerHTML =
-      ` : ${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
+    if (wcag255Li.lastChild) {
+      wcag255Li.lastChild.textContent = ` : ${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
+    }
     wcag255Li.style.display = 'block';
 
     // KWCAG 2.1.3 - 6mm diagonal length
@@ -447,8 +475,9 @@ export function updateTargetSize(
     const kwcag213Threshold = CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
     const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
     (kwcag213Li.firstChild as HTMLElement).textContent = kwcag213Label;
-    (kwcag213Li.lastChild as HTMLElement).innerHTML =
-      ` : ${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
+    if (kwcag213Li.lastChild) {
+      kwcag213Li.lastChild.textContent = ` : ${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
+    }
     kwcag213Li.style.display = 'block';
   } catch (error) {
     console.error('Target size 계산 오류:', error);
