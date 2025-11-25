@@ -8,7 +8,6 @@ import {
   $,
   createElement,
   setTextContent,
-  setInnerHTML,
   addEventListenerSafe,
   toggleDisplay,
   addClassToElements,
@@ -142,28 +141,6 @@ describe('DOM Utilities', () => {
       expect(element.textContent).toContain('&');
       expect(element.textContent).toContain('<');
       expect(element.textContent).toContain('>');
-    });
-  });
-
-  describe('setInnerHTML', () => {
-    test('sets innerHTML (with deprecation warning)', () => {
-      const element = document.createElement('div');
-      setInnerHTML(element, '<span>Test</span>');
-      expect(element.innerHTML).toBe('<span>Test</span>');
-      expect(console.warn).toHaveBeenCalled();
-    });
-
-    test('shows deprecation warning', () => {
-      const element = document.createElement('div');
-      setInnerHTML(element, 'test');
-      expect(console.warn).toHaveBeenCalledWith(
-        'setInnerHTML is deprecated. Use createElement and appendChild instead.',
-      );
-    });
-
-    test('handles null element gracefully', () => {
-      setInnerHTML(null, '<div>test</div>');
-      expect(console.error).toHaveBeenCalled();
     });
   });
 

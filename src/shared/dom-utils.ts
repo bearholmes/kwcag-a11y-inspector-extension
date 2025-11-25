@@ -69,23 +69,6 @@ export function setTextContent(
 }
 
 /**
- * 안전하게 요소에 HTML 추가 (XSS 방지를 위해 textContent 사용 권장)
- * @deprecated HTML 주입 대신 createElement와 appendChild 사용을 권장합니다.
- * @param element - 대상 요소
- * @param html - HTML 문자열
- */
-export function setInnerHTML(element: HTMLElement | null, html: string): void {
-  console.warn(
-    'setInnerHTML is deprecated. Use createElement and appendChild instead.',
-  );
-  if (!element || !(element instanceof HTMLElement)) {
-    console.error('Invalid element provided to setInnerHTML');
-    return;
-  }
-  element.innerHTML = html;
-}
-
-/**
  * 요소에 이벤트 리스너 추가 (안전한 방식)
  * @param element - 대상 요소
  * @param event - 이벤트 타입
