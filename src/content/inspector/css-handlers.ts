@@ -9,6 +9,7 @@ import { RGBToHex, RGBToHexStr, getL } from './color-utils.ts';
 import { getCurrentDocument, getTargetSize } from './dom-utils.ts';
 import { getLocalizedMessage } from '../../shared/i18n-utils.ts';
 import { InspectorOptions } from './inspector-core.ts';
+import { setTextContent } from '../../shared/dom-utils.ts';
 
 const localizedContrastRatioLabel = getLocalizedMessage(
   'contrastRatioLabel',
@@ -60,6 +61,25 @@ function getCSSProperty(
   return element.getPropertyValue(property);
 }
 
+function setListItemText(
+  li: HTMLElement,
+  labelText: string,
+  valueText: string,
+): boolean {
+  const labelElement = li.firstElementChild as HTMLElement | null;
+  const valueElement = li.lastElementChild as HTMLElement | null;
+
+  if (!labelElement || !valueElement) {
+    console.warn('리스트 항목에 필요한 자식 요소를 찾을 수 없습니다');
+    return false;
+  }
+
+  setTextContent(labelElement, labelText);
+  setTextContent(valueElement, valueText);
+  li.classList.remove('a11y-inspector__hidden');
+  return true;
+}
+
 /**
  * CSS 속성을 조건에 따라 설정하고 표시/숨김 처리
  * @param element - CSS 스타일 객체
@@ -81,11 +101,12 @@ function setCSSPropertyIf(
   }
 
   if (condition) {
-    (li.firstChild as HTMLElement).textContent = `${property}:`;
-    (li.lastChild as HTMLElement).innerHTML =
-      element.getPropertyValue(property);
-    li.classList.remove('a11y-inspector__hidden');
-    return 1;
+    const updated = setListItemText(
+      li,
+      `${property}:`,
+      element.getPropertyValue(property),
+    );
+    return updated ? 1 : 0;
   } else {
     li.classList.add('a11y-inspector__hidden');
     return 0;
@@ -111,9 +132,7 @@ function setCSSPropertyValue(
     return;
   }
 
-  (li.firstChild as HTMLElement).textContent = `${property}:`;
-  (li.lastChild as HTMLElement).innerHTML = value;
-  li.classList.remove('a11y-inspector__hidden');
+  setListItemText(li, `${property}:`, value);
 }
 
 /**
@@ -139,10 +158,8 @@ function setCSSPropertyValueIf(
   }
 
   if (condition) {
-    (li.firstChild as HTMLElement).textContent = `${property}:`;
-    (li.lastChild as HTMLElement).innerHTML = value;
-    li.classList.remove('a11y-inspector__hidden');
-    return 1;
+    const updated = setListItemText(li, `${property}:`, value);
+    return updated ? 1 : 0;
   } else {
     li.classList.add('a11y-inspector__hidden');
     return 0;
@@ -299,11 +316,11 @@ function setCSSColorContrast(
     if (condition) {
       // Display contrast ratio
       const contrastLabel = localizedContrastRatioLabel;
-      (contrastLi.firstChild as HTMLElement).textContent = `${contrastLabel}:`;
-      (contrastLi.lastChild as HTMLElement).innerHTML = `${
-        Math.round(ratio * 100) / 100
-      }:1`;
-      contrastLi.classList.remove('a11y-inspector__hidden');
+      setListItemText(
+        contrastLi,
+        `${contrastLabel}:`,
+        `${Math.round(ratio * 100) / 100}:1`,
+      );
 
       // Display AA compliance (4.5:1)
       const meetsAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AA_NORMAL;
@@ -311,11 +328,11 @@ function setCSSColorContrast(
         ? localizedTargetSizePass
         : localizedTargetSizeFail;
       const aaIcon = meetsAA ? '✅' : '❌';
-      (contrastAALi.firstChild as HTMLElement).textContent =
-        `${localizedWcag143AALabel}:`;
-      (contrastAALi.lastChild as HTMLElement).innerHTML =
-        `${aaIcon} ${aaStatus.toUpperCase()}`;
-      contrastAALi.classList.remove('a11y-inspector__hidden');
+      setListItemText(
+        contrastAALi,
+        `${localizedWcag143AALabel}:`,
+        `${aaIcon} ${aaStatus.toUpperCase()}`,
+      );
 
       // Display AAA compliance (7:1)
       const meetsAAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AAA_NORMAL;
@@ -323,11 +340,11 @@ function setCSSColorContrast(
         ? localizedTargetSizePass
         : localizedTargetSizeFail;
       const aaaIcon = meetsAAA ? '✅' : '❌';
-      (contrastAAALi.firstChild as HTMLElement).textContent =
-        `${localizedWcag143AAALabel}:`;
-      (contrastAAALi.lastChild as HTMLElement).innerHTML =
-        `${aaaIcon} ${aaaStatus.toUpperCase()}`;
-      contrastAAALi.classList.remove('a11y-inspector__hidden');
+      setListItemText(
+        contrastAAALi,
+        `${localizedWcag143AAALabel}:`,
+        `${aaaIcon} ${aaaStatus.toUpperCase()}`,
+      );
 
       return 1;
     } else {
@@ -422,9 +439,11 @@ export function updateTargetSize(
     const wcag258Threshold = CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX;
     const wcag258Comparison = targetSize.meetsWCAG258 ? '≥' : '<';
     (wcag258Li.firstChild as HTMLElement).textContent = `${wcag258Label}:`;
-    (wcag258Li.lastChild as HTMLElement).innerHTML =
-      `${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
-    wcag258Li.classList.remove('a11y-inspector__hidden');
+    setListItemText(
+      wcag258Li,
+      `${wcag258Label}:`,
+      `${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`,
+    );
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
     const wcag255Label = localizedWcag255Label;
@@ -434,10 +453,11 @@ export function updateTargetSize(
     const wcag255Icon = targetSize.meetsWCAG255 ? '✅' : '❌';
     const wcag255Threshold = CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX;
     const wcag255Comparison = targetSize.meetsWCAG255 ? '≥' : '<';
-    (wcag255Li.firstChild as HTMLElement).textContent = `${wcag255Label}:`;
-    (wcag255Li.lastChild as HTMLElement).innerHTML =
-      `${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
-    wcag255Li.classList.remove('a11y-inspector__hidden');
+    setListItemText(
+      wcag255Li,
+      `${wcag255Label}:`,
+      `${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`,
+    );
 
     // KWCAG 2.1.3 - 6mm diagonal length
     const kwcag213Label = localizedKwcag213Label;
@@ -451,10 +471,11 @@ export function updateTargetSize(
     const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
     const kwcag213Threshold = CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
     const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
-    (kwcag213Li.firstChild as HTMLElement).textContent = `${kwcag213Label}:`;
-    (kwcag213Li.lastChild as HTMLElement).innerHTML =
-      `${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
-    kwcag213Li.classList.remove('a11y-inspector__hidden');
+    setListItemText(
+      kwcag213Li,
+      `${kwcag213Label}:`,
+      `${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`,
+    );
   } catch (error) {
     console.error('Target size 계산 오류:', error);
     wcag258Li.classList.add('a11y-inspector__hidden');

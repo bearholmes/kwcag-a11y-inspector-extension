@@ -32,6 +32,20 @@ export default [
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-undef': 'error',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[property.name='innerHTML']",
+          message:
+            '직접 innerHTML을 사용하지 마십시오. textContent 또는 전용 렌더링 헬퍼를 사용하세요.',
+        },
+        {
+          selector:
+            "MemberExpression[computed=true][property.value='innerHTML']",
+          message:
+            '직접 innerHTML을 사용하지 마십시오. textContent 또는 전용 렌더링 헬퍼를 사용하세요.',
+        },
+      ],
 
       // 코드 품질
       'no-var': 'error',
@@ -70,6 +84,20 @@ export default [
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[property.name='innerHTML']",
+          message:
+            '직접 innerHTML을 사용하지 마십시오. textContent 또는 전용 렌더링 헬퍼를 사용하세요.',
+        },
+        {
+          selector:
+            "MemberExpression[computed=true][property.value='innerHTML']",
+          message:
+            '직접 innerHTML을 사용하지 마십시오. textContent 또는 전용 렌더링 헬퍼를 사용하세요.',
+        },
+      ],
 
       // 코드 품질
       'no-var': 'error',
