@@ -55,6 +55,14 @@
     "message": "标准",
     "description": "标准显示"
   },
+  "calcHeightPlaceholder": {
+    "message": "例如：48",
+    "description": "高度输入字段占位符"
+  },
+  "calcWidthPlaceholder": {
+    "message": "例如：48",
+    "description": "宽度输入字段占位符"
+  },
   "errorInvalidInput": {
     "message": "无效的输入值。",
     "description": "无效输入错误"

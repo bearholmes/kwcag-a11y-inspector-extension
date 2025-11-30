@@ -55,6 +55,14 @@
     "message": "標準",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "例如：48",
+    "description": "高度輸入欄位佔位符"
+  },
+  "calcWidthPlaceholder": {
+    "message": "例如：48",
+    "description": "寬度輸入欄位佔位符"
+  },
   "errorInvalidInput": {
     "message": "無效的輸入值。",
     "description": "Invalid input error"

@@ -55,6 +55,14 @@
     "message": "기준",
     "description": "기준 표시"
   },
+  "calcHeightPlaceholder": {
+    "message": "예: 48",
+    "description": "높이 입력 필드 플레이스홀더"
+  },
+  "calcWidthPlaceholder": {
+    "message": "예: 48",
+    "description": "너비 입력 필드 플레이스홀더"
+  },
   "errorInvalidInput": {
     "message": "유효하지 않은 입력값입니다.",
     "description": "잘못된 입력 에러"
@@ -304,7 +312,7 @@
     "description": "향상된 목표 크기 레이블"
   },
   "targetSizeInfo": {
-    "message": "목표 크기 검사",
+    "message": "크기 검사",
     "description": "목표 크기 검사 섹션 레이블"
   },
   "settingTargetSizeCheck": {

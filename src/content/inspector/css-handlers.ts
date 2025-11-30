@@ -9,6 +9,7 @@ import { RGBToHex, RGBToHexStr, getL } from './color-utils.ts';
 import { getCurrentDocument, getTargetSize } from './dom-utils.ts';
 import { getLocalizedMessage } from '../../shared/i18n-utils.ts';
 import { InspectorOptions } from './inspector-core.ts';
+import { setTextContent } from '../../shared/dom-utils.ts';
 
 const localizedContrastRatioLabel = getLocalizedMessage(
   'contrastRatioLabel',
@@ -37,22 +38,6 @@ const localizedKwcag213Label = getLocalizedMessage(
   'KWCAG 2.1.3',
 );
 
-const inspectorElementCache = new Map<string, HTMLElement | null>();
-
-function getInspectorElement(id: string): HTMLElement | null {
-  const cachedElement = inspectorElementCache.get(id);
-
-  if (cachedElement && cachedElement.isConnected) {
-    return cachedElement;
-  }
-
-  const document = getCurrentDocument();
-  const element = document.getElementById(id);
-
-  inspectorElementCache.set(id, element);
-  return element;
-}
-
 /**
  * 문자열에서 'px'를 제거하고 반올림한 값을 문자열로 반환
  * @param value - 픽셀 값 문자열 (예: "10.5px")
@@ -76,6 +61,25 @@ function getCSSProperty(
   return element.getPropertyValue(property);
 }
 
+function setListItemText(
+  li: HTMLElement,
+  labelText: string,
+  valueText: string,
+): boolean {
+  const labelElement = li.firstElementChild as HTMLElement | null;
+  const valueElement = li.lastElementChild as HTMLElement | null;
+
+  if (!labelElement || !valueElement) {
+    console.warn('리스트 항목에 필요한 자식 요소를 찾을 수 없습니다');
+    return false;
+  }
+
+  setTextContent(labelElement, labelText);
+  setTextContent(valueElement, valueText);
+  li.classList.remove('a11y-inspector__hidden');
+  return true;
+}
+
 /**
  * CSS 속성을 조건에 따라 설정하고 표시/숨김 처리
  * @param element - CSS 스타일 객체
@@ -88,8 +92,8 @@ function setCSSPropertyIf(
   property: string,
   condition: boolean,
 ): number {
-  const li = getInspectorElement(`dkInspect_${property}`);
-  const valueNode = li?.lastChild;
+  const document = getCurrentDocument();
+  const li = document.getElementById(`dkInspect_${property}`);
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
@@ -97,16 +101,14 @@ function setCSSPropertyIf(
   }
 
   if (condition) {
-    if (!valueNode) {
-      console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
-      return 0;
-    }
-
-    valueNode.textContent = ` : ${element.getPropertyValue(property)}`;
-    li.style.display = 'block';
-    return 1;
+    const updated = setListItemText(
+      li,
+      `${property}:`,
+      element.getPropertyValue(property),
+    );
+    return updated ? 1 : 0;
   } else {
-    li.style.display = 'none';
+    li.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -122,21 +124,15 @@ function setCSSPropertyValue(
   property: string,
   value: string,
 ): void {
-  const li = getInspectorElement(`dkInspect_${property}`);
-  const valueNode = li?.lastChild;
+  const document = getCurrentDocument();
+  const li = document.getElementById(`dkInspect_${property}`);
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
     return;
   }
 
-  if (!valueNode) {
-    console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
-    return;
-  }
-
-  valueNode.textContent = ` : ${value}`;
-  li.style.display = 'block';
+  setListItemText(li, `${property}:`, value);
 }
 
 /**
@@ -153,8 +149,8 @@ function setCSSPropertyValueIf(
   value: string,
   condition: boolean,
 ): number {
-  const li = getInspectorElement(`dkInspect_${property}`);
-  const valueNode = li?.lastChild;
+  const document = getCurrentDocument();
+  const li = document.getElementById(`dkInspect_${property}`);
 
   if (!li) {
     console.warn(`요소를 찾을 수 없습니다: dkInspect_${property}`);
@@ -162,16 +158,10 @@ function setCSSPropertyValueIf(
   }
 
   if (condition) {
-    if (!valueNode) {
-      console.warn(`값 노드를 찾을 수 없습니다: dkInspect_${property}`);
-      return 0;
-    }
-
-    valueNode.textContent = ` : ${value}`;
-    li.style.display = 'block';
-    return 1;
+    const updated = setListItemText(li, `${property}:`, value);
+    return updated ? 1 : 0;
   } else {
-    li.style.display = 'none';
+    li.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -181,8 +171,9 @@ function setCSSPropertyValueIf(
  * @param property - CSS 속성명
  */
 function hideCSSProperty(property: string): void {
-  const li = getInspectorElement(`dkInspect_${property}`);
-  if (li) li.style.display = 'none';
+  const document = getCurrentDocument();
+  const li = document.getElementById(`dkInspect_${property}`);
+  if (li) li.classList.add('a11y-inspector__hidden');
 }
 
 /**
@@ -190,7 +181,8 @@ function hideCSSProperty(property: string): void {
  * @param category - 카테고리명
  */
 export function hideCSSCategory(category: string): void {
-  const div = getInspectorElement(`dkInspect_${category}`);
+  const document = getCurrentDocument();
+  const div = document.getElementById(`dkInspect_${category}`);
   if (div) div.style.display = 'none';
 }
 
@@ -210,9 +202,10 @@ function setCSSDiagonal(
   hasWidth: boolean,
   hasHeight: boolean,
 ): number {
-  const heightLi = getInspectorElement('dkInspect_h');
-  const widthLi = getInspectorElement('dkInspect_w');
-  const diagonalLi = getInspectorElement('dkInspect_diagonal');
+  const document = getCurrentDocument();
+  const heightLi = document.getElementById('dkInspect_h');
+  const widthLi = document.getElementById('dkInspect_w');
+  const diagonalLi = document.getElementById('dkInspect_diagonal');
 
   if (!heightLi || !widthLi || !diagonalLi) {
     console.warn('대각선 표시 요소를 찾을 수 없습니다');
@@ -264,16 +257,19 @@ function setCSSDiagonal(
 
     // 표시 업데이트
     const precision = CONSTANTS.MEASUREMENT.SIZE_PRECISION;
-    heightLi.lastChild!.textContent = ` : ${heightMm.toFixed(precision)}mm (${heightPx.toFixed(precision)}px)`;
-    widthLi.lastChild!.textContent = ` : ${widthMm.toFixed(precision)}mm (${widthPx.toFixed(precision)}px)`;
-    diagonalLi.lastChild!.textContent = ` : ${diagonalMm.toFixed(precision)}mm (${diagonalPx.toFixed(precision)}px)`;
-    heightLi.style.display = 'block';
-    widthLi.style.display = 'block';
-    diagonalLi.style.display = 'block';
+    (heightLi.firstChild as HTMLElement).textContent = 'height:';
+    heightLi.lastChild!.textContent = `${heightMm.toFixed(precision)}mm (${heightPx.toFixed(precision)}px)`;
+    (widthLi.firstChild as HTMLElement).textContent = 'width:';
+    widthLi.lastChild!.textContent = `${widthMm.toFixed(precision)}mm (${widthPx.toFixed(precision)}px)`;
+    (diagonalLi.firstChild as HTMLElement).textContent = 'diagonal:';
+    diagonalLi.lastChild!.textContent = `${diagonalMm.toFixed(precision)}mm (${diagonalPx.toFixed(precision)}px)`;
+    heightLi.classList.remove('a11y-inspector__hidden');
+    widthLi.classList.remove('a11y-inspector__hidden');
+    diagonalLi.classList.remove('a11y-inspector__hidden');
 
     return 1;
   } else {
-    diagonalLi.style.display = 'none';
+    diagonalLi.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -288,9 +284,10 @@ function setCSSColorContrast(
   element: CSSStyleDeclaration,
   condition: boolean,
 ): number {
-  const contrastLi = getInspectorElement('dkInspect_contrast');
-  const contrastAALi = getInspectorElement('dkInspect_contrastAA');
-  const contrastAAALi = getInspectorElement('dkInspect_contrastAAA');
+  const document = getCurrentDocument();
+  const contrastLi = document.getElementById('dkInspect_contrast');
+  const contrastAALi = document.getElementById('dkInspect_contrastAA');
+  const contrastAAALi = document.getElementById('dkInspect_contrastAAA');
 
   if (!contrastLi || !contrastAALi || !contrastAAALi) {
     console.warn('대비 표시 요소를 찾을 수 없습니다');
@@ -306,9 +303,9 @@ function setCSSColorContrast(
     const L2 = getL(backgroundColor);
 
     if (L1 === false || L2 === false) {
-      contrastLi.style.display = 'none';
-      contrastAALi.style.display = 'none';
-      contrastAAALi.style.display = 'none';
+      contrastLi.classList.add('a11y-inspector__hidden');
+      contrastAALi.classList.add('a11y-inspector__hidden');
+      contrastAAALi.classList.add('a11y-inspector__hidden');
       return 0;
     }
 
@@ -319,13 +316,11 @@ function setCSSColorContrast(
     if (condition) {
       // Display contrast ratio
       const contrastLabel = localizedContrastRatioLabel;
-      const ratioValue = Math.round(ratio * 100) / 100;
-
-      (contrastLi.firstChild as HTMLElement).textContent = contrastLabel;
-      if (contrastLi.lastChild) {
-        contrastLi.lastChild.textContent = ` : ${ratioValue}:1`;
-      }
-      contrastLi.style.display = 'block';
+      setListItemText(
+        contrastLi,
+        `${contrastLabel}:`,
+        `${Math.round(ratio * 100) / 100}:1`,
+      );
 
       // Display AA compliance (4.5:1)
       const meetsAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AA_NORMAL;
@@ -333,12 +328,11 @@ function setCSSColorContrast(
         ? localizedTargetSizePass
         : localizedTargetSizeFail;
       const aaIcon = meetsAA ? '✅' : '❌';
-      (contrastAALi.firstChild as HTMLElement).textContent =
-        localizedWcag143AALabel;
-      if (contrastAALi.lastChild) {
-        contrastAALi.lastChild.textContent = ` : ${aaIcon} ${aaStatus.toUpperCase()}`;
-      }
-      contrastAALi.style.display = 'block';
+      setListItemText(
+        contrastAALi,
+        `${localizedWcag143AALabel}:`,
+        `${aaIcon} ${aaStatus.toUpperCase()}`,
+      );
 
       // Display AAA compliance (7:1)
       const meetsAAA = ratio >= CONSTANTS.WCAG_CONTRAST.RATIO_AAA_NORMAL;
@@ -346,25 +340,24 @@ function setCSSColorContrast(
         ? localizedTargetSizePass
         : localizedTargetSizeFail;
       const aaaIcon = meetsAAA ? '✅' : '❌';
-      (contrastAAALi.firstChild as HTMLElement).textContent =
-        localizedWcag143AAALabel;
-      if (contrastAAALi.lastChild) {
-        contrastAAALi.lastChild.textContent = ` : ${aaaIcon} ${aaaStatus.toUpperCase()}`;
-      }
-      contrastAAALi.style.display = 'block';
+      setListItemText(
+        contrastAAALi,
+        `${localizedWcag143AAALabel}:`,
+        `${aaaIcon} ${aaaStatus.toUpperCase()}`,
+      );
 
       return 1;
     } else {
-      contrastLi.style.display = 'none';
-      contrastAALi.style.display = 'none';
-      contrastAAALi.style.display = 'none';
+      contrastLi.classList.add('a11y-inspector__hidden');
+      contrastAALi.classList.add('a11y-inspector__hidden');
+      contrastAAALi.classList.add('a11y-inspector__hidden');
       return 0;
     }
   } catch (error) {
     console.error('색상 대비 계산 오류:', error);
-    contrastLi.style.display = 'none';
-    contrastAALi.style.display = 'none';
-    contrastAAALi.style.display = 'none';
+    contrastLi.classList.add('a11y-inspector__hidden');
+    contrastAALi.classList.add('a11y-inspector__hidden');
+    contrastAAALi.classList.add('a11y-inspector__hidden');
     return 0;
   }
 }
@@ -374,9 +367,6 @@ function setCSSColorContrast(
  * @param element - CSS 스타일 객체
  */
 export function updateColorBackground(element: CSSStyleDeclaration): void {
-  const backgroundColor = getCSSProperty(element, 'background-color');
-  const isTransparent = backgroundColor === CONSTANTS.STYLE_VALUES.TRANSPARENT;
-
   setCSSPropertyValue(
     element,
     'color',
@@ -386,11 +376,16 @@ export function updateColorBackground(element: CSSStyleDeclaration): void {
   setCSSPropertyValueIf(
     element,
     'background-color',
-    RGBToHex(backgroundColor),
-    !isTransparent,
+    RGBToHex(getCSSProperty(element, 'background-color')),
+    getCSSProperty(element, 'background-color') !==
+      CONSTANTS.STYLE_VALUES.TRANSPARENT,
   );
 
-  setCSSColorContrast(element, !isTransparent);
+  setCSSColorContrast(
+    element,
+    getCSSProperty(element, 'background-color') !==
+      CONSTANTS.STYLE_VALUES.TRANSPARENT,
+  );
 }
 
 /**
@@ -422,9 +417,10 @@ export function updateTargetSize(
   domElement: HTMLElement,
   opt: InspectorOptions,
 ): void {
-  const wcag258Li = getInspectorElement('dkInspect_wcag258');
-  const wcag255Li = getInspectorElement('dkInspect_wcag255');
-  const kwcag213Li = getInspectorElement('dkInspect_kwcag213');
+  const document = getCurrentDocument();
+  const wcag258Li = document.getElementById('dkInspect_wcag258');
+  const wcag255Li = document.getElementById('dkInspect_wcag255');
+  const kwcag213Li = document.getElementById('dkInspect_kwcag213');
 
   if (!wcag258Li || !wcag255Li || !kwcag213Li) {
     console.warn('Target size 표시 요소를 찾을 수 없습니다');
@@ -442,11 +438,12 @@ export function updateTargetSize(
     const wcag258Icon = targetSize.meetsWCAG258 ? '✅' : '❌';
     const wcag258Threshold = CONSTANTS.ACCESSIBILITY.WCAG_258_CSS_PX;
     const wcag258Comparison = targetSize.meetsWCAG258 ? '≥' : '<';
-    (wcag258Li.firstChild as HTMLElement).textContent = wcag258Label;
-    if (wcag258Li.lastChild) {
-      wcag258Li.lastChild.textContent = ` : ${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`;
-    }
-    wcag258Li.style.display = 'block';
+    (wcag258Li.firstChild as HTMLElement).textContent = `${wcag258Label}:`;
+    setListItemText(
+      wcag258Li,
+      `${wcag258Label}:`,
+      `${wcag258Icon} ${wcag258Status} (${wcag258Comparison} ${wcag258Threshold}×${wcag258Threshold}px)`,
+    );
 
     // WCAG 2.5.5 (AAA) - 44x44 CSS pixels
     const wcag255Label = localizedWcag255Label;
@@ -456,11 +453,11 @@ export function updateTargetSize(
     const wcag255Icon = targetSize.meetsWCAG255 ? '✅' : '❌';
     const wcag255Threshold = CONSTANTS.ACCESSIBILITY.WCAG_255_CSS_PX;
     const wcag255Comparison = targetSize.meetsWCAG255 ? '≥' : '<';
-    (wcag255Li.firstChild as HTMLElement).textContent = wcag255Label;
-    if (wcag255Li.lastChild) {
-      wcag255Li.lastChild.textContent = ` : ${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`;
-    }
-    wcag255Li.style.display = 'block';
+    setListItemText(
+      wcag255Li,
+      `${wcag255Label}:`,
+      `${wcag255Icon} ${wcag255Status} (${wcag255Comparison} ${wcag255Threshold}×${wcag255Threshold}px)`,
+    );
 
     // KWCAG 2.1.3 - 6mm diagonal length
     const kwcag213Label = localizedKwcag213Label;
@@ -474,16 +471,16 @@ export function updateTargetSize(
     const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
     const kwcag213Threshold = CONSTANTS.ACCESSIBILITY.KWCAG_213_MM;
     const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
-    (kwcag213Li.firstChild as HTMLElement).textContent = kwcag213Label;
-    if (kwcag213Li.lastChild) {
-      kwcag213Li.lastChild.textContent = ` : ${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`;
-    }
-    kwcag213Li.style.display = 'block';
+    setListItemText(
+      kwcag213Li,
+      `${kwcag213Label}:`,
+      `${kwcag213Icon} ${kwcag213Status} (${kwcag213Comparison} ${kwcag213Threshold.toFixed(1)}mm)`,
+    );
   } catch (error) {
     console.error('Target size 계산 오류:', error);
-    wcag258Li.style.display = 'none';
-    wcag255Li.style.display = 'none';
-    kwcag213Li.style.display = 'none';
+    wcag258Li.classList.add('a11y-inspector__hidden');
+    wcag255Li.classList.add('a11y-inspector__hidden');
+    kwcag213Li.classList.add('a11y-inspector__hidden');
   }
 }
 

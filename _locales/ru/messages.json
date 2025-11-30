@@ -55,6 +55,14 @@
     "message": "Стандарт",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "напр. 48",
+    "description": "Заполнитель для поля ввода высоты"
+  },
+  "calcWidthPlaceholder": {
+    "message": "напр. 48",
+    "description": "Заполнитель для поля ввода ширины"
+  },
   "errorInvalidInput": {
     "message": "Неверное значение ввода.",
     "description": "Invalid input error"

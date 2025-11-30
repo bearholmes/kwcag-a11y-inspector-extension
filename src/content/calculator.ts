@@ -6,10 +6,10 @@ import { StorageManager } from '../shared/storage-utils.ts';
 interface CalculatorResult {
   monitor: string;
   resolution: string;
-  height: string;
-  width: string;
-  diagonal: string;
-  diagonal_px: string;
+  height: number;
+  width: number;
+  diagonal: number;
+  diagonal_px: number;
 }
 
 /**
@@ -19,8 +19,12 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
 (function (): void {
   // ==================== EARLY EXIT CHECK ====================
-  // calculator가 이미 존재하면 중복 초기화 방지
-  if (document.querySelector('.a11y-calculator')) {
+  // calculator가 이미 존재하면 다시 표시
+  const existingCalculator = document.querySelector(
+    '.a11y-calculator',
+  ) as HTMLElement | null;
+  if (existingCalculator) {
+    existingCalculator.style.display = 'block';
     return;
   }
 
@@ -48,6 +52,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     RESULT: 'a11y-calculator__result',
     PROPERTY: 'a11y-calculator__property',
     BUTTON: 'a11y-calculator__button',
+    ACTIONS: 'a11y-calculator__actions',
   } as const;
 
   /**
@@ -67,6 +72,9 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     MM_PER_INCH: 25.4,
     DECIMAL_PLACES_STANDARD: 2,
     DECIMAL_PLACES_RESULT: 1,
+    KWCAG_213_MM: 6.0,
+    WCAG_258_CSS_PX: 24,
+    WCAG_255_CSS_PX: 44,
   } as const;
 
   /**
@@ -96,6 +104,14 @@ type CalculatorCallback = (result: CalculatorResult) => void;
     CALC_CLOSE: 'calcClose',
     CALC_RESULTS: 'calcResults',
     CALC_STANDARD: 'calcStandard',
+    CALC_HEIGHT_PLACEHOLDER: 'calcHeightPlaceholder',
+    CALC_WIDTH_PLACEHOLDER: 'calcWidthPlaceholder',
+    WCAG_258_LABEL: 'wcag258Label',
+    WCAG_255_LABEL: 'wcag255Label',
+    KWCAG_213_LABEL: 'kwcag213Label',
+    TARGET_SIZE_PASS: 'targetSizePass',
+    TARGET_SIZE_FAIL: 'targetSizeFail',
+    TARGET_SIZE_INFO: 'targetSizeInfo',
   } as const;
 
   /**
@@ -191,7 +207,6 @@ type CalculatorCallback = (result: CalculatorResult) => void;
       errorDiv.textContent = message;
       resultElement.appendChild(errorDiv);
     }
-    alert(message);
   }
 
   // ==================== MAIN CALCULATOR OBJECT ====================
@@ -214,6 +229,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const container = doc.createElement('div');
         container.id = ELEMENT_IDS.CONTAINER;
         container.className = CSS_CLASSES.CONTAINER;
+        container.style.display = 'block';
 
         // "h1" 요소를 생성하고, 이 요소에 계산기 제목 텍스트 노드를 추가합니다.
         const header = doc.createElement('h1');
@@ -293,6 +309,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const heightInput = doc.createElement('input');
         heightInput.type = 'text';
         heightInput.id = ELEMENT_IDS.INPUT_HEIGHT;
+        heightInput.placeholder =
+          getMessage(MESSAGE_KEYS.CALC_HEIGHT_PLACEHOLDER) || 'e.g. 48';
         heightInputSpan.appendChild(heightInput);
         heightInputSpan.appendChild(doc.createTextNode(' px'));
         heightLi.appendChild(heightLabelSpan);
@@ -311,6 +329,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const widthInput = doc.createElement('input');
         widthInput.type = 'text';
         widthInput.id = ELEMENT_IDS.INPUT_WIDTH;
+        widthInput.placeholder =
+          getMessage(MESSAGE_KEYS.CALC_WIDTH_PLACEHOLDER) || 'e.g. 48';
         widthInputSpan.appendChild(widthInput);
         widthInputSpan.appendChild(doc.createTextNode(' px'));
         widthLi.appendChild(widthLabelSpan);
@@ -319,8 +339,8 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
         // Buttons
         const btnLi = doc.createElement('li');
+        btnLi.classList.add(CSS_CLASSES.ACTIONS);
         const btnSpan = doc.createElement('span');
-        btnSpan.style.cssFloat = 'right';
         const submitBtn = doc.createElement('button');
         submitBtn.id = ELEMENT_IDS.BTN_SUBMIT;
         submitBtn.className = CSS_CLASSES.BUTTON;
@@ -341,7 +361,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         // 결과를 출력할 "div" 요소를 생성하고, ID와 클래스를 설정합니다.
         const result = doc.createElement('div');
         result.id = ELEMENT_IDS.RESULT;
-        result.className = CSS_CLASSES.RESULT;
+        result.className = `${CSS_CLASSES.RESULT} a11y-inspector__content`;
         container.appendChild(result);
 
         // 새로 생성한 "div" 요소를 "body" 요소에 추가합니다.
@@ -389,13 +409,14 @@ type CalculatorCallback = (result: CalculatorResult) => void;
           return;
         }
 
-        // "body" 요소에서 "container" 요소를 제거합니다.
-        const body = window.document.getElementsByTagName('BODY')[0];
-        if (!body) {
-          throw new Error('Body element not found');
-        }
+        // DOM 제거 대신 숨기기 (재사용 가능하도록)
+        container.style.display = 'none';
 
-        body.removeChild(container);
+        // 결과 영역 초기화
+        const resultElement = $(ELEMENT_IDS.RESULT);
+        if (resultElement) {
+          resultElement.textContent = '';
+        }
       } catch (error) {
         console.error('Error in close:', error);
         // 닫기 실패는 심각한 문제가 아니므로 사용자에게 알리지 않음
@@ -444,66 +465,138 @@ type CalculatorCallback = (result: CalculatorResult) => void;
           return;
         }
 
+        const heightValue = Number(h);
+        const widthValue = Number(w);
+
         // "setDiagonal" 함수를 호출하여 계산을 수행합니다.
-        await cals.setDiagonal(h, w, function (cb: CalculatorResult): void {
-          try {
-            // 결과를 출력하기 위해 "dkInspect_cals_result" ID를 가진 요소를 찾아 가져옵니다.
-            const res = $(ELEMENT_IDS.RESULT);
+        await cals.setDiagonal(
+          heightValue,
+          widthValue,
+          function (cb: CalculatorResult): void {
+            try {
+              // 결과를 출력하기 위해 "dkInspect_cals_result" ID를 가진 요소를 찾아 가져옵니다.
+              const res = $(ELEMENT_IDS.RESULT);
 
-            if (!validateElement(res, 'Result Container')) {
-              return;
+              if (!validateElement(res, 'Result Container')) {
+                return;
+              }
+
+              // 이전 내용을 모두 지웁니다.
+              res.textContent = '';
+
+              // WCAG 적합여부 계산
+              const meetsWCAG258 =
+                heightValue >= CALCULATION_CONSTANTS.WCAG_258_CSS_PX &&
+                widthValue >= CALCULATION_CONSTANTS.WCAG_258_CSS_PX;
+              const meetsWCAG255 =
+                heightValue >= CALCULATION_CONSTANTS.WCAG_255_CSS_PX &&
+                widthValue >= CALCULATION_CONSTANTS.WCAG_255_CSS_PX;
+              const diagonalMm = cb.diagonal;
+              const meetsKWCAG213 =
+                diagonalMm >= CALCULATION_CONSTANTS.KWCAG_213_MM;
+
+              const wcag258Status = meetsWCAG258
+                ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+                : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
+              const wcag255Status = meetsWCAG255
+                ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+                : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
+              const kwcag213Status = meetsKWCAG213
+                ? getMessage(MESSAGE_KEYS.TARGET_SIZE_PASS) || 'Pass'
+                : getMessage(MESSAGE_KEYS.TARGET_SIZE_FAIL) || 'Fail';
+
+              const wcag258Icon = meetsWCAG258 ? '✅' : '❌';
+              const wcag255Icon = meetsWCAG255 ? '✅' : '❌';
+              const kwcag213Icon = meetsKWCAG213 ? '✅' : '❌';
+
+              const wcag258Comparison = meetsWCAG258 ? '≥' : '<';
+              const wcag255Comparison = meetsWCAG255 ? '≥' : '<';
+              const kwcag213Comparison = meetsKWCAG213 ? '≥' : '<';
+
+              const createCategory = (
+                title: string,
+                items: Array<{ label: string; value: string }>,
+              ): HTMLDivElement => {
+                const category = doc.createElement('div');
+                category.className =
+                  'a11y-calculator__category a11y-inspector__category';
+
+                const heading = doc.createElement('h2');
+                heading.textContent = title;
+                category.appendChild(heading);
+
+                const listElement = doc.createElement('ul');
+                items.forEach((item) => {
+                  const li = doc.createElement('li');
+
+                  const labelSpan = doc.createElement('span');
+                  labelSpan.className = `${CSS_CLASSES.PROPERTY} a11y-inspector__property`;
+                  labelSpan.textContent = `${item.label}:`;
+
+                  const valueSpan = doc.createElement('span');
+                  valueSpan.textContent = item.value;
+
+                  li.appendChild(labelSpan);
+                  li.appendChild(valueSpan);
+                  listElement.appendChild(li);
+                });
+
+                category.appendChild(listElement);
+                return category;
+              };
+
+              const lengthCategory = createCategory('Length', [
+                {
+                  label: 'height',
+                  value: `${cb.height.toFixed(1)}mm (${heightValue.toFixed(1)}px)`,
+                },
+                {
+                  label: 'width',
+                  value: `${cb.width.toFixed(1)}mm (${widthValue.toFixed(1)}px)`,
+                },
+                {
+                  label: 'diagonal',
+                  value: `${cb.diagonal.toFixed(1)}mm (${cb.diagonal_px.toFixed(1)}px)`,
+                },
+              ]);
+
+              const targetSizeCategory = createCategory(
+                getMessage(MESSAGE_KEYS.TARGET_SIZE_INFO) ||
+                  'Target Size Check',
+                [
+                  {
+                    label:
+                      getMessage(MESSAGE_KEYS.WCAG_258_LABEL) ||
+                      'WCAG 2.5.8 (AA)',
+                    value: `${wcag258Icon} ${(wcag258Status || 'PASS').toUpperCase()} (${wcag258Comparison} ${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_258_CSS_PX}px)`,
+                  },
+                  {
+                    label:
+                      getMessage(MESSAGE_KEYS.WCAG_255_LABEL) ||
+                      'WCAG 2.5.5 (AAA)',
+                    value: `${wcag255Icon} ${(wcag255Status || 'PASS').toUpperCase()} (${wcag255Comparison} ${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}×${CALCULATION_CONSTANTS.WCAG_255_CSS_PX}px)`,
+                  },
+                  {
+                    label:
+                      getMessage(MESSAGE_KEYS.KWCAG_213_LABEL) || 'KWCAG 2.1.3',
+                    value: `${kwcag213Icon} ${(kwcag213Status || 'PASS').toUpperCase()} (${kwcag213Comparison} ${CALCULATION_CONSTANTS.KWCAG_213_MM.toFixed(1)}mm)`,
+                  },
+                ],
+              );
+
+              res.appendChild(lengthCategory);
+              res.appendChild(targetSizeCategory);
+
+              // 해상도와 모니터 크기 정보를 "span" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
+              const span = doc.createElement('span');
+              span.textContent = ` * ${getMessage(MESSAGE_KEYS.CALC_STANDARD)} : ${cb.resolution} (${cb.monitor} inch)`;
+              res.appendChild(span);
+            } catch (error) {
+              console.error('Error in submit callback:', error);
+              displayError(ERROR_MESSAGES.RESULT_DISPLAY);
             }
-
-            // 이전 내용을 모두 지우고, "h2" 요소를 추가하여 결과 제목 텍스트 노드를 출력합니다.
-            res.textContent = '';
-            const header = doc.createElement('h2');
-            header.appendChild(
-              doc.createTextNode(getMessage(MESSAGE_KEYS.CALC_RESULTS)),
-            );
-            res.appendChild(header);
-
-            // 입력값과 계산 결과를 "ul" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
-            const list = [
-              { label: 'height', value: `${cb.height} mm (${h}px)` },
-              { label: 'width', value: `${cb.width} mm (${w}px)` },
-              {
-                label: 'diagonal',
-                value: `${cb.diagonal} mm (${cb.diagonal_px}px)`,
-              },
-            ];
-
-            // "list" 배열에 저장된 값들을 이용하여 "ul" 요소를 생성하고, 이 요소에 "li" 요소들을 추가합니다.
-            const ul = doc.createElement('ul');
-            list.forEach((item) => {
-              // "li" 요소를 생성하고, 안전하게 DOM 요소를 추가합니다.
-              const li = doc.createElement('li');
-
-              const labelSpan = doc.createElement('span');
-              labelSpan.className = CSS_CLASSES.PROPERTY;
-              labelSpan.textContent = ` ${item.label} : `;
-
-              const valueSpan = doc.createElement('span');
-              valueSpan.textContent = item.value;
-
-              li.appendChild(labelSpan);
-              li.appendChild(valueSpan);
-
-              // 생성된 "li" 요소를 "ul" 요소에 추가합니다.
-              ul.appendChild(li);
-            });
-
-            // "ul" 요소를 "dkInspect_cals_result" 요소에 추가합니다.
-            res.appendChild(ul);
-
-            // 해상도와 모니터 크기 정보를 "span" 요소에 추가하여 "dkInspect_cals_result" 요소에 출력합니다.
-            const span = doc.createElement('span');
-            span.textContent = ` * ${getMessage(MESSAGE_KEYS.CALC_STANDARD)} : ${cb.resolution} (${cb.monitor} inch)`;
-            res.appendChild(span);
-          } catch (error) {
-            console.error('Error in submit callback:', error);
-            displayError(ERROR_MESSAGES.RESULT_DISPLAY);
-          }
-        });
+          },
+        );
       } catch (error) {
         console.error('Error in submit:', error);
         displayError(ERROR_MESSAGES.CALCULATION_ERROR);
@@ -558,9 +651,14 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const { resolutions, monitors } = data;
 
         // 계산 결과를 저장할 객체를 생성합니다.
-        const cb: Partial<CalculatorResult> = {};
-        cb.monitor = String(monitors);
-        cb.resolution = String(resolutions);
+        const cb: CalculatorResult = {
+          monitor: String(monitors),
+          resolution: String(resolutions),
+          height: 0,
+          width: 0,
+          diagonal: 0,
+          diagonal_px: 0,
+        };
 
         // 해상도의 가로 세로 값을 구합니다.
         const std_res = cb.resolution.split('x');
@@ -600,20 +698,28 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const widthNum = parseFloat(String(w));
 
         // 입력받은 높이와 너비를 이용하여, 실제 높이와 너비를 구합니다.
-        cb.height = (heightNum * std_px).toFixed(
-          CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+        cb.height = Number(
+          (heightNum * std_px).toFixed(
+            CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+          ),
         ); // to mm
-        cb.width = (widthNum * std_px).toFixed(
-          CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+        cb.width = Number(
+          (widthNum * std_px).toFixed(
+            CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+          ),
         ); // to mm
-        cb.diagonal = Math.sqrt(
-          Math.pow(Number(cb.width), 2) + Math.pow(Number(cb.height), 2),
-        ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to mm
+        cb.diagonal = Number(
+          Math.sqrt(Math.pow(cb.width, 2) + Math.pow(cb.height, 2)).toFixed(
+            CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+          ),
+        ); // to mm
 
         // 입력받은 높이와 너비를 이용하여 대각선 길이(px)를 구합니다.
-        cb.diagonal_px = Math.sqrt(
-          Math.pow(heightNum, 2) + Math.pow(widthNum, 2),
-        ).toFixed(CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT); // to px
+        cb.diagonal_px = Number(
+          Math.sqrt(Math.pow(heightNum, 2) + Math.pow(widthNum, 2)).toFixed(
+            CALCULATION_CONSTANTS.DECIMAL_PLACES_RESULT,
+          ),
+        ); // to px
 
         // 계산 결과를 콜백 함수에 전달합니다.
         callback(cb as CalculatorResult);

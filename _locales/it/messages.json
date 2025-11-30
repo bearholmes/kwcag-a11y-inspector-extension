@@ -55,6 +55,14 @@
     "message": "Standard",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "es. 48",
+    "description": "Segnaposto del campo di input altezza"
+  },
+  "calcWidthPlaceholder": {
+    "message": "es. 48",
+    "description": "Segnaposto del campo di input larghezza"
+  },
   "errorInvalidInput": {
     "message": "Valore di input non valido.",
     "description": "Invalid input error"

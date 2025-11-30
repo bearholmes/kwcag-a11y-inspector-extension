@@ -55,6 +55,14 @@
     "message": "Standard",
     "description": "Standard label"
   },
+  "calcHeightPlaceholder": {
+    "message": "par ex. 48",
+    "description": "Espace réservé pour le champ de saisie de hauteur"
+  },
+  "calcWidthPlaceholder": {
+    "message": "par ex. 48",
+    "description": "Espace réservé pour le champ de saisie de largeur"
+  },
   "errorInvalidInput": {
     "message": "Valeur d'entrée invalide.",
     "description": "Invalid input error"
