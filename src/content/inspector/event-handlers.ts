@@ -129,6 +129,11 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    * @this HTMLElement 이벤트가 발생한 요소
    */
   function handleMouseOver(this: HTMLElement, e: MouseEvent): void {
+    // 일시정지 상태 체크
+    if (window.__kwcagShortcutState?.isPaused) {
+      return;
+    }
+
     const document = getCurrentDocument();
     const block = document.querySelector(
       '.a11y-inspector',
@@ -369,6 +374,11 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    * @this HTMLElement 이벤트가 발생한 요소
    */
   function handleMouseOut(this: HTMLElement, e: MouseEvent): void {
+    // 일시정지 상태 체크
+    if (window.__kwcagShortcutState?.isPaused) {
+      return;
+    }
+
     const document = getCurrentDocument();
     const block = document.querySelector(
       '.a11y-inspector',
@@ -429,6 +439,11 @@ export function createEventHandlers(opt: InspectorOptions): EventHandlers {
    * @this HTMLElement 이벤트가 발생한 요소
    */
   function handleMouseMove(this: HTMLElement, e: MouseEvent): void {
+    // 일시정지 상태 체크
+    if (window.__kwcagShortcutState?.isPaused) {
+      return;
+    }
+
     const document = getCurrentDocument();
     const block = document.querySelector(
       '.a11y-inspector',

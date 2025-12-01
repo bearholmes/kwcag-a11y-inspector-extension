@@ -10,19 +10,6 @@ import {
 import { createShortcutManager } from './shortcut-manager.ts';
 import { getLocalizedMessage } from '../../shared/i18n-utils.ts';
 
-/*!
- * BASE on CSSViewer, CSSViewer 기반으로 작성되었습니다.
- * CSSViewer, A Google Chrome Extension for fellow web developers, web designers, and hobbyists.
- *
- * https://github.com/miled/cssviewer
- * https://chrome.google.com/webstore/detail/cssviewer/ggfgijbpiheegefliciemofobhmofgce
- *
- * Copyright (c) 2006, 2008 Nicolas Huon
- *
- * This source code is licensed under the GNU General Public License,
- * Version 2. See the file COPYING for more details.
- */
-
 /**
  * 전역 window 객체에 Inspector 인스턴스 저장을 위한 타입 확장
  */
@@ -182,6 +169,12 @@ async function myApp(): Promise<AppConfig> {
     if (existingTracking) {
       existingTracking.remove();
     }
+
+    // 단축키 관리자 정리
+    if (window.__kwcagInspector?.shortcutManager) {
+      window.__kwcagInspector.shortcutManager.cleanup();
+    }
+
     return;
   }
 
@@ -197,7 +190,7 @@ async function myApp(): Promise<AppConfig> {
   );
 
   // 단축키 관리자 생성 및 초기화
-  const shortcutManager = createShortcutManager(inspector);
+  const shortcutManager = createShortcutManager();
   shortcutManager.initialize();
 
   // 전역 window 객체에 저장 (단축키용)

@@ -38,8 +38,15 @@ describe('Shortcut Manager', () => {
       addEventListeners: jest.fn(),
     };
 
-    // shortcut manager 생성
-    shortcutManager = createShortcutManager(mockInspector);
+    // 전역 상태 초기화
+    window.__kwcagShortcutState = undefined;
+    window.__kwcagInspector = {
+      inspector: mockInspector,
+      shortcutManager: null,
+    };
+
+    // shortcut manager 생성 (매개변수 없음)
+    shortcutManager = createShortcutManager();
 
     // Chrome API 초기화
     global.chrome.runtime.lastError = null;
@@ -50,6 +57,11 @@ describe('Shortcut Manager', () => {
     // Timers 정리
     jest.runOnlyPendingTimers();
     jest.useRealTimers();
+
+    // 전역 상태 정리
+    if (shortcutManager && shortcutManager.cleanup) {
+      shortcutManager.cleanup();
+    }
   });
 
   describe('createShortcutManager', () => {
@@ -194,34 +206,72 @@ describe('Shortcut Manager', () => {
     });
   });
 
-  describe('initialize', () => {
-    test('sends message to chrome runtime', () => {
-      shortcutManager.initialize();
+  describe('cleanup', () => {
+    test('removes event listener and clears state', () => {
+      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
 
-      expect(global.chrome.runtime.sendMessage).toHaveBeenCalledWith(
-        { cmd: 'pause' },
+      shortcutManager.initialize();
+      shortcutManager.cleanup();
+
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        'keyup',
         expect.any(Function),
+        false,
       );
+      expect(window.__kwcagShortcutState.keyupHandler).toBeNull();
+      expect(window.__kwcagShortcutState.isPaused).toBe(false);
+      expect(window.__kwcagShortcutState.shortcutManager).toBeNull();
+
+      removeEventListenerSpy.mockRestore();
     });
 
-    test('handles chrome runtime error gracefully', () => {
-      const consoleWarnSpy = jest
-        .spyOn(console, 'warn')
-        .mockImplementation(() => {});
-
-      global.chrome.runtime.sendMessage.mockImplementation((msg, callback) => {
-        global.chrome.runtime.lastError = { message: 'Test error' };
-        callback();
-      });
-
+    test('cleanup can be called without initialization', () => {
       expect(() => {
-        shortcutManager.initialize();
+        shortcutManager.cleanup();
       }).not.toThrow();
+    });
+  });
 
-      expect(consoleWarnSpy).toHaveBeenCalled();
+  describe('initialize', () => {
+    test('registers keyup event listener', () => {
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
 
-      consoleWarnSpy.mockRestore();
-      global.chrome.runtime.lastError = null;
+      shortcutManager.initialize();
+
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        'keyup',
+        expect.any(Function),
+        false,
+      );
+
+      addEventListenerSpy.mockRestore();
+    });
+
+    test('sets up global state', () => {
+      shortcutManager.initialize();
+
+      expect(window.__kwcagShortcutState).toBeDefined();
+      expect(window.__kwcagShortcutState.keyupHandler).not.toBeNull();
+      expect(window.__kwcagShortcutState.isPaused).toBe(false);
+      expect(window.__kwcagShortcutState.shortcutManager).toBe(shortcutManager);
+    });
+
+    test('removes old handler and registers new one on re-initialization', () => {
+      const addEventListenerSpy = jest.spyOn(window, 'addEventListener');
+      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
+
+      // 첫 번째 초기화
+      shortcutManager.initialize();
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(1);
+      expect(removeEventListenerSpy).not.toHaveBeenCalled();
+
+      // 두 번째 초기화 - 기존 핸들러 제거 후 새로 등록
+      shortcutManager.initialize();
+      expect(removeEventListenerSpy).toHaveBeenCalledTimes(1);
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(2);
+
+      addEventListenerSpy.mockRestore();
+      removeEventListenerSpy.mockRestore();
     });
 
     test('handles initialization error', () => {
@@ -229,9 +279,11 @@ describe('Shortcut Manager', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      global.chrome.runtime.sendMessage.mockImplementation(() => {
+      // 강제로 에러 발생
+      const originalAddEventListener = window.addEventListener;
+      window.addEventListener = () => {
         throw new Error('Initialization failed');
-      });
+      };
 
       expect(() => {
         shortcutManager.initialize();
@@ -239,6 +291,7 @@ describe('Shortcut Manager', () => {
 
       expect(consoleErrorSpy).toHaveBeenCalled();
 
+      window.addEventListener = originalAddEventListener;
       consoleErrorSpy.mockRestore();
     });
   });
