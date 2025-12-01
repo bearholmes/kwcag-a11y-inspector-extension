@@ -1,11 +1,12 @@
 {
   "name": "kwcag-a11y-inspector",
-  "version": "0.16.0",
+  "version": "1.0.0",
   "type": "module",
   "description": "KWCAG 2.1 Accessibility Inspector - Chrome Extension for measuring operable criteria",
   "scripts": {
     "dev": "vite build --watch --mode development",
     "build": "vite build",
+    "build:zip": "npm run build && cd dist && zip -r ../kwcag-a11y-inspector-v$npm_package_version.zip . && cd ..",
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,ts}'",
     "lint:fix": "eslint 'src/**/*.{js,ts}' --fix",
