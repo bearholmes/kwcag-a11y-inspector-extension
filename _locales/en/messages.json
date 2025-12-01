@@ -40,8 +40,8 @@
     "description": "Width label"
   },
   "calcConfirm": {
-    "message": "Confirm",
-    "description": "Confirm button"
+    "message": "Calculate",
+    "description": "Calculate button"
   },
   "calcClose": {
     "message": "Close",

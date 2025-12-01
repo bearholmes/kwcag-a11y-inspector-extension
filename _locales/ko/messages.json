@@ -40,8 +40,8 @@
     "description": "너비 레이블"
   },
   "calcConfirm": {
-    "message": "확인",
-    "description": "확인 버튼"
+    "message": "계산",
+    "description": "계산 버튼"
   },
   "calcClose": {
     "message": "닫기",

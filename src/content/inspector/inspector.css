@@ -24,7 +24,6 @@ span.a11y-inspector__property,
   text-indent: 0 !important;
   text-align: left !important;
   visibility: visible !important;
-  width: auto !important;
   height: auto !important;
   line-height: 1.5;
   clear: both !important;
@@ -33,6 +32,7 @@ span.a11y-inspector__property,
 
 .a11y-inspector {
   display: none;
+  width: 320px !important;
   color: #1f2937 !important;
   position: absolute !important;
   border: 1px solid #e5e7eb !important;
@@ -55,7 +55,6 @@ span.a11y-inspector__property,
   display: block !important;
   background-color: #334e68 !important;
   padding: 8px 12px !important;
-  max-width: 320px !important;
   overflow: hidden !important;
 }
 

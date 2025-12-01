@@ -100,18 +100,22 @@ chrome.contextMenus.onClicked.addListener(
           return;
         }
 
-        // calculator.js 스크립트 주입
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: () => {
-            import(chrome.runtime.getURL('content/calculator.js'));
-          },
-        });
-
         // calculator.css 스타일시트 주입
         await chrome.scripting.insertCSS({
           target: { tabId: tab.id },
           files: ['calculator.css'],
+        });
+
+        // calculator.js 스크립트 주입
+        // 타임스탬프를 추가하여 모듈 캐시 우회 - 매번 새로 실행됨
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            const timestamp = Date.now();
+            import(
+              chrome.runtime.getURL(`content/calculator.js?t=${timestamp}`)
+            );
+          },
         });
       }
     } catch (error) {

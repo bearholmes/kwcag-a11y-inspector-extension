@@ -19,14 +19,10 @@ type CalculatorCallback = (result: CalculatorResult) => void;
 
 (function (): void {
   // ==================== EARLY EXIT CHECK ====================
-  // calculator가 이미 존재하면 다시 표시
+  // calculator가 이미 존재하는지 확인
   const existingCalculator = document.querySelector(
     '.a11y-calculator',
   ) as HTMLElement | null;
-  if (existingCalculator) {
-    existingCalculator.style.display = 'block';
-    return;
-  }
 
   // ==================== CONSTANTS ====================
 
@@ -229,13 +225,24 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         const container = doc.createElement('div');
         container.id = ELEMENT_IDS.CONTAINER;
         container.className = CSS_CLASSES.CONTAINER;
-        container.style.display = 'block';
 
         // "h1" 요소를 생성하고, 이 요소에 계산기 제목 텍스트 노드를 추가합니다.
         const header = doc.createElement('h1');
         header.appendChild(
           doc.createTextNode(getMessage(MESSAGE_KEYS.CALC_TITLE)),
         );
+
+        // X 닫기 버튼 생성
+        const closeBtn = doc.createElement('button');
+        closeBtn.id = ELEMENT_IDS.BTN_CLOSE;
+        closeBtn.className = 'a11y-calculator__close-btn';
+        closeBtn.textContent = '×';
+        closeBtn.setAttribute(
+          'aria-label',
+          getMessage(MESSAGE_KEYS.CALC_CLOSE),
+        );
+        header.appendChild(closeBtn);
+
         container.appendChild(header);
 
         // 드래그 기능 추가 - addEventListener 사용으로 충돌 방지
@@ -345,12 +352,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         submitBtn.id = ELEMENT_IDS.BTN_SUBMIT;
         submitBtn.className = CSS_CLASSES.BUTTON;
         submitBtn.textContent = getMessage(MESSAGE_KEYS.CALC_CONFIRM);
-        const closeBtn = doc.createElement('button');
-        closeBtn.id = ELEMENT_IDS.BTN_CLOSE;
-        closeBtn.className = CSS_CLASSES.BUTTON;
-        closeBtn.textContent = getMessage(MESSAGE_KEYS.CALC_CLOSE);
         btnSpan.appendChild(submitBtn);
-        btnSpan.appendChild(closeBtn);
         btnLi.appendChild(btnSpan);
         ul.appendChild(btnLi);
 
@@ -410,7 +412,7 @@ type CalculatorCallback = (result: CalculatorResult) => void;
         }
 
         // DOM 제거 대신 숨기기 (재사용 가능하도록)
-        container.style.display = 'none';
+        container.style.setProperty('display', 'none', 'important');
 
         // 결과 영역 초기화
         const resultElement = $(ELEMENT_IDS.RESULT);
@@ -736,6 +738,31 @@ type CalculatorCallback = (result: CalculatorResult) => void;
   // ==================== INITIALIZATION ====================
 
   try {
+    // calculator가 이미 존재하면 다시 표시하고 이벤트 리스너만 재등록
+    if (existingCalculator) {
+      // display: none을 제거하여 다시 표시 (CSS의 기본값으로 복원)
+      existingCalculator.style.removeProperty('display');
+
+      // 기존 이벤트 리스너 제거 (중복 방지)
+      const closeBtn = $(ELEMENT_IDS.BTN_CLOSE);
+      const submitBtn = $(ELEMENT_IDS.BTN_SUBMIT);
+
+      if (closeBtn) {
+        // 기존 리스너를 제거하기 위해 clone & replace 방법 사용
+        const newCloseBtn = closeBtn.cloneNode(true) as HTMLElement;
+        closeBtn.parentNode?.replaceChild(newCloseBtn, closeBtn);
+        newCloseBtn.addEventListener('click', cals.close);
+      }
+
+      if (submitBtn) {
+        const newSubmitBtn = submitBtn.cloneNode(true) as HTMLElement;
+        submitBtn.parentNode?.replaceChild(newSubmitBtn, submitBtn);
+        newSubmitBtn.addEventListener('click', cals.submit);
+      }
+
+      return; // 이미 존재하는 경우 여기서 종료
+    }
+
     // "dkInspect_cals" 요소가 없을 경우에만 "cals.initialize()" 함수를 호출하여 계산기 UI를 초기화합니다.
     if (!$(ELEMENT_IDS.CONTAINER)) {
       cals.initialize();
