@@ -1,0 +1,122 @@
+name: Lint Code
+
+on:
+  pull_request:
+    branches: ['**']
+  push:
+    branches: ['main', 'master', 'develop']
+
+jobs:
+  lint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check code formatting
+        run: |
+          npm run format -- --check
+          if [ $? -ne 0 ]; then
+            echo "❌ Code formatting check failed"
+            echo "Please run 'npm run format' locally and commit the changes"
+            exit 1
+          fi
+
+      - name: Run ESLint
+        run: npm run lint -- --format=json --output-file=eslint-report.json
+        continue-on-error: true
+
+      - name: Annotate code with ESLint results
+        if: always()
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          eslint_flags: 'src/**/*.{js,ts}'
+          fail_level: error
+          filter_mode: added
+
+      - name: Upload ESLint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eslint-report
+          path: eslint-report.json
+
+      - name: Comment PR with lint results
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            let report;
+
+            try {
+              const reportContent = fs.readFileSync('eslint-report.json', 'utf8');
+              report = JSON.parse(reportContent);
+            } catch (error) {
+              console.error('Failed to read ESLint report:', error);
+              return;
+            }
+
+            const results = report.filter(r => r.errorCount > 0 || r.warningCount > 0);
+
+            if (results.length === 0) return;
+
+            let totalErrors = 0;
+            let totalWarnings = 0;
+            let commentBody = '## ⚠️ ESLint Report\n\n';
+
+            results.forEach(result => {
+              totalErrors += result.errorCount;
+              totalWarnings += result.warningCount;
+
+              if (result.messages.length > 0) {
+                commentBody += `\n### 📄 \`${result.filePath.replace(process.cwd() + '/', '')}\`\n\n`;
+                commentBody += '| Line | Column | Severity | Message | Rule |\n';
+                commentBody += '|------|--------|----------|---------|------|\n';
+
+                result.messages.forEach(msg => {
+                  const severity = msg.severity === 2 ? '🔴 Error' : '🟡 Warning';
+                  const line = msg.line || '-';
+                  const column = msg.column || '-';
+                  const message = msg.message.replace(/\|/g, '\\|');
+                  const rule = msg.ruleId || '-';
+
+                  commentBody += `| ${line} | ${column} | ${severity} | ${message} | ${rule} |\n`;
+                });
+              }
+            });
+
+            commentBody += `\n---\n**Summary**: ${totalErrors} error(s), ${totalWarnings} warning(s)\n\n`;
+
+            if (totalErrors > 0) {
+              commentBody += '❌ **This PR cannot be merged due to ESLint errors.**\n';
+              commentBody += 'Please fix all errors before requesting a review.\n';
+            } else {
+              commentBody += '⚠️ **Please review and fix the warnings.**\n';
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });

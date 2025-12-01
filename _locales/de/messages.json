@@ -1,0 +1,334 @@
+{
+  "extName": {
+    "message": "KWCAG A11y Inspector",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "KWCAG 2.1.3 Messwerkzeug für Bedienbarkeit",
+    "description": "Extension description"
+  },
+  "contextMenuCalc": {
+    "message": "Manuellen Rechner öffnen",
+    "description": "Context menu item"
+  },
+  "alertChromeInternal": {
+    "message": "Funktioniert nicht auf internen Chrome/Edge-Seiten.",
+    "description": "Internal page warning"
+  },
+  "alertStorePage": {
+    "message": "Funktioniert nicht auf Store-Seiten.",
+    "description": "Store page warning"
+  },
+  "alertRestrictedPage": {
+    "message": "Erweiterung kann auf dieser Seite nicht verwendet werden.\n(Eingeschränkte Seite)",
+    "description": "Restricted page warning"
+  },
+  "alertExtensionError": {
+    "message": "Beim Ausführen der Erweiterung ist ein Fehler aufgetreten.\nBitte überprüfen Sie die Konsole.",
+    "description": "General error message"
+  },
+  "calcTitle": {
+    "message": "Manuelle Berechnung",
+    "description": "Calculator title"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "Height label"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "Width label"
+  },
+  "calcConfirm": {
+    "message": "Bestätigen",
+    "description": "Confirm button"
+  },
+  "calcClose": {
+    "message": "Schließen",
+    "description": "Close button"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "Results title"
+  },
+  "calcStandard": {
+    "message": "Standard",
+    "description": "Standard label"
+  },
+  "calcHeightPlaceholder": {
+    "message": "z.B. 48",
+    "description": "Platzhalter für Höheneingabefeld"
+  },
+  "calcWidthPlaceholder": {
+    "message": "z.B. 48",
+    "description": "Platzhalter für Breiteneingabefeld"
+  },
+  "errorInvalidInput": {
+    "message": "Ungültiger Eingabewert.",
+    "description": "Invalid input error"
+  },
+  "errorMissingElement": {
+    "message": "Erforderliches Element nicht gefunden.",
+    "description": "Element missing error"
+  },
+  "errorStorage": {
+    "message": "Daten können nicht aus dem Speicher gelesen werden.",
+    "description": "Storage error"
+  },
+  "errorCalculation": {
+    "message": "Während der Berechnung ist ein Fehler aufgetreten.",
+    "description": "Calculation error"
+  },
+  "errorInputValidation": {
+    "message": "Nur positive Zahlen sind zulässig.",
+    "description": "Input validation error"
+  },
+  "errorUIInit": {
+    "message": "UI-Initialisierung fehlgeschlagen.",
+    "description": "UI initialization error"
+  },
+  "errorResultDisplay": {
+    "message": "Fehler beim Anzeigen der Ergebnisse.",
+    "description": "Result display error"
+  },
+  "errorCalcInit": {
+    "message": "Rechner-Initialisierung fehlgeschlagen.",
+    "description": "Calculator initialization error"
+  },
+  "pauseMessage": {
+    "message": "Pausiert. Drücken Sie ESC zum Fortsetzen.",
+    "description": "Pause message"
+  },
+  "resumeMessage": {
+    "message": "Fortgesetzt.",
+    "description": "Resume message"
+  },
+  "optionPageTitle": {
+    "message": "KWCAG A11y Inspector - Optionen",
+    "description": "Options page title"
+  },
+  "optionVersion": {
+    "message": "Version",
+    "description": "Version label"
+  },
+  "optionMenu": {
+    "message": "Optionsmenü",
+    "description": "Options menu title"
+  },
+  "optionContent": {
+    "message": "Optionsinhalt",
+    "description": "Options content title"
+  },
+  "menuIntro": {
+    "message": "Einführung",
+    "description": "Introduction menu"
+  },
+  "menuShortcuts": {
+    "message": "Tastenkombinationen",
+    "description": "Shortcuts menu"
+  },
+  "menuSettings": {
+    "message": "Einstellungen",
+    "description": "Settings menu"
+  },
+  "menuReferences": {
+    "message": "Referenzen",
+    "description": "References menu"
+  },
+  "menuSupport": {
+    "message": "Support",
+    "description": "Support menu"
+  },
+  "introDesc1": {
+    "message": "Bietet Funktionen zur Messung der KWCAG 2.1 2.1.3 Bedienbarkeit-Testitems",
+    "description": "Introduction description 1"
+  },
+  "introDesc2": {
+    "message": "WCAG 2.2 Zielgrößenprüfung: Echtzeit-Anzeige der WCAG 2.5.8 (AA) und 2.5.5 (AAA) Konformität",
+    "description": "Introduction description 2"
+  },
+  "introDesc3": {
+    "message": "Standard: box + padding + border",
+    "description": "Introduction description 3"
+  },
+  "introTip": {
+    "message": "Tipp",
+    "description": "Tip label"
+  },
+  "introWarning1": {
+    "message": "* Hinweis: Aufgrund der Chrome-Eigenschaften können Inhalte in iframe/frame nicht überprüft werden.",
+    "description": "Introduction warning 1"
+  },
+  "introWarning2": {
+    "message": "* Sie können den manuellen Rechner über das Kontextmenü öffnen, das beim Rechtsklick angezeigt wird.",
+    "description": "Introduction warning 2"
+  },
+  "shortcutDesc": {
+    "message": "Die Verwendung von Tastenkombinationen macht es bequemer.",
+    "description": "Shortcut description"
+  },
+  "shortcutEsc": {
+    "message": "Pause / Fortsetzen (verfügbar wenn aktiviert)",
+    "description": "ESC shortcut description"
+  },
+  "settingResolution": {
+    "message": "Auflösungsstandard",
+    "description": "Resolution setting label"
+  },
+  "settingMonitor": {
+    "message": "Monitorstandard",
+    "description": "Monitor setting label"
+  },
+  "settingContrastCheck": {
+    "message": "Kontrastprüfung",
+    "description": "Contrast check setting label"
+  },
+  "settingBoxCheck": {
+    "message": "Box Model Check",
+    "description": "Box model check setting label"
+  },
+  "settingSelectorLine": {
+    "message": "Selektor-Linie",
+    "description": "Selector line setting label"
+  },
+  "settingSelectorColor": {
+    "message": "Selektor-Farbe",
+    "description": "Selector color setting label"
+  },
+  "settingSelectorBorder": {
+    "message": "Selektor-Rahmen",
+    "description": "Selector border setting label"
+  },
+  "settingLinkMode": {
+    "message": "Link-Modus",
+    "description": "Link mode setting label"
+  },
+  "settingLinkModeOn": {
+    "message": "EIN (beschränkt auf a, button, input-Elemente)",
+    "description": "Link mode ON label"
+  },
+  "settingLinkModeDesc": {
+    "message": "- Nur bis zu übergeordneten Elementen prüfen",
+    "description": "Link mode description"
+  },
+  "settingLinkModeOff": {
+    "message": "AUS (alle Elemente)",
+    "description": "Link mode OFF label"
+  },
+  "settingLineTypeSolid": {
+    "message": "Durchgezogen",
+    "description": "Solid line label"
+  },
+  "settingLineTypeDashed": {
+    "message": "Gestrichelt",
+    "description": "Dashed line label"
+  },
+  "settingLineTypeDotted": {
+    "message": "Gepunktet",
+    "description": "Dotted line label"
+  },
+  "settingSaveButton": {
+    "message": "Einstellungen speichern",
+    "description": "Save settings button"
+  },
+  "settingOn": {
+    "message": "EIN",
+    "description": "ON label"
+  },
+  "settingOff": {
+    "message": "AUS",
+    "description": "OFF label"
+  },
+  "refBasedOn": {
+    "message": "Basierend auf CSSViewer entwickelt.",
+    "description": "CSSViewer reference description"
+  },
+  "refContrast": {
+    "message": "Die Kontrastprüfungsfunktion basiert auf WebAIMs Color Contrast Checker.",
+    "description": "WebAIM reference description"
+  },
+  "refDiagonal": {
+    "message": "Referenziert die Diagnosemethode des Accessibility Component Diagonal Tools.",
+    "description": "Diagonal tool reference description"
+  },
+  "refPageRuler": {
+    "message": "Die Idee zur Berechnung von Elementen mit auto-Breite/-Höhe stammt von Page Ruler.",
+    "description": "Page Ruler reference description"
+  },
+  "refMoreLink": {
+    "message": "mehr",
+    "description": "More link text"
+  },
+  "supportDesc": {
+    "message": "Kontaktieren Sie uns jederzeit bei Fragen oder Verbesserungsvorschlägen.",
+    "description": "Support description"
+  },
+  "supportLink": {
+    "message": "Kontakt",
+    "description": "Contact link text"
+  },
+  "settingSaved": {
+    "message": "Einstellungen erfolgreich gespeichert.",
+    "description": "Settings saved message"
+  },
+  "translationDisclaimer": {
+    "message": "Übersetzungen werden maschinell bereitgestellt und können Fehler enthalten. Bitte melden Sie Ungenauigkeiten.",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "Übersetzungsfehler melden",
+    "description": "Report translation error link"
+  },
+  "wcag258Label": {
+    "message": "WCAG 2.5.8 (AA)",
+    "description": "WCAG 2.5.8 Target Size Minimum label"
+  },
+  "wcag255Label": {
+    "message": "WCAG 2.5.5 (AAA)",
+    "description": "WCAG 2.5.5 Target Size Enhanced label"
+  },
+  "kwcag213Label": {
+    "message": "KWCAG 2.1.3",
+    "description": "KWCAG 2.1.3 minimum size label"
+  },
+  "targetSizePass": {
+    "message": "Pass",
+    "description": "Target size requirement passed"
+  },
+  "targetSizeFail": {
+    "message": "Fail",
+    "description": "Target size requirement failed"
+  },
+  "cssPixelSize": {
+    "message": "CSS pixels",
+    "description": "CSS pixel unit"
+  },
+  "targetSizeMinimum": {
+    "message": "Target Size (Minimum)",
+    "description": "Minimum target size label"
+  },
+  "targetSizeEnhanced": {
+    "message": "Target Size (Enhanced)",
+    "description": "Enhanced target size label"
+  },
+  "targetSizeInfo": {
+    "message": "Target Size Check",
+    "description": "Target size check section label"
+  },
+  "settingTargetSizeCheck": {
+    "message": "Target Size Check (WCAG 2.2)",
+    "description": "Target size check setting label"
+  },
+  "contrastRatioLabel": {
+    "message": "Contrast Ratio",
+    "description": "Contrast ratio label"
+  },
+  "wcag143AALabel": {
+    "message": "WCAG 1.4.3 (AA)",
+    "description": "WCAG 1.4.3 contrast Level AA label"
+  },
+  "wcag143AAALabel": {
+    "message": "WCAG 1.4.3 (AAA)",
+    "description": "WCAG 1.4.3 contrast Level AAA label"
+  }
+}

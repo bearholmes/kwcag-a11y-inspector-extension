@@ -1,0 +1,334 @@
+{
+  "extName": {
+    "message": "KWCAG アクセシビリティ検査",
+    "description": "拡張機能名"
+  },
+  "extDescription": {
+    "message": "KWCAG 2.1.3 操作可能項目測定ツール",
+    "description": "拡張機能の説明"
+  },
+  "contextMenuCalc": {
+    "message": "手動計算ポップアップを開く",
+    "description": "右クリックメニュー項目"
+  },
+  "alertChromeInternal": {
+    "message": "Chrome/Edge内部ページでは動作しません。",
+    "description": "内部ページ警告"
+  },
+  "alertStorePage": {
+    "message": "ストアページでは動作しません。",
+    "description": "ストアページ警告"
+  },
+  "alertRestrictedPage": {
+    "message": "このページでは拡張機能を使用できません。\n(権限が制限されたページです)",
+    "description": "制限されたページ警告"
+  },
+  "alertExtensionError": {
+    "message": "拡張機能の実行中にエラーが発生しました。\nコンソールを確認してください。",
+    "description": "一般エラーメッセージ"
+  },
+  "calcTitle": {
+    "message": "手動計算",
+    "description": "計算機のタイトル"
+  },
+  "calcHeight": {
+    "message": "Height",
+    "description": "高さラベル"
+  },
+  "calcWidth": {
+    "message": "Width",
+    "description": "幅ラベル"
+  },
+  "calcConfirm": {
+    "message": "確認",
+    "description": "確認ボタン"
+  },
+  "calcClose": {
+    "message": "閉じる",
+    "description": "閉じるボタン"
+  },
+  "calcResults": {
+    "message": "Results",
+    "description": "結果タイトル"
+  },
+  "calcStandard": {
+    "message": "基準",
+    "description": "基準表示"
+  },
+  "calcHeightPlaceholder": {
+    "message": "例：48",
+    "description": "高さ入力フィールドのプレースホルダー"
+  },
+  "calcWidthPlaceholder": {
+    "message": "例：48",
+    "description": "幅入力フィールドのプレースホルダー"
+  },
+  "errorInvalidInput": {
+    "message": "無効な入力値です。",
+    "description": "無効な入力エラー"
+  },
+  "errorMissingElement": {
+    "message": "必要な要素が見つかりません。",
+    "description": "要素なしエラー"
+  },
+  "errorStorage": {
+    "message": "ストレージからデータを読み取れません。",
+    "description": "ストレージエラー"
+  },
+  "errorCalculation": {
+    "message": "計算中にエラーが発生しました。",
+    "description": "計算エラー"
+  },
+  "errorInputValidation": {
+    "message": "正の数のみ入力できます。",
+    "description": "入力検証エラー"
+  },
+  "errorUIInit": {
+    "message": "UIの初期化に失敗しました。",
+    "description": "UI初期化エラー"
+  },
+  "errorResultDisplay": {
+    "message": "結果表示中にエラーが発生しました。",
+    "description": "結果表示エラー"
+  },
+  "errorCalcInit": {
+    "message": "計算機の初期化に失敗しました。",
+    "description": "計算機初期化エラー"
+  },
+  "pauseMessage": {
+    "message": "一時停止しました。ESCを押すと再開します。",
+    "description": "一時停止メッセージ"
+  },
+  "resumeMessage": {
+    "message": "再開します。",
+    "description": "再開メッセージ"
+  },
+  "optionPageTitle": {
+    "message": "KWCAG A11y Inspector - オプション",
+    "description": "オプションページタイトル"
+  },
+  "optionVersion": {
+    "message": "バージョン",
+    "description": "バージョンラベル"
+  },
+  "optionMenu": {
+    "message": "オプションメニュー",
+    "description": "オプションメニュータイトル"
+  },
+  "optionContent": {
+    "message": "オプション本文",
+    "description": "オプション本文タイトル"
+  },
+  "menuIntro": {
+    "message": "紹介",
+    "description": "紹介メニュー"
+  },
+  "menuShortcuts": {
+    "message": "ショートカット案内",
+    "description": "ショートカットメニュー"
+  },
+  "menuSettings": {
+    "message": "環境設定",
+    "description": "環境設定メニュー"
+  },
+  "menuReferences": {
+    "message": "参考資料",
+    "description": "参考資料メニュー"
+  },
+  "menuSupport": {
+    "message": "サポート",
+    "description": "サポートメニュー"
+  },
+  "introDesc1": {
+    "message": "KWCAG 2.1の2.1.3 操作可能項目を測定するための機能を提供",
+    "description": "紹介説明 1"
+  },
+  "introDesc2": {
+    "message": "WCAG 2.2 ターゲットサイズチェック：WCAG 2.5.8 (AA) および 2.5.5 (AAA) の適合状況をリアルタイム表示",
+    "description": "紹介説明 2"
+  },
+  "introDesc3": {
+    "message": "基準: box + padding + border",
+    "description": "紹介説明 3"
+  },
+  "introTip": {
+    "message": "ヒント",
+    "description": "ヒントラベル"
+  },
+  "introWarning1": {
+    "message": "* 注意事項: 残念ながらChromeの特性上、iframe、frame内部の文書は確認できません。",
+    "description": "紹介警告 1"
+  },
+  "introWarning2": {
+    "message": "* 右クリックで表示されるコンテキストメニューから手動計算ポップアップを開くことができます。",
+    "description": "紹介警告 2"
+  },
+  "shortcutDesc": {
+    "message": "ショートカットを使用するとより便利に利用できます。",
+    "description": "ショートカット説明"
+  },
+  "shortcutEsc": {
+    "message": "一時停止 / 再開（有効化状態で可能）",
+    "description": "ESCショートカット説明"
+  },
+  "settingResolution": {
+    "message": "解像度基準",
+    "description": "解像度設定ラベル"
+  },
+  "settingMonitor": {
+    "message": "モニター基準",
+    "description": "モニター設定ラベル"
+  },
+  "settingContrastCheck": {
+    "message": "明度対比チェック",
+    "description": "明度対比設定ラベル"
+  },
+  "settingBoxCheck": {
+    "message": "Box Model Check",
+    "description": "Box model check setting label"
+  },
+  "settingSelectorLine": {
+    "message": "セレクタライン",
+    "description": "セレクタライン設定ラベル"
+  },
+  "settingSelectorColor": {
+    "message": "セレクタカラー",
+    "description": "セレクタカラー設定ラベル"
+  },
+  "settingSelectorBorder": {
+    "message": "セレクタボーダー",
+    "description": "セレクタボーダー設定ラベル"
+  },
+  "settingLinkMode": {
+    "message": "リンクモード",
+    "description": "リンクモード設定ラベル"
+  },
+  "settingLinkModeOn": {
+    "message": "ON（a、button、input要素に限定）",
+    "description": "リンクモードONラベル"
+  },
+  "settingLinkModeDesc": {
+    "message": "- 親要素までのみチェック",
+    "description": "リンクモード説明"
+  },
+  "settingLinkModeOff": {
+    "message": "OFF（すべての要素）",
+    "description": "リンクモードOFFラベル"
+  },
+  "settingLineTypeSolid": {
+    "message": "実線（solid）",
+    "description": "実線ラベル"
+  },
+  "settingLineTypeDashed": {
+    "message": "破線（dashed）",
+    "description": "破線ラベル"
+  },
+  "settingLineTypeDotted": {
+    "message": "点線（dotted）",
+    "description": "点線ラベル"
+  },
+  "settingSaveButton": {
+    "message": "設定",
+    "description": "設定保存ボタン"
+  },
+  "settingOn": {
+    "message": "ON",
+    "description": "ONラベル"
+  },
+  "settingOff": {
+    "message": "OFF",
+    "description": "OFFラベル"
+  },
+  "refBasedOn": {
+    "message": "CSSViewerをベースに作成されました。",
+    "description": "CSSViewer参考説明"
+  },
+  "refContrast": {
+    "message": "明度対比チェック機能はWebAIMのColor Contrast Checkerを参考にしました。",
+    "description": "WebAIM参考説明"
+  },
+  "refDiagonal": {
+    "message": "アクセシビリティコンポーネント対角線ツールの診断方式を参考にしました。",
+    "description": "対角線ツール参考説明"
+  },
+  "refPageRuler": {
+    "message": "幅/高さがautoの要素を計算する方法はPage Rulerからアイデアを得ました。",
+    "description": "Page Ruler参考説明"
+  },
+  "refMoreLink": {
+    "message": "詳細",
+    "description": "詳細リンクテキスト"
+  },
+  "supportDesc": {
+    "message": "お問い合わせや改善のご意見がありましたら、いつでもご連絡ください。",
+    "description": "サポート説明"
+  },
+  "supportLink": {
+    "message": "お問い合わせ",
+    "description": "お問い合わせリンクテキスト"
+  },
+  "settingSaved": {
+    "message": "設定が保存されました。",
+    "description": "設定保存完了メッセージ"
+  },
+  "translationDisclaimer": {
+    "message": "翻訳は機械翻訳によって提供されるため、誤訳が含まれる可能性があります。誤りを発見された場合はご報告ください。",
+    "description": "Translation disclaimer"
+  },
+  "reportTranslationError": {
+    "message": "翻訳エラーを報告",
+    "description": "Report translation error link"
+  },
+  "wcag258Label": {
+    "message": "WCAG 2.5.8 (AA)",
+    "description": "WCAG 2.5.8 Target Size Minimum label"
+  },
+  "wcag255Label": {
+    "message": "WCAG 2.5.5 (AAA)",
+    "description": "WCAG 2.5.5 Target Size Enhanced label"
+  },
+  "kwcag213Label": {
+    "message": "KWCAG 2.1.3",
+    "description": "KWCAG 2.1.3 minimum size label"
+  },
+  "targetSizePass": {
+    "message": "適合",
+    "description": "Target size requirement passed"
+  },
+  "targetSizeFail": {
+    "message": "不適合",
+    "description": "Target size requirement failed"
+  },
+  "cssPixelSize": {
+    "message": "CSSピクセル",
+    "description": "CSS pixel unit"
+  },
+  "targetSizeMinimum": {
+    "message": "ターゲットサイズ（最小）",
+    "description": "Minimum target size label"
+  },
+  "targetSizeEnhanced": {
+    "message": "ターゲットサイズ（拡張）",
+    "description": "Enhanced target size label"
+  },
+  "targetSizeInfo": {
+    "message": "ターゲットサイズチェック",
+    "description": "Target size check section label"
+  },
+  "settingTargetSizeCheck": {
+    "message": "ターゲットサイズチェック (WCAG 2.2)",
+    "description": "Target size check setting label"
+  },
+  "contrastRatioLabel": {
+    "message": "Contrast Ratio",
+    "description": "Contrast ratio label"
+  },
+  "wcag143AALabel": {
+    "message": "WCAG 1.4.3 (AA)",
+    "description": "WCAG 1.4.3 contrast Level AA label"
+  },
+  "wcag143AAALabel": {
+    "message": "WCAG 1.4.3 (AAA)",
+    "description": "WCAG 1.4.3 contrast Level AAA label"
+  }
+}
