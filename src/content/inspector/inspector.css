@@ -1,0 +1,141 @@
+@charset "utf-8";
+
+/* A11y Inspector - Compact Info UI */
+
+/* Base Reset */
+.a11y-inspector,
+.a11y-inspector__content,
+.a11y-inspector__footer,
+.a11y-inspector__category,
+span.a11y-inspector__property,
+.a11y-inspector h1,
+.a11y-inspector h2,
+.a11y-inspector ul,
+.a11y-inspector li,
+.a11y-inspector span {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', sans-serif !important;
+  font-size: 12px !important;
+  z-index: 9999 !important;
+  background-color: #fff !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-indent: 0 !important;
+  text-align: left !important;
+  visibility: visible !important;
+  height: auto !important;
+  line-height: 1.5;
+  clear: both !important;
+  pointer-events: none !important;
+}
+
+.a11y-inspector {
+  display: none;
+  width: 320px !important;
+  color: #1f2937 !important;
+  position: absolute !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.5rem !important;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+  z-index: 2147483647 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.a11y-inspector h1 {
+  color: #ffffff !important;
+  float: inherit !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  text-align: center !important;
+  display: block !important;
+  background-color: #334e68 !important;
+  padding: 8px 12px !important;
+  overflow: hidden !important;
+}
+
+.a11y-inspector__content {
+  padding: 10px 12px !important;
+  overflow: hidden !important;
+  clear: both !important;
+}
+
+.a11y-inspector__footer {
+  padding: 8px 12px !important;
+  color: #6b7280 !important;
+  text-align: center !important;
+  font-size: 11px !important;
+  background-color: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.a11y-inspector__category {
+  padding: 0 !important;
+  margin-bottom: 10px !important;
+}
+
+.a11y-inspector h2 {
+  padding: 0 0 6px 0 !important;
+  color: #334e68 !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  margin-bottom: 6px !important;
+}
+
+.a11y-inspector ul {
+  padding: 0 !important;
+  width: auto !important;
+  list-style: none !important;
+}
+
+.a11y-inspector li {
+  padding: 5px 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.a11y-inspector li:last-child {
+  border-bottom: none !important;
+}
+
+.a11y-inspector li.a11y-inspector__hidden {
+  display: none !important;
+}
+
+.a11y-inspector span.a11y-inspector__property {
+  color: #1f2937 !important;
+  float: none !important;
+  width: auto !important;
+  display: block !important;
+  overflow: hidden !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+  margin-right: 7px !important;
+}
+
+.a11y-inspector span:not(.a11y-inspector__property) {
+  color: #6b7280 !important;
+  font-weight: 400 !important;
+  font-size: 11px !important;
+}
+
+/* A11y Inspector Tracking Overlay - Separate Block */
+.a11y-inspector-tracking {
+  position: absolute !important;
+  z-index: 2000005 !important;
+  outline-width: 2px !important;
+  outline-offset: -1px !important;
+  cursor: none !important;
+  pointer-events: none !important;
+}
