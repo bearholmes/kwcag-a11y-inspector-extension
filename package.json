@@ -15,7 +15,10 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules' jest --coverage",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version:sync": "tsx scripts/sync-version.ts",
+    "version": "npm run version:sync && git add README.md README.en.md",
+    "postversion": "git push && git push --tags"
   },
   "author": "bearholmes <bearholmes@gmail.com>",
   "license": "MIT",
@@ -52,6 +55,7 @@
     "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.5",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.47.0",
     "vite": "^7.2.2"

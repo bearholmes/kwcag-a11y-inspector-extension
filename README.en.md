@@ -4,7 +4,7 @@
 
 **Languages**: 🇰🇷 [한국어](README.md) | 🇺🇸 [English](README.en.md)
 
-![Version](https://img.shields.io/badge/version-0.13.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Chrome Web Store](https://img.shields.io/badge/chrome-extension-orange.svg)
 ![Manifest](https://img.shields.io/badge/manifest-v3-brightgreen.svg)
